@@ -1,0 +1,59 @@
+<div class="select-role-container">
+  <div class="select-role-card">
+    
+    <div class="header">
+      <div class="icon-wrapper">
+        <i class="pi pi-user"></i>
+      </div>
+      <h1>انتخاب نقش</h1>
+      <p class="welcome-text">خوش آمدید {{ fullName }}</p>
+      <p class="sub-text">لطفاً نقش مورد نظر خود را برای ورود انتخاب کنید</p>
+      <span class="role-count" *ngIf="roles.length > 0">
+        تعداد نقش‌ها: {{ roles.length }}
+      </span>
+    </div>
+
+    <div class="no-roles" *ngIf="roles.length === 0">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>شما هیچ نقشی در سیستم ندارید</p>
+      <p class="hint">لطفاً با مدیر سیستم تماس بگیرید</p>
+    </div>
+
+    <div class="roles-grid" *ngIf="roles.length > 0">
+      <div 
+        *ngFor="let role of roles"
+        class="role-card"
+        [class.selected]="selectedRoleId === role.roleId"
+        (click)="selectedRoleId = role.roleId"
+      >
+        <div class="role-icon">
+          <i class="pi pi-shield"></i>
+        </div>
+        <div class="role-info">
+          <h3>{{ role.roleName }}</h3>
+          <p>{{ role.description }}</p>
+        </div>
+        <div class="role-check" [class.selected]="selectedRoleId === role.roleId">
+          <i class="pi pi-check-circle"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions" *ngIf="roles.length > 0">
+      <button 
+        pButton 
+        label="ورود با این نقش" 
+        icon="pi pi-arrow-right"
+        [loading]="loading"
+        [disabled]="!selectedRoleId"
+        class="login-btn"
+        (click)="onSelectRole()"
+      ></button>
+    </div>
+
+    <div class="select-role-footer">
+      <span class="version">سامانه مدیریت | نسخه ۲.۰.۱</span>
+    </div>
+
+  </div>
+</div>

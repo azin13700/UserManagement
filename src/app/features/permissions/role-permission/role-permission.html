@@ -1,0 +1,126 @@
+<div class="permission-container">
+  <div class="card">
+    
+    <div class="table-header">
+      <div class="header-title">
+        <h1><i class="pi pi-key"></i> مدیریت دسترسی‌ها</h1>
+        <p>مدیریت و تعریف دسترسی‌های سیستم</p>
+      </div>
+      <div class="header-actions">
+        <button pButton icon="pi pi-plus" label="دسترسی جدید" class="action-btn" (click)="openNew()"></button>
+      </div>
+    </div>
+
+    <div class="filters-section">
+      <div class="filters-row">
+        <div class="filter-item search-global">
+          <input pInputText type="text" [(ngModel)]="searchValue" placeholder="جستجوی دسترسی..." />
+        </div>
+        <div class="filter-item">
+          <p-select
+            [options]="categories"
+            [(ngModel)]="selectedCategory"
+            placeholder="همه دسته‌بندی‌ها"
+            [showClear]="true"
+            (onChange)="selectedCategory = $event.value"
+          ></p-select>
+        </div>
+        <div class="filter-item filter-actions">
+          <button pButton label="پاک کردن" icon="pi pi-filter-slash" class="p-button-outlined" (click)="searchValue=''; selectedCategory=null"></button>
+        </div>
+      </div>
+    </div>
+
+    <p-table
+      [value]="filteredPermissions"
+      [rows]="10"
+      [paginator]="true"
+      [rowHover]="true"
+      dataKey="id"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10,25,50]"
+      [loading]="loading"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">نام دسترسی <p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="category">دسته‌بندی <p-sortIcon field="category"></p-sortIcon></th>
+          <th>توضیحات</th>
+          <th pSortableColumn="roleCount">تعداد نقش‌ها <p-sortIcon field="roleCount"></p-sortIcon></th>
+          <th pSortableColumn="isActive">وضعیت <p-sortIcon field="isActive"></p-sortIcon></th>
+          <th style="width:100px">عملیات</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-perm>
+        <tr>
+          <td><span class="perm-name">{{ perm.name }}</span></td>
+          <td><span class="perm-category">{{ perm.category }}</span></td>
+          <td>{{ perm.description || '-' }}</td>
+          <td><span class="role-count-badge">{{ perm.roleCount }}</span></td>
+          <td>
+            <p-tag
+              [severity]="perm.isActive ? 'success' : 'danger'"
+              [value]="perm.isActive ? 'فعال' : 'غیرفعال'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="action-group">
+              <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="editPermission(perm)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deletePermission(perm)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="6" class="empty-row">هیچ دسترسی یافت نشد</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="dialogVisible"
+  [header]="isEditMode ? 'ویرایش دسترسی' : 'دسترسی جدید'"
+  [modal]="true"
+  [style]="{width: '600px', maxWidth: '95vw'}"
+  [draggable]="false"
+>
+  <div class="dialog-content">
+    <div class="field">
+      <label>نام دسترسی <span class="required">*</span></label>
+      <input pInputText [(ngModel)]="currentPermission.name" placeholder="مثال: مشاهده کاربران" class="w-full" />
+    </div>
+
+    <div class="field">
+      <label>دسته‌بندی <span class="required">*</span></label>
+      <input pInputText [(ngModel)]="currentPermission.category" placeholder="مثال:  کاربران" class="w-full" />
+
+    </div>
+
+    <div class="field">
+      <label>توضیحات</label>
+      <textarea pInputTextarea [(ngModel)]="currentPermission.description" rows="3" placeholder="توضیحات دسترسی..." class="w-full"></textarea>
+    </div>
+
+    <div class="field">
+      <label>وضعیت</label>
+      <div class="status-buttons">
+        <div class="status-option" [class.active]="currentPermission.isActive" (click)="currentPermission.isActive = true">
+          <i class="pi pi-check-circle"></i> <span>فعال</span>
+        </div>
+        <div class="status-option" [class.active]="!currentPermission.isActive" (click)="currentPermission.isActive = false">
+          <i class="pi pi-ban"></i> <span>غیرفعال</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <button pButton label="انصراف" icon="pi pi-times" class="p-button-outlined" (click)="dialogVisible = false"></button>
+      <button pButton label="ذخیره" icon="pi pi-save" [loading]="loading" (click)="savePermission()"></button>
+    </div>
+  </ng-template>
+</p-dialog>

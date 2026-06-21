@@ -1,0 +1,75 @@
+<div class="permission-container">
+  
+  <div class="permission-header">
+    <h2>
+      <i class="pi pi-key"></i>
+      مدیریت دسترسی‌های نقش: {{ roleName }}
+    </h2>
+    <p class="sub-text">دسترسی‌های مورد نظر را انتخاب کنید</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <i class="pi pi-spin pi-spinner"></i>
+    <span>در حال بارگذاری دسترسی‌ها...</span>
+  </div>
+
+
+  <div class="permission-content" *ngIf="!loading">
+    
+    <div class="select-all-row" *ngIf="allPermissions.length > 0">
+      <p-checkbox 
+        [(ngModel)]="selectAll"
+        [binary]="true"
+        inputId="select-all"
+        (onChange)="toggleAllPermissions($event)"
+      ></p-checkbox>
+      <label for="select-all" class="select-all-label">
+        <span *ngIf="selectAll">لغو انتخاب همه</span>
+        <span *ngIf="!selectAll">انتخاب همه</span>
+        <span class="selected-count">({{ selectedCount }} از {{ allPermissions.length }})</span>
+      </label>
+    </div>
+
+    <div class="permission-group" *ngFor="let group of permissionGroups">
+      <h4 class="group-title">{{ group.category }}</h4>
+      <div class="permission-list">
+        <div class="permission-item" *ngFor="let permission of group.permissions">
+          <p-checkbox 
+            [(ngModel)]="permission.isActive"
+            [binary]="true"
+            [inputId]="'perm-' + permission.id"
+          ></p-checkbox>
+          <label [for]="'perm-' + permission.id" class="permission-label">
+            <span class="perm-name">{{ permission.name }}</span>
+            <span class="perm-desc" *ngIf="permission.description">— {{ permission.description }}</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-permissions" *ngIf="permissionGroups.length === 0">
+      <i class="pi pi-inbox"></i>
+      <p>هیچ دسترسی برای این نقش تعریف نشده است</p>
+    </div>
+
+  </div>
+
+  <div class="permission-actions">
+    <button
+      pButton
+      label="انصراف"
+      icon="pi pi-times"
+      class="p-button-outlined"
+      (click)="close()"
+    ></button>
+    <button
+      pButton
+      label="ذخیره دسترسی‌ها"
+      icon="pi pi-save"
+      [loading]="saving"
+      [disabled]="loading"
+      (click)="savePermissions()"
+    ></button>
+  </div>
+
+</div>

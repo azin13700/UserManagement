@@ -1,0 +1,276 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="form-container">
+    
+    <!-- بخش عکس -->
+    <div class="avatar-section">
+      <div class="avatar-wrapper">
+        <div class="avatar-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="پروفایل">
+          <button type="button" class="remove-avatar" (click)="removeImage()">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        <div class="avatar-placeholder" *ngIf="!imagePreview">
+          <i class="pi pi-user"></i>
+        </div>
+      </div>
+      
+      <p-fileUpload 
+        mode="basic"
+        name="photo"
+        accept="image/*"
+        chooseLabel="انتخاب عکس"
+        chooseIcon="pi pi-camera"
+        (onSelect)="onFileSelected($event)"
+        [auto]="true"
+        [maxFileSize]="2000000">
+      </p-fileUpload>
+      <small class="upload-hint">حداکثر 2 مگابایت | فرمت‌های مجاز: JPG, PNG</small>
+    </div>
+
+    <div class="form-grid">
+      <!-- نام -->
+      <div class="form-field">
+        <label for="name">
+          نام <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-user input-icon"></i>
+          <input 
+            pInputText 
+            id="name" 
+            formControlName="name" 
+            placeholder="نام خود را وارد کنید"
+            [class.ng-invalid]="isInvalid('name')"
+            autocomplete="off" />
+        </div>
+        <small class="error-message" *ngIf="isInvalid('name')">
+          نام الزامی است (حداقل 2 کاراکتر)
+        </small>
+      </div>
+
+      <!-- نام خانوادگی -->
+      <div class="form-field">
+        <label for="family">
+          نام خانوادگی <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-users input-icon"></i>
+          <input 
+            pInputText 
+            id="family" 
+            formControlName="family" 
+            placeholder="نام خانوادگی خود را وارد کنید"
+            [class.ng-invalid]="isInvalid('family')"
+            autocomplete="off" />
+        </div>
+        <small class="error-message" *ngIf="isInvalid('family')">
+          نام خانوادگی الزامی است (حداقل 2 کاراکتر)
+        </small>
+      </div>
+      <div class="form-field">
+        <label for="role">
+           واحد / سازمان <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <p-multiselect 
+            [options]="userUnit" 
+            formControlName="unitId" 
+            optionLabel="name" 
+            optionValue="unitId"
+            placeholder="انتخاب واحد / سازمان "
+            [maxSelectedLabels]="4"
+            [showClear]="true"
+            [filter]="true"
+            [loading]="rolesLoading"
+            [class.ng-invalid]="isInvalid('unitId')"
+            styleClass="w-full">
+            <ng-template pTemplate="selectedItems">
+              <span *ngIf="userForm.get('unitId')?.value?.length === 0">
+                انتخاب واحدها
+              </span>
+              <span *ngFor="let unitId of userForm.get('unitId')?.value" class="role-badge">
+                {{ getUnitNameById(unitId) }}
+              </span>
+            </ng-template>
+          </p-multiselect>
+        </div>
+        <small class="error-message" *ngIf="isInvalid('unitId')">
+          حداقل یک نقش باید انتخاب شود
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="role">
+          نقش کاربری <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <p-multiselect 
+            [options]="userRoles" 
+            formControlName="roleId" 
+            optionLabel="roleName" 
+            optionValue="roleId"
+            placeholder="انتخاب نقش‌های کاربری"
+            [maxSelectedLabels]="4"
+            [showClear]="true"
+            [filter]="true"
+            [loading]="rolesLoading"
+            [class.ng-invalid]="isInvalid('roleId')"
+            styleClass="w-full">
+            <ng-template pTemplate="selectedItems">
+              <span *ngIf="userForm.get('roleId')?.value?.length === 0">
+                انتخاب نقش‌ها
+              </span>
+              <span *ngFor="let roleId of userForm.get('roleId')?.value" class="role-badge">
+                {{ getRoleNameById(roleId) }}
+              </span>
+            </ng-template>
+          </p-multiselect>
+        </div>
+        <small class="error-message" *ngIf="isInvalid('roleId')">
+          حداقل یک نقش باید انتخاب شود
+        </small>
+      </div>
+
+            <div class="form-field">
+              <label for="username">
+                نام کاربری <span class="required">*</span>
+              </label>
+              <div class="input-wrapper">
+                <i class="pi pi-at input-icon"></i>
+                <input 
+                  pInputText 
+                  id="username" 
+                  formControlName="username" 
+                  placeholder="نام کاربری خود را وارد کنید"
+                  [class.ng-invalid]="isInvalid('username')"
+                  autocomplete="off" />
+              </div>
+              <small class="error-message" *ngIf="isInvalid('username')">
+                فقط حروف انگلیسی، اعداد و زیرخط مجاز است (حداقل 3 کاراکتر)
+              </small>
+            </div>
+      <div class="form-field">
+        <label for="email">
+          ایمیل <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-envelope input-icon"></i>
+          <input 
+            pInputText 
+            id="email" 
+            formControlName="email" 
+            placeholder="example@domain.com"
+            [class.ng-invalid]="isInvalid('email')"
+            autocomplete="off" />
+        </div>
+        <small class="error-message" *ngIf="isInvalid('email')">
+          لطفاً یک ایمیل معتبر وارد کنید
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="nationalNo">
+          کد ملی <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-id-card input-icon"></i>
+          <input 
+            pInputText 
+            id="nationalNo" 
+            formControlName="nationalNo" 
+            placeholder="کد ملی 10 رقمی"
+            [class.ng-invalid]="isInvalid('nationalNo')"
+            autocomplete="off" 
+            maxlength="10" />
+        </div>
+        <small class="error-message" *ngIf="isInvalid('nationalNo')">
+          کد ملی الزامی است (10 رقم)
+        </small>
+      </div>
+      
+
+      <div class="form-field">
+        <label for="phoneNumber">
+          شماره موبایل <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-phone input-icon"></i>
+          <input 
+            pInputText 
+            id="phoneNumber" 
+            formControlName="phoneNumber" 
+            placeholder="09123456789"
+            [class.ng-invalid]="isInvalid('phoneNumber')"
+            autocomplete="off" 
+            maxlength="11" />
+        </div>
+        <small class="error-message" *ngIf="isInvalid('phoneNumber')">
+          شماره موبایل الزامی است (11 رقم)
+        </small>
+      </div>
+
+
+<div class="form-field">
+  <label for="dateOfBirth">
+    تاریخ تولد <span class="required">*</span>
+  </label>
+  <div class="input-wrapper">
+    <i class="pi pi-calendar input-icon"></i>
+    <input 
+      pInputText 
+      id="dateOfBirth" 
+      formControlName="dateOfBirth" 
+      placeholder="1400/01/01"
+      [class.ng-invalid]="isInvalid('dateOfBirth')"
+      autocomplete="off" />
+  </div>
+  <small class="error-message" *ngIf="isInvalid('dateOfBirth')">
+    تاریخ تولد الزامی است (مثال: 1400/01/01)
+  </small>
+</div>
+
+      <div class="form-field">
+        <label for="password">
+          رمز عبور <span class="required" *ngIf="!isEditMode">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-lock input-icon"></i>
+          <p-password 
+            id="password" 
+            formControlName="password" 
+            placeholder="رمز عبور خود را وارد کنید"
+            [toggleMask]="true"
+            [feedback]="!isEditMode && userForm.get('password')?.value"
+            [class.ng-invalid]="isInvalid('password')"
+            styleClass="w-full">
+          </p-password>
+        </div>
+        <small class="error-message" *ngIf="isInvalid('password') && !isEditMode">
+          رمز عبور الزامی است (حداقل 6 کاراکتر)
+        </small>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button 
+      type="button" 
+      pButton 
+      label="انصراف" 
+      icon="pi pi-times" 
+      class="p-button-outlined"
+      (click)="close()">
+    </button>
+    <button 
+      type="submit" 
+      pButton 
+      [label]="isEditMode ? 'ویرایش کاربر' : 'ایجاد کاربر'"
+      [icon]="isEditMode ? 'pi pi-pencil' : 'pi pi-plus'"
+      [loading]="loading"
+      class="p-button-primary">
+    </button>
+  </div>
+</form>

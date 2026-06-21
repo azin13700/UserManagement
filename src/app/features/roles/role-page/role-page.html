@@ -1,0 +1,69 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="form-container">
+    
+
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="roleName">
+      نام نقش <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <i class="pi pi-user input-icon"></i>
+          <input 
+            pInputText 
+            id="roleName" 
+            formControlName="roleName" 
+            placeholder="نام نقش خود را وارد کنید"
+            [class.ng-invalid]="isInvalid('roleName')"
+            autocomplete="off" />
+        </div>
+        <small class="error-message" *ngIf="isInvalid('roleName')">
+          نام نقش الزامی است (حداقل 2 کاراکتر)
+        </small>
+      </div>
+
+
+      <div class="form-field ">
+        <label>وضعیت </label>
+        <div class="status-buttons">
+          <div 
+            *ngFor="let opt of statusOptions"
+            class="status-option"
+            [class.active]="userForm.get('isActive')?.value === opt.value"
+            (click)="userForm.get('isActive')?.setValue(opt.value)">
+            <i [class]="opt.value === true ? 'pi pi-check-circle' : 'pi pi-ban'"></i>
+            <span>{{ opt.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+     <div class="form-field">
+      <textarea rows="5" cols="30" pTextarea formControlName="description" [invalid]="isInvalid('description')"></textarea>
+
+   
+      <small class="error-message" *ngIf="isInvalid('family')">
+        توضیحات الزامی است 
+      </small>
+    </div>
+  <div class="form-actions">
+    <button 
+      type="button" 
+      pButton 
+      label="انصراف" 
+      icon="pi pi-times" 
+      class="p-button-outlined"
+      (click)="close()">
+    </button>
+    <button 
+      type="submit" 
+      pButton 
+      [label]="isEditMode ? 'ویرایش نقش' : 'ایجاد نقش'"
+      [icon]="isEditMode ? 'pi pi-pencil' : 'pi pi-plus'"
+      [loading]="loading"
+      class="p-button-primary">
+    </button>
+  </div>
+</form>

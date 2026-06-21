@@ -1,0 +1,80 @@
+<div class="layout">
+
+  <div class="topbar">
+    <button class="menu-toggle" (click)="toggleDrawer()">
+      <i class="pi pi-bars"></i>
+    </button>
+
+    <span class="title">
+      مدیریت کاربران
+    </span>
+
+    <div class="topbar-right">
+      <span class="role-badge" *ngIf="selectedRoleName">
+        <i class="pi pi-shield"></i>
+        {{ selectedRoleName }}
+      </span>
+      <button class="logout-btn" (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+        خروج
+      </button>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" *ngIf="visible" (click)="closeDrawer()"></div>
+
+  <div class="sidebar" [class.open]="visible">
+    
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="pi pi-users"></i>
+        <span>مدیریت کاربران</span>
+      </div>
+      <button class="sidebar-close" (click)="closeDrawer()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        <i class="pi pi-user"></i>
+      </div>
+      <div class="user-info">
+        <!-- <span class="user-name">{{ fullName }}</span> -->
+        <span class="user-role">{{ selectedRoleName }}</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li *ngFor="let item of items">
+          <ng-container *ngIf="!item.items">
+            <a [routerLink]="item.routerLink" routerLinkActive="active" (click)="closeDrawer()">
+              <i [class]="item.icon"></i>
+              <span>{{ item.label }}</span>
+            </a>
+          </ng-container>
+          <ng-container *ngIf="item.items">
+            <div class="nav-group-title">{{ item.label }}</div>
+            <ul>
+              <li *ngFor="let child of item.items">
+                <a [routerLink]="child.routerLink" routerLinkActive="active" (click)="closeDrawer()">
+                  <i [class]="child.icon"></i>
+                  <span>{{ child.label }}</span>
+                </a>
+              </li>
+            </ul>
+          </ng-container>
+        </li>
+      </ul>
+    </nav>
+
+ 
+
+  </div>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
