@@ -79,12 +79,16 @@ export class UserForm implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       dateOfBirth: [null, Validators.required],
       password: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]],
-      status: ['Active'],
+            status: ['Active'],
       roleId: [[], Validators.required],
       unitId: [[], Validators.required],
-      nationalNo: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{11}$')]],
+      nationalNo: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+
     });
+    if (this.isEditMode) {
+      this.userForm.get('password')?.disable();
+    }
   }
 
   async loadRoles() {
@@ -121,7 +125,7 @@ getUnitNameById(unitId: number): string {
 async loadUserData() {
   try {
     const data = await lastValueFrom(this.api.GetUserById(this.userId!));
-  
+    
     
     let birthDate = null;
     if (data.dateOfBirth) {
@@ -131,25 +135,24 @@ async loadUserData() {
     const unitIds = data.unitIds || data.unitId || data.unitid || [];
     const roleIds = data.roleIds || data.roleId || [];
 
-    
     this.userForm.patchValue({
-      name: data.name,
-      family: data.family,
-      username: data.userName || data.username,
-      email: data.email,
+      name: data.name || '',
+      family: data.family || '',
+      username: data.userName || data.username || '',
+      email: data.email || '',
       dateOfBirth: birthDate,
       status: data.status || 'Active',
       roleId: roleIds,
-      photo: data.photo ? `data:image/jpeg;base64,${data.photo}` : null,
-      unitId: unitIds, 
-      nationalNo: data.nationalNo,
-      phoneNumber: data.phoneNumber,
+      unitId: unitIds,
+      nationalNo: data.nationalNo ? data.nationalNo.toString() : '',
+      phoneNumber: data.phoneNumber ? data.phoneNumber.toString() : '',
     });
     
-    this.imagePreview =data.photo ? `data:image/jpeg;base64,${data.photo}` : null;
+    if (data.photo) {
+      this.imagePreview = `data:image/jpeg;base64,${data.photo}`;
+    }
     
   } catch (error) {
-
     this.showError('خطا در دریافت اطلاعات کاربر');
   }
 }
@@ -168,8 +171,8 @@ async loadUserData() {
     this.selectedFile = null;
     this.imagePreview = null;
   }
-
   onSubmit() {
+    
     if (this.userForm.invalid) {
       Object.keys(this.userForm.controls).forEach(key => {
         const control = this.userForm.get(key);
@@ -177,6 +180,9 @@ async loadUserData() {
           control.markAsTouched();
         }
       });
+      
+
+      
       this.showError('لطفاً همه فیلدهای الزامی را به درستی پر کنید');
       return;
     }
@@ -184,19 +190,22 @@ async loadUserData() {
     this.loading = true;
     const formData = new FormData();
   
-    
     if (this.isEditMode && this.userId) {
       formData.append('UserId', this.userId.toString());
     }
-    formData.append('Name', this.userForm.get('name')?.value);
-    formData.append('Family', this.userForm.get('family')?.value);
-    formData.append('UserName', this.userForm.get('username')?.value);
-    formData.append('Email', this.userForm.get('email')?.value);
-    formData.append('NationalNo', this.userForm.get('nationalNo')?.value);
-    formData.append('PhoneNumber', this.userForm.get('phoneNumber')?.value);
-    formData.append('Status', this.userForm.get('status')?.value);
+    formData.append('Name', this.userForm.get('name')?.value || '');
+    formData.append('Family', this.userForm.get('family')?.value || '');
+    formData.append('UserName', this.userForm.get('username')?.value || '');
+    formData.append('Email', this.userForm.get('email')?.value || '');
+    
+    const nationalNo = this.userForm.get('nationalNo')?.value || '';
+  formData.append('NationalNo', nationalNo.toString());
   
-
+  const phoneNumber = this.userForm.get('phoneNumber')?.value || '';
+  formData.append('PhoneNumber', phoneNumber.toString());
+    
+    formData.append('Status', this.userForm.get('status')?.value || 'Active');
+  
     const dateValue = this.userForm.get('dateOfBirth')?.value;
     if (dateValue) {
       let formattedDate: string;
@@ -215,40 +224,37 @@ async loadUserData() {
       formData.append('DateOfBirth', formattedDate);
     }
   
-
     const password = this.userForm.get('password')?.value;
     if (password) {
       formData.append('Password', password);
     }
   
-
     const roleIds = this.userForm.get('roleId')?.value || [];
     roleIds.forEach((id: number) => {
       formData.append('RoleId', id.toString());
     });
   
-
     const unitIds = this.userForm.get('unitId')?.value || [];
     unitIds.forEach((id: number) => {
-      formData.append('UnitId', id.toString());  // ✅ درست: UnitId
+      formData.append('UnitId', id.toString());
     });
   
-
     if (this.selectedFile) {
       formData.append('Photo', this.selectedFile);
     }
   
 
+  
     const request = this.isEditMode && this.userId
       ? this.api.UpdateUser(this.userId, formData)
       : this.api.CreateEmployee(formData);
   
     request.subscribe({
-      next: () => {
-  
-        
+      next: (res) => {
+        const message = this.isEditMode ? 'کاربر با موفقیت ویرایش شد' : 'کاربر با موفقیت ایجاد شد';
+        this.showSuccess(message);
         this.loading = false;
-                this.ref.close(true);
+        this.ref.close(true);
       },
       error: (err) => {
         this.loading = false;
@@ -269,9 +275,17 @@ async loadUserData() {
 
   isInvalid(controlName: string): boolean {
     const control = this.userForm.get(controlName);
+    if (control) {
+      console.log(`🔍 ${controlName}:`, {
+        value: control.value,
+        invalid: control.invalid,
+        touched: control.touched,
+        dirty: control.dirty,
+        errors: control.errors
+      });
+    }
     return control ? (control.invalid && (control.touched || control.dirty)) : false;
   }
-
   showSuccess(msg: string) {
     this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
   }

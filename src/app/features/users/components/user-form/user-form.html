@@ -242,6 +242,7 @@
             placeholder="رمز عبور خود را وارد کنید"
             [toggleMask]="true"
             [feedback]="!isEditMode && userForm.get('password')?.value"
+            [disabled]="isEditMode"  
             [class.ng-invalid]="isInvalid('password')"
             styleClass="w-full">
           </p-password>

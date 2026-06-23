@@ -345,3 +345,19 @@
     color: #475569;
   }
 }
+// user-form.scss
+::ng-deep .p-password {
+  .p-inputtext:disabled {
+    background: #f1f5f9 !important;
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.hint-text {
+  display: block;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
