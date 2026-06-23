@@ -23,6 +23,10 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: 'system' // یا 'light' | 'dark'
         }
       }
-    })
+    }),
+
+    MessageService,
+    ConfirmationService,
+    DialogService
   ]
 };

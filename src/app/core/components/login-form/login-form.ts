@@ -66,6 +66,8 @@ export class LoginForm implements OnInit {
     const formData = new FormData();
     formData.append('userName', this.userForm.get('userName')?.value);
     formData.append('password', this.userForm.get('password')?.value);
+
+    
     this.api
     .login(formData)
     .subscribe(res => {

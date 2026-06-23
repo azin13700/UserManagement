@@ -135,34 +135,44 @@ export class RolePermission implements OnInit {
     this.dialogVisible = true;
   }
 
-  async savePermission() {
-    if (!this.currentPermission.name.trim()) {
-      this.showError('نام دسترسی الزامی است');
-      return;
-    }
-    if (!this.currentPermission.category.trim()) {
-      this.showError('دسته‌بندی الزامی است');
-      return;
-    }
-
-    this.loading = true;
-    try {
-      if (this.isEditMode) {
-        await lastValueFrom(this.api.updatePermission(this.currentPermission));
-        this.showSuccess('دسترسی با موفقیت ویرایش شد');
-      } else {
-        await lastValueFrom(this.api.createPermission(this.currentPermission));
-        this.showSuccess('دسترسی با موفقیت ایجاد شد');
-      }
-      this.dialogVisible = false;
-      await this.loadPermissions();
-    } catch (error: any) {
-      this.showError(error?.error?.message || 'خطا در ذخیره اطلاعات');
-    } finally {
-      this.loading = false;
-    }
+async savePermission() {
+  if (!this.currentPermission.name.trim()) {
+    this.showError('نام دسترسی الزامی است');
+    return;
+  }
+  if (!this.currentPermission.category.trim()) {
+    this.showError('دسته‌بندی الزامی است');
+    return;
   }
 
+  this.loading = true;
+  try {
+    const dataToSend = {
+      id: this.currentPermission.id,
+      name: this.currentPermission.name,
+      category: this.currentPermission.category,
+      description: this.currentPermission.description || '',
+      isActive: this.currentPermission.isActive
+    };
+
+
+    if (this.isEditMode) {
+      await lastValueFrom(this.api.updatePermission(dataToSend));
+      this.showSuccess('دسترسی با موفقیت ویرایش شد');
+    } else {
+      await lastValueFrom(this.api.createPermission(dataToSend));
+      this.showSuccess('دسترسی با موفقیت ایجاد شد');
+    }
+    
+    this.dialogVisible = false;
+    await this.loadPermissions();
+    
+  } catch (error: any) {
+    this.showError(error?.error?.message || 'خطا در ذخیره اطلاعات');
+  } finally {
+    this.loading = false;
+  }
+}
   deletePermission(permission: Permission) {
     this.confirmationService.confirm({
       message: `آیا از حذف دسترسی "${permission.name}" اطمینان دارید؟`,

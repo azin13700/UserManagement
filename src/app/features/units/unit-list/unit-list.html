@@ -1,4 +1,6 @@
 <div class="dashboard-container">
+  <p-toast position="top-right"></p-toast>
+
   <div class="main-card">
     
     <div class="table-header">
@@ -72,7 +74,7 @@
 
       <ng-template pTemplate="body" let-unit>
         <tr [class.inactive-row]="unit.isActive === false">
- >
+
           <td>
             <span class="unit-name-text">{{ unit.name }}</span>
           </td>

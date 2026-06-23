@@ -106,7 +106,6 @@ export class RolePage implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.showSuccess(this.isEditMode ? 'نقش با موفقیت ویرایش شد' : ',نقش با موفقیت ایجاد شد');
         this.loading = false;
         this.ref.close(true);
       },

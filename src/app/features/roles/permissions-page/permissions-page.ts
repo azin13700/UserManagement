@@ -110,7 +110,7 @@ export class PermissionsPage implements OnInit {
 
     this.api.AssignPermissionsToRole(this.roleId, selectedIds).subscribe({
       next: () => {
-        this.showSuccess('دسترسی‌ها با موفقیت تخصیص داده شدند');
+       // this.showSuccess('دسترسی‌ها با موفقیت تخصیص داده شدند');
         this.saving = false;
         this.ref.close(true);
       },

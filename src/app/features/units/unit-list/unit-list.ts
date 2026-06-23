@@ -150,15 +150,23 @@ export class UnitList implements OnInit {
     const ref = this.dialogService.open(UnitPage, {
       header: 'ایجاد واحد جدید',
       width: '80%',
+      closable: true,  
+      closeOnEscape: true, 
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
       data: { mode: 'create' }
     });
 
+
     ref?.onClose.subscribe((result) => {
       if (result) {
         this.loadUnits();
-        this.showSuccess('واحد با موفقیت ایجاد شد');
+        this.messageService.add({
+          severity: 'success',
+          summary: 'موفق',
+          detail: 'واحد با موفقیت ایجاد شد',
+          life: 4000
+        });
       }
     });
   }
@@ -167,6 +175,8 @@ export class UnitList implements OnInit {
     const ref = this.dialogService.open(UnitPage, {
       header: 'ویرایش واحد',
       width: '80%',
+      closable: true,  
+      closeOnEscape: true, 
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
       data: { 
@@ -174,13 +184,18 @@ export class UnitList implements OnInit {
         unitId: unit.unitId 
       }
     });
-    
     ref?.onClose.subscribe((result) => {
       if (result) {
-        this.loadUnits();  
-        this.showSuccess('واحد با موفقیت ویرایش شد');
+        this.loadUnits();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'موفق',
+          detail: 'واحد با موفقیت ویرایش شد',
+          life: 4000
+        });
       }
     });
+  
   }
 
 

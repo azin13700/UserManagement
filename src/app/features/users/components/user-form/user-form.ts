@@ -245,18 +245,23 @@ async loadUserData() {
   
     request.subscribe({
       next: () => {
-        this.showSuccess(this.isEditMode ? 'کاربر با موفقیت ویرایش شد' : 'کاربر با موفقیت ایجاد شد');
+  
+        
         this.loading = false;
-        this.ref.close(true);
+                this.ref.close(true);
       },
       error: (err) => {
         this.loading = false;
         let errorMsg = 'خطا در انجام عملیات';
+        
         if (err.error?.errors) {
           errorMsg = Object.values(err.error.errors).flat().join(', ');
         } else if (err.error?.message) {
           errorMsg = err.error.message;
+        } else if (err.message) {
+          errorMsg = err.message;
         }
+        
         this.showError(errorMsg);
       }
     });

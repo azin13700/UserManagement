@@ -1,4 +1,6 @@
 <div class="permission-container">
+  <p-toast position="top-right"></p-toast>
+
   <div class="card">
     
     <div class="table-header">
@@ -48,7 +50,7 @@
           <th>توضیحات</th>
           <th pSortableColumn="roleCount">تعداد نقش‌ها <p-sortIcon field="roleCount"></p-sortIcon></th>
           <th pSortableColumn="isActive">وضعیت <p-sortIcon field="isActive"></p-sortIcon></th>
-          <th style="width:100px">عملیات</th>
+          <th style="width:100px">ویرایش</th>
         </tr>
       </ng-template>
 
@@ -67,7 +69,6 @@
           <td>
             <div class="action-group">
               <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="editPermission(perm)"></button>
-              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deletePermission(perm)"></button>
             </div>
           </td>
         </tr>

@@ -117,8 +117,18 @@ ToggleUnitStatus(data: any) {
     return this.http.post(`${this.apiUrl}Permission/Create`, data);
   }
 
+
+
   updatePermission(data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}Permission/Update`, data);
+    // ✅ فقط فیلدهای مورد نیاز را ارسال کن
+    const payload = {
+      id: data.id,
+      name: data.name,
+      category: data.category,
+      description: data.description || '',
+      isActive: data.isActive
+    };
+    return this.http.put(`${this.apiUrl}Permission/Update`, payload);
   }
 
   deletePermission(id: number): Observable<any> {

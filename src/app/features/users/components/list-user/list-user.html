@@ -1,4 +1,6 @@
 <div class="dashboard-container">
+  <p-toast position="top-right"></p-toast>
+
   <div class="main-card">
     
     <div class="table-header">
@@ -25,13 +27,7 @@
               (keyup.enter)="onSearch()"
               placeholder="نام، نام کاربری، ایمیل ..." 
               class="w-full" />
-            <button 
-              pButton 
-              icon="pi pi-search" 
-              class="search-btn"
-              (click)="onSearch()"
-              [loading]="searchLoading">
-            </button>
+       
           </div>
         </div>
     
@@ -64,6 +60,13 @@
         </div>
     
         <div class="filter-item filter-actions">
+          <button 
+          pButton 
+          icon="pi pi-search" 
+          class="search-btn"
+          (click)="onSearch()"
+          [loading]="searchLoading">
+        </button>
           <button 
             pButton 
             label="پاک کردن" 
@@ -111,7 +114,7 @@
           <th>نقش‌ها</th>
           <th pSortableColumn="isActive">وضعیت <p-sortIcon field="isActive"></p-sortIcon></th>
           <th>تاریخ ایجاد</th>
-          <th style="width:80px">عملیات</th>
+          <th style="width:80px">ویرایش</th>
         </tr>
       </ng-template>
 

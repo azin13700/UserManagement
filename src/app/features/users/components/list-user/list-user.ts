@@ -237,21 +237,39 @@ onSearch() {
       contentStyle: { overflow: 'auto' },
       data: { mode: 'create' }
     });
-    ref?.onClose.subscribe(result => {
-      if (result) this.loadUsers();
+    ref?.onClose.subscribe((result) => {
+      if (result) {
+        this.loadUsers();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'موفق',
+          detail: 'کاربر با موفقیت ایجاد شد',
+          life: 4000
+        });
+      }
     });
   }
 
   editUser(user: User) {
     const ref = this.dialogService.open(UserForm, {
       header: 'ویرایش کاربر',
+      closable: true,  
+      closeOnEscape: true, 
       width: '80%',
       height:'96%',
       contentStyle: { overflow: 'auto' },
       data: { mode: 'edit', userId: user.userId }
     });
-    ref?.onClose.subscribe(result => {
-      if (result) this.loadUsers();
+    ref?.onClose.subscribe((result) => {
+      if (result) {
+        this.loadUsers();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'موفق',
+          detail: 'کاربر با موفقیت ویرایش شد',
+          life: 4000
+        });
+      }
     });
   }
 

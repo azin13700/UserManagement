@@ -122,12 +122,12 @@ export class UnitPage implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.showSuccess(this.isEditMode ? 'واحد/سازمان با موفقیت ویرایش شد' : ',واحد/سازمان با موفقیت ایجاد شد');
         this.loading = false;
         this.ref.close(true);
       },
       error: (err) => {
         this.loading = false;
+     
         let errorMsg = 'خطا در انجام عملیات';
         if (err.error?.errors) {
           errorMsg = Object.values(err.error.errors).flat().join(', ');
