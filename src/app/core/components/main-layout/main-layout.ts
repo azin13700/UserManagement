@@ -84,16 +84,22 @@ export class MainLayout implements OnInit {
         icon: 'pi pi-shield',
         routerLink: '/dashboard/list-role'
       });
-    }
+      if (permissions.includes('permission.View')) {
+        userManagementItems.push({
+          label: 'دسترسی‌های نقش',
+          icon: 'pi pi-key',
+          routerLink: '/dashboard/role-permission'
+        });
+      } }
   
-    if (permissions.includes('Role.Edit')) {
+    if (permissions.includes('workflow.View')) {
       userManagementItems.push({
-        label: 'دسترسی‌های نقش',
+        label: ' کارتابل من',
         icon: 'pi pi-key',
-        routerLink: '/dashboard/role-permission'
+        routerLink: '/dashboard/workflow'
       });
     }
-  
+    
     if (permissions.includes('Unit.View')) {
       userManagementItems.push({
         label: 'لیست واحدها',
@@ -101,7 +107,21 @@ export class MainLayout implements OnInit {
         routerLink: '/dashboard/list-unit'
       });
     }
-  
+    if (permissions.includes('Subject.View')) {
+      userManagementItems.push({
+        label: 'لیست موضوعات',
+        icon: 'pi pi-sitemap',
+        routerLink: '/dashboard/list-subject'
+      });
+    }
+    if (permissions.includes('Request.View')) {
+      userManagementItems.push({
+        label: ' ایجاد درخواست',
+        icon: 'pi pi-sitemap',
+        routerLink: '/dashboard/request'
+      });
+    }
+    
     this.items = [];
   
     if (userManagementItems.length > 0) {

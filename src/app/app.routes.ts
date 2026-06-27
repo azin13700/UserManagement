@@ -6,6 +6,9 @@ import { RolePermission } from "./features/permissions/role-permission/role-perm
 import { RoleList } from "./features/roles/role-list/role-list";
 import { UnitList } from "./features/units/unit-list/unit-list";
 import { ListUser } from "./features/users/components/list-user/list-user";
+import { ListSubject } from "./features/subject/list-subject/list-subject";
+import { RequestPage } from "./features/request/request-page/request-page";
+import { Dashboard } from "./features/dashboard/dashboard/dashboard";
 
 export const routes: Routes = [
   {
@@ -29,7 +32,13 @@ export const routes: Routes = [
       { path: 'role-permission', component: RolePermission },
       { path: 'list-role', component: RoleList },
       { path: 'list-unit', component: UnitList },
-      { path: '', redirectTo: 'list-user', pathMatch: 'full' }
+      { path: 'list-subject', component: ListSubject },
+      {path:'request',component:RequestPage},
+      { path: '', redirectTo: 'list-user', pathMatch: 'full' },
+      { 
+        path: 'workflow', 
+        component: Dashboard 
+      },
     ]
   }
 ];

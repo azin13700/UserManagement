@@ -1,0 +1,824 @@
+// ============================================================
+//  CHILDREN DIALOG - Colorful & Professional
+// ============================================================
+
+// ========== Colors ==========
+$primary: #0055a4;
+$primary-light: #1a6bb8;
+$primary-dark: #003d7a;
+$primary-gradient: linear-gradient(135deg, #0055a4 0%, #1a6bb8 100%);
+$accent: #00a3d6;
+$gold: #d4a843;
+$gold-light: #f5edd6;
+$purple: #7c3aed;
+$purple-light: #ede9fe;
+$rose: #f43f5e;
+$rose-light: #ffe4e6;
+$emerald: #10b981;
+$emerald-light: #d1fae5;
+$blue: #3b82f6;
+$blue-light: #dbeafe;
+$indigo: #4f46e5;
+$indigo-light: #e8e6ff;
+$teal: #0d9488;
+$teal-light: #d5f5f0;
+$white: #ffffff;
+$bg: #f1f5f9;
+$bg-card: #ffffff;
+$text-dark: #1a2a3a;
+$text-muted: #5a6a7a;
+$text-light: #8a9aaa;
+$border: #dce4ec;
+$shadow: 0 8px 30px rgba(0, 85, 164, 0.08);
+$shadow-hover: 0 12px 40px rgba(0, 85, 164, 0.12);
+
+// ============================================================
+//  DIALOG CONTENT
+// ============================================================
+.children-dialog-content {
+  padding: 0.5rem 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// ============================================================
+//  PARENT INFO - کارت رنگی
+// ============================================================
+.parent-info {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: $primary-gradient;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 20px rgba(0, 85, 164, 0.25);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $gold, $accent, $gold);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .parent-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 1;
+
+    i {
+      font-size: 1.4rem;
+      color: $gold;
+      background: rgba($gold, 0.15);
+      padding: 0.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba($gold, 0.1);
+    }
+
+    span {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $white;
+    }
+
+    .parent-id {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.15rem 0.7rem;
+      border-radius: 20px;
+    }
+  }
+
+  .parent-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 1;
+
+    i {
+      color: $gold;
+      margin-left: 0.3rem;
+    }
+
+    span {
+      color: $gold;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+  }
+}
+
+// ============================================================
+//  TABLE WRAPPER
+// ============================================================
+.children-table-wrapper {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid $border;
+  max-height: 420px;
+  overflow-y: auto;
+  background: $white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $primary-light;
+    border-radius: 10px;
+
+    &:hover {
+      background: $primary-dark;
+    }
+  }
+
+  // ===== TABLE =====
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+
+    // ===== HEADER =====
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+
+      tr {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+        th {
+          padding: 0.9rem 1.25rem;
+          text-align: right;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+          color: $text-muted;
+          border-bottom: 2px solid $border;
+
+          &:last-child {
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    // ===== BODY =====
+    tbody {
+      tr {
+        transition: all 0.25s ease;
+        border-bottom: 1px solid #f1f5f9;
+
+        &:hover {
+          background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%);
+        }
+
+        // ===== INACTIVE ROW - رنگی =====
+        &.inactive-child {
+          background: $rose-light;
+
+          &:hover {
+            background: #fcd5d8;
+          }
+
+          td {
+            .child-title {
+              color: $rose;
+              text-decoration: line-through;
+              opacity: 0.7;
+            }
+
+            .child-status {
+              background: $rose-light;
+              color: $rose;
+              border-color: #f5c6c6;
+            }
+          }
+        }
+
+        td {
+          padding: 0.8rem 1.25rem;
+          vertical-align: middle;
+          font-size: 0.95rem;
+
+          &:last-child {
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ============================================================
+//  CHILD ITEMS
+// ============================================================
+.child-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  i {
+    font-size: 1rem;
+    color: $primary-light;
+    background: rgba(0, 85, 164, 0.08);
+    padding: 0.35rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+
+    &:hover {
+      background: rgba($gold, 0.15);
+      color: $gold;
+      transform: rotate(-8deg);
+    }
+  }
+
+  .child-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $text-dark;
+  }
+}
+
+// ============================================================
+//  STATUS BADGE - رنگی
+// ============================================================
+.child-status {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  display: inline-block;
+  border: 1px solid transparent;
+
+  &.active-status {
+    background: $emerald-light;
+    color: #065f46;
+    border-color: #86efac;
+
+    &::before {
+      content: '● ';
+      color: $emerald;
+      font-size: 0.6rem;
+    }
+  }
+
+  &.inactive-status {
+    background: $rose-light;
+    color: #9f1239;
+    border-color: #fca5a5;
+
+    &::before {
+      content: '● ';
+      color: $rose;
+      font-size: 0.6rem;
+    }
+  }
+}
+
+// ============================================================
+//  ACTION BUTTONS - رنگ‌های متنوع
+// ============================================================
+.child-actions {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: center;
+
+  ::ng-deep .p-button {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+
+    .p-button-icon {
+      font-size: 0.85rem;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    // 🔵 دکمه ویرایش - آبی
+    &.edit-btn {
+      color: $blue !important;
+
+      &:hover {
+        color: $white !important;
+        background: $blue !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+    }
+
+    // 🔴 دکمه حذف - قرمز رز
+    &.delete-btn {
+      color: $rose !important;
+
+      &:hover {
+        color: $white !important;
+        background: $rose !important;
+        box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+      }
+    }
+
+    // 🟣 دکمه مشاهده - بنفش
+    &.view-btn {
+      color: $purple !important;
+
+      &:hover {
+        color: $white !important;
+        background: $purple !important;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      }
+    }
+
+    // 🟢 دکمه ذخیره - سبز
+    &.save-btn {
+      color: $emerald !important;
+
+      &:hover {
+        color: $white !important;
+        background: $emerald !important;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+    }
+  }
+}
+
+// ============================================================
+//  LOADING
+// ============================================================
+.children-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.5rem;
+  color: $text-muted;
+
+  i {
+    font-size: 1.5rem;
+    color: $accent;
+    animation: spin 1s linear infinite;
+  }
+
+  span {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================================
+//  EMPTY STATE
+// ============================================================
+.no-children {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  color: $text-light;
+
+  i {
+    font-size: 3rem;
+    color: #dce4ec;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: $text-muted;
+  }
+
+  .empty-hint {
+    font-size: 0.8rem;
+    color: $text-light;
+    margin-top: 0.25rem;
+  }
+}
+
+// ============================================================
+//  DIALOG FOOTER
+// ============================================================
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  ::ng-deep .p-button {
+    border-radius: 10px;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    &.p-button-outlined {
+      background: transparent;
+      border: 2px solid $border;
+      color: $text-muted;
+
+      &:hover {
+        background: $bg;
+        border-color: $text-light;
+        color: $text-dark;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.p-button-primary {
+      background: $primary-gradient !important;
+      border: none !important;
+      box-shadow: 0 4px 15px rgba(0, 85, 164, 0.2);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 85, 164, 0.3);
+      }
+    }
+  }
+}
+
+// ============================================================
+//  ANIMATIONS
+// ============================================================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.children-table-wrapper tbody tr {
+  animation: fadeInUp 0.3s ease both;
+}
+
+.children-table-wrapper tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.children-table-wrapper tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.children-table-wrapper tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.children-table-wrapper tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.children-table-wrapper tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+// ============================================================
+//  RESPONSIVE
+// ============================================================
+@media (max-width: 768px) {
+  .parent-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .children-table-wrapper {
+    max-height: 300px;
+
+    table {
+      font-size: 0.85rem;
+
+      thead tr th,
+      tbody tr td {
+        padding: 0.4rem 0.6rem;
+      }
+    }
+  }
+
+  .child-actions ::ng-deep .p-button {
+    width: 28px;
+    height: 28px;
+
+    .p-button-icon {
+      font-size: 0.7rem;
+    }
+  }
+
+  .dialog-footer {
+    flex-direction: column-reverse;
+
+    ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// ============================================================
+//  DIALOG OVERRIDES
+// ============================================================
+::ng-deep .p-dialog {
+  .p-dialog-header {
+    background:linear-gradient(
+      135deg,
+      #f8fafc 0%,
+      #eef2ff 100%);
+    color: #1667b5  !important;
+    padding: 1.25rem 1.5rem !important;
+    border-radius: 16px 16px 0 0 !important;
+
+    .p-dialog-title {
+      font-size: 1.2rem !important;
+      font-weight: 700 !important;
+    }
+
+    .p-dialog-header-icon {
+      color: rgba(255, 255, 255, 0.7) !important;
+      border-radius: 8px;
+      width: 2rem;
+      height: 2rem;
+
+      &:hover {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: 1.25rem 1.5rem !important;
+    background: $white !important;
+  }
+
+  .p-dialog-footer {
+    padding: 0.75rem 1.5rem !important;
+    border-top: 1px solid $border !important;
+    background: $bg !important;
+    border-radius: 0 0 16px 16px !important;
+  }
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid $border;
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .toolbar-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $text-dark;
+
+      i {
+        color: $primary-light;
+        margin-left: 0.3rem;
+      }
+    }
+
+    .toolbar-count {
+      font-size: 0.7rem;
+      color: $text-light;
+      background: $bg;
+      padding: 0.1rem 0.5rem;
+      border-radius: 20px;
+    }
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .add-child-btn {
+      background: $primary-gradient !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 0.4rem 1rem !important;
+      font-size: 0.75rem !important;
+      font-weight: 600 !important;
+      color: $white !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0, 85, 164, 0.25) !important;
+      }
+
+      i {
+        font-size: 0.7rem !important;
+        margin-left: 0.3rem !important;
+      }
+    }
+  }
+}
+
+// ============================================================
+//  CHILD SUBJECTS COUNT
+// ============================================================
+.child-subjects-count {
+  font-size: 0.75rem;
+  color: $text-muted;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  i {
+    font-size: 0.7rem;
+    color: $primary-light;
+  }
+}
+
+
+.add-child-form {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  border-radius: 12px;
+  border-right: 3px solid $primary;
+  animation: slideDown 0.3s ease both;
+
+  .add-form-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .add-form-input {
+    flex: 1;
+    position: relative;
+    min-width: 200px;
+
+    .input-icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $primary-light;
+      font-size: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem 2.5rem 0.6rem 1rem;
+      border: 1px solid $border;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      background: $white;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+      }
+
+      &::placeholder {
+        color: $text-light;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .add-form-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+
+    ::ng-deep .p-button {
+      border-radius: 10px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      &.save-btn {
+        background: $primary-gradient !important;
+        border: none !important;
+        color: $white !important;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 85, 164, 0.2);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      &.cancel-btn {
+        background: transparent;
+        border: 1px solid $border;
+        color: $text-muted;
+
+        &:hover {
+          background: $bg;
+          border-color: $text-light;
+        }
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================================
+//  TABLE TOOLBAR
+// ============================================================
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid $border;
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .toolbar-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $text-dark;
+
+      i {
+        color: $primary-light;
+        margin-left: 0.3rem;
+      }
+    }
+
+    .toolbar-count {
+      font-size: 0.7rem;
+      color: $text-light;
+      background: $bg;
+      padding: 0.1rem 0.5rem;
+      border-radius: 20px;
+    }
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .add-child-btn {
+      background: $primary-gradient !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 0.4rem 1rem !important;
+      font-size: 0.75rem !important;
+      font-weight: 600 !important;
+      color: $white !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0, 85, 164, 0.25) !important;
+      }
+
+      i {
+        font-size: 0.7rem !important;
+        margin-left: 0.3rem !important;
+      }
+    }
+  }
+}

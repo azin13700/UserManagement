@@ -1,0 +1,223 @@
+<div class="dashboard-container">
+    <p-toast position="top-right"></p-toast>
+  
+    <div class="main-card">
+      
+      <!-- ====== HEADER ====== -->
+      <div class="table-header">
+        <div class="header-title">
+          <h1>
+            <i class="pi pi-inbox"></i>
+            کارتابل من
+          </h1>
+          <p>مدیریت و پیگیری درخواست‌های واحد {{ userUnitName }}</p>
+        </div>
+        <div class="header-actions">
+          <button
+            (click)="refresh()"
+            pButton
+            icon="pi pi-refresh"
+            label="بروزرسانی"
+            class="refresh-btn"
+          ></button>
+        </div>
+      </div>
+  
+      <!-- ====== آمار ====== -->
+      <!-- <div class="statistics-row">
+        <div class="stat-item total">
+          <div class="stat-icon">
+            <i class="pi pi-inbox"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{      this.totalRecords }}</span>
+            <span class="stat-label">کل درخواست‌ها</span>
+          </div>
+        </div>
+        <div class="stat-item pending">
+          <div class="stat-icon">
+            <i class="pi pi-clock"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ statistics.pending }}</span>
+            <span class="stat-label">در انتظار</span>
+          </div>
+        </div>
+        <div class="stat-item in-progress">
+          <div class="stat-icon">
+            <i class="pi pi-spin pi-spinner"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ statistics.inProgress }}</span>
+            <span class="stat-label">در حال بررسی</span>
+          </div>
+        </div>
+        <div class="stat-item approved">
+          <div class="stat-icon">
+            <i class="pi pi-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ statistics.approved }}</span>
+            <span class="stat-label">تایید شده</span>
+          </div>
+        </div>
+        <div class="stat-item rejected">
+          <div class="stat-icon">
+            <i class="pi pi-times-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ statistics.rejected }}</span>
+            <span class="stat-label">رد شده</span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="filters-section">
+        <div class="filters-row">
+          <div class="filter-item search-global">
+            <label>جستجو</label>
+            <div class="search-wrapper">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="searchValue"
+                (input)="applyFilters()"
+                placeholder="جستجو در درخواست‌ها..."
+              />
+            </div>
+          </div>
+          <div class="filter-item">
+            <label>وضعیت</label>
+            <p-dropdown
+              [options]="statusOptions"
+              [(ngModel)]="selectedStatus"
+              (onChange)="applyFilters()"
+              placeholder="همه"
+              styleClass="w-full"
+            ></p-dropdown>
+          </div>
+          <div class="filter-item filter-actions">
+            <button
+              pButton
+              label="پاک کردن فیلترها"
+              icon="pi pi-filter-slash"
+              class="p-button-outlined"
+              (click)="searchValue=''; selectedStatus=''; applyFilters()"
+            ></button>
+          </div>
+        </div>
+      </div> -->
+  
+      <!-- ====== TABLE ====== -->
+      <p-table 
+        [value]="getPaginatedRequests()"
+        [rows]="rowsPerPage" 
+        [totalRecords]="totalRecords" 
+        [paginator]="true" 
+        [rowHover]="true" 
+        dataKey="id" 
+        [showCurrentPageReport]="true" 
+        [rowsPerPageOptions]="[10,25,50]" 
+        (onPage)="onPageChange($event)"
+        selectionMode="multiple" 
+        [(selection)]="selectedRequests" 
+        [loading]="loading"
+      >
+        
+        <ng-template pTemplate="caption">
+          <div class="table-caption">
+            <div class="total-info">
+              <i class="pi pi-info-circle"></i> 
+              <span>نمایش {{ filteredRequests.length }} درخواست</span>
+            </div>
+          </div>
+        </ng-template>
+  
+        <ng-template pTemplate="header">
+          <tr>
+            <th>کد</th>
+    
+            <th>موضوع</th>
+            
+            <th>زیرموضوع</th>
+            <th>واحد</th>
+            <th>توضیحات</th>
+  
+            <th>تاریخ</th>
+            <!-- <th>نمایش درخواست</th> -->
+        
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="body" let-request>
+          <tr> 
+             <td>
+            <span class="subject-title">{{ request.id }}</span>
+          </td>
+            <td>
+                <span class="subject-title">{{ request.subjectTitle }}</span>
+              </td>
+              <td>
+                <span class="subject-title">{{ request.subSubjectTitle }}</span>
+                
+              </td>  
+              <td>
+                <span class="subject-title">{{ request.unitName }}</span>
+              </td>
+            <!-- <td>
+               
+              -->
+           
+            <td>
+              <span class="request-description">{{ request.description | slice:0:40 }}{{ request.description?.length > 40 ? '...' : '' }}</span>
+            </td>
+       
+            <td>
+              <span class="date-text">{{ request.createdDate | date:'yyyy/MM/dd' }}</span>
+            </td>
+            <!-- <td>
+              <div class="action-group">
+                <button 
+                  pButton 
+                  icon="pi pi-eye" 
+                  class="p-button-rounded p-button-text view-btn" 
+                  (click)="viewDetails(request)"
+                  pTooltip="مشاهده جزئیات"
+                ></button>
+                <button 
+                  *ngIf="request.canEdit"
+                  pButton 
+                  icon="pi pi-check" 
+                  class="p-button-rounded p-button-text approve-btn" 
+                  (click)="changeStatus(request, 'تایید شده')"
+                  pTooltip="تایید"
+                ></button>
+                <button 
+                  *ngIf="request.canEdit"
+                  pButton 
+                  icon="pi pi-times" 
+                  class="p-button-rounded p-button-text reject-btn" 
+                  (click)="changeStatus(request, 'رد شده')"
+                  pTooltip="رد"
+                ></button>
+              </div>
+            </td> -->
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="empty-row">
+              <div class="empty-content">
+                <i class="pi pi-inbox"></i>
+                <p>هیچ درخواستی در کارتابل شما وجود ندارد</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+  
+      </p-table>
+    </div>
+  </div>
+  

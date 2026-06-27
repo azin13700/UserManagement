@@ -1,0 +1,141 @@
+<div class="children-dialog-content">
+    
+  <div class="parent-info" *ngIf="selectedSubject">
+    <div class="parent-badge">
+      <i class="pi pi-folder-open"></i>
+      <span>{{ selectedSubject.title }}</span>
+      <span class="parent-id">#{{ selectedSubject.subjectId }}</span>
+    </div>
+    <div class="parent-desc">
+      <i class="pi pi-list"></i>
+      تعداد زیرمجموعه‌ها: <span>{{ childrenList.length }}</span>
+    </div>
+  </div>
+
+  <div class="table-toolbar">
+    <div class="toolbar-left">
+      <span class="toolbar-title">
+        <i class="pi pi-list"></i>
+        لیست زیرمجموعه‌ها
+      </span>
+      <span class="toolbar-count" *ngIf="childrenList.length > 0">
+        {{ childrenList.length }} مورد
+      </span>
+    </div>
+    <div class="toolbar-right">
+      <button 
+        pButton 
+        [icon]="showAddInput ? 'pi pi-minus' : 'pi pi-plus'" 
+        [label]="showAddInput ? 'بستن' : 'افزودن زیرمجموعه'" 
+        class="add-child-btn"
+        (click)="toggleAddInput()"
+      ></button>
+    </div>
+  </div>
+
+  <div class="add-child-form" *ngIf="showAddInput">
+    <form class="add-form-row"[formGroup]="subjectForm" (ngSubmit)="saveNewChild()"    >
+      <div class="add-form-input">
+        <i class="pi pi-plus-circle input-icon"></i>
+        <input 
+          pInputText 
+          formControlName="title" 
+
+          type="text" 
+          placeholder="عنوان زیرمجموعه جدید را وارد کنید..."
+          autofocus
+        />
+      </div>
+      <div class="add-form-actions">
+        <button 
+          pButton 
+          type="submit" 
+          label="ثبت" 
+          icon="pi pi-save" 
+          class="save-btn"
+       
+        ></button>
+        <button 
+          pButton 
+          label="انصراف" 
+          icon="pi pi-times" 
+          class="p-button-outlined cancel-btn"
+          (click)="cancelAddChild()"
+        ></button>
+      </div>
+    </form>
+  </div>
+
+  <div class="children-loading" *ngIf="loading">
+    <i class="pi pi-spin pi-spinner"></i>
+    <span>در حال بارگذاری...</span>
+  </div>
+
+  <div class="children-table-wrapper" *ngIf="!loading">
+    <table *ngIf="childrenList.length > 0; else noChildren">
+      <thead>
+        <tr>
+          <th style="width:40%">عنوان</th>
+          <th style="width:20%">وضعیت</th>
+          <th style="width:20%; text-align:center">عملیات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let child of childrenList" [class.inactive-child]="!child.isActive">
+          <td>
+            <div class="child-info">
+              <i class="pi pi-file"></i>
+              <span class="child-title">{{ child.title }}</span>
+            </div>
+          </td>
+      
+          <td>
+            <button 
+            pButton
+            [label]="child.isActive ? 'فعال' : 'غیرفعال'"
+            [icon]="child.isActive ? 'pi pi-check-circle' : 'pi pi-ban'"
+            [class]="child.isActive ? 'status-btn active' : 'status-btn inactive'"
+            (click)="toggleSubjectStatus(child)"
+        
+          ></button>
+          </td>
+          <td>
+            <div class="child-actions">
+              <button 
+                pButton 
+                icon="pi pi-pencil" 
+                class="p-button-rounded p-button-text p-button-sm edit-btn" 
+                (click)="editSubject(child)"
+                pTooltip="ویرایش"
+              ></button>
+        
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card flex justify-center">
+    <p-toast />
+    <p-confirmdialog>
+        <ng-template #message let-message>
+            @if (message) {
+                <div class="flex flex-col items-center w-full gap-4 border-b border-surface-200 dark:border-surface-700">
+                    <i [ngClass]="message.icon" class="!text-6xl text-primary-500"></i>
+                    <p>{{ message.message }}</p>
+                </div>
+            }
+        </ng-template>
+    </p-confirmdialog>
+    <p-button (click)="confirm()" label="Save" />
+</div>
+  <!-- Empty -->
+  <ng-template #noChildren>
+    <div class="no-children">
+      <i class="pi pi-inbox"></i>
+      <p>این موضوع هیچ زیرمجموعه‌ای ندارد</p>
+      <span class="empty-hint">برای افزودن زیرمجموعه، روی دکمه «افزودن زیرمجموعه» کلیک کنید</span>
+    </div>
+  </ng-template>
+
+</div>

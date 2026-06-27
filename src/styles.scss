@@ -41,13 +41,33 @@ $shadow-hover: 0 12px 40px rgba(0, 85, 164, 0.1);
 $success: #10b981;
 $danger: #ef4444;
 $warning: #f59e0b;
-
+$accent: #00a3d6;
+$gold: #d4a843;
+$gold-light: #f5edd6;
+$purple: #7c3aed;
+$purple-light: #ede9fe;
+$rose: #f43f5e;
+$rose-light: #ffe4e6;
+$emerald: #10b981;
+$emerald-light: #d1fae5;
+$blue: #3b82f6;
+$blue-light: #dbeafe;
+$indigo: #4f46e5;
+$indigo-light: #e8e6ff;
+$teal: #0d9488;
+$teal-light: #d5f5f0;
+$white: #ffffff;
+$bg: #f1f5f9;
+$bg-card: #ffffff;
+$text-dark: #1a2a3a;
+$text-muted: #5a6a7a;
 // ============================================================
 //  CONTAINER
 // ============================================================
 .dashboard-container {
   padding: 1.5rem;
   background: $bg;
+  
   min-height: 100vh;
 }
 
@@ -85,7 +105,7 @@ $warning: #f59e0b;
     h1 {
       font-size: 1.4rem;
       margin: 0;
-      color: $text-dark;
+      color:  #1a2a3a;;
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -161,7 +181,7 @@ $warning: #f59e0b;
     width: 100%;
     outline: none;
     font-size: 0.85rem;
-    color: $text-dark;
+    color: #1a2a3a;
 
     &::placeholder {
       color: $text-light;
@@ -175,7 +195,7 @@ $warning: #f59e0b;
 ::ng-deep .p-datatable {
   .p-datatable-thead > tr > th {
     background: #f8fafc;
-    color: $text-dark;
+    color:  #1a2a3a;
     padding: 0.85rem 1rem;
     border-bottom: 2px solid $border;
     font-weight: 600;
@@ -202,7 +222,7 @@ $warning: #f59e0b;
 // ============================================================
 .unit-name-text {
   font-weight: 600;
-  color: $text-dark;
+  color:  #1a2a3a;
 }
 
 .unit-desc-text {
@@ -232,6 +252,45 @@ $warning: #f59e0b;
 // ============================================================
 //  STATUS BUTTON
 // ============================================================
+// .status-btn {
+//   border-radius: 20px !important;
+//   padding: 0.25rem 0.9rem !important;
+//   font-size: 0.7rem !important;
+//   font-weight: 600 !important;
+//   min-width: 72px !important;
+//   border: none !important;
+
+//   i {
+//     font-size: 0.7rem !important;
+//     margin-left: 0.3rem !important;
+//   }
+
+//   &.active {
+//     background: $success !important;
+//     color: #ffffff !important;
+
+//     &:hover {
+//       background: darken($success, 10%) !important;
+//       transform: scale(1.04);
+//       box-shadow: 0 4px 12px rgba($success, 0.3);
+//     }
+//   }
+
+//   &.inactive {
+//     background: $danger !important;
+//     color: #ffffff !important;
+
+//     &:hover {
+//       background: darken($danger, 10%) !important;
+//       transform: scale(1.04);
+//       box-shadow: 0 4px 12px rgba($danger, 0.3);
+//     }
+//   }
+
+//   &:disabled {
+//     opacity: 0.6 !important;
+//   }
+// }
 .status-btn {
   border-radius: 20px !important;
   padding: 0.25rem 0.9rem !important;
@@ -250,6 +309,7 @@ $warning: #f59e0b;
     color: #ffffff !important;
 
     &:hover {
+      // ✅ استفاده از darken معمولی (هنوز کار می‌کند)
       background: darken($success, 10%) !important;
       transform: scale(1.04);
       box-shadow: 0 4px 12px rgba($success, 0.3);
@@ -261,6 +321,7 @@ $warning: #f59e0b;
     color: #ffffff !important;
 
     &:hover {
+      // ✅ استفاده از darken معمولی
       background: darken($danger, 10%) !important;
       transform: scale(1.04);
       box-shadow: 0 4px 12px rgba($danger, 0.3);
@@ -271,7 +332,6 @@ $warning: #f59e0b;
     opacity: 0.6 !important;
   }
 }
-
 // ============================================================
 //  ACTION GROUP
 // ============================================================
@@ -280,27 +340,88 @@ $warning: #f59e0b;
   gap: 0.25rem;
   justify-content: center;
 
-  ::ng-deep .p-button.p-button-text {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    color: $text-muted;
-    transition: all 0.2s ease;
+  // ::ng-deep .p-button.p-button-text {
+  //   width: 34px;
+  //   height: 34px;
+  //   border-radius: 8px;
+  //   color: $text-muted;
+  //   transition: all 0.2s ease;
+
+  //   &:hover {
+  //     background: #f1f5f9;
+  //   }
+  // }
+
+  // .edit-btn:hover {
+  //   color: $primary !important;
+  //   background: #eef2ff !important;
+  // }
+
+  // .delete-btn:hover {
+  //   color: $danger !important;
+  //   background: #fef2f2 !important;
+  // }
+
+  
+
+::ng-deep .p-button.p-button-text  {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px !important;
+  transition: all 0.3s ease !important;
+
+  .p-button-icon {
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  // 🔵 دکمه ویرایش - آبی
+  &.edit-btn {
+    color: $blue !important;
 
     &:hover {
-      background: #f1f5f9;
+      color: $white !important;
+      background: $blue !important;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
   }
 
-  .edit-btn:hover {
-    color: $primary !important;
-    background: #eef2ff !important;
+  // 🔴 دکمه حذف - قرمز رز
+  &.delete-btn {
+    color: $rose !important;
+
+    &:hover {
+      color: $white !important;
+      background: $rose !important;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+    }
   }
 
-  .delete-btn:hover {
-    color: $danger !important;
-    background: #fef2f2 !important;
+  // 🟣 دکمه مشاهده - بنفش
+  &.view-btn {
+    color: $purple !important;
+
+    &:hover {
+      color: $white !important;
+      background: $purple !important;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
   }
+
+  // 🟢 دکمه ذخیره - سبز
+  &.save-btn {
+    color: $emerald !important;
+
+    &:hover {
+      color: $white !important;
+      background: $emerald !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+  }
+}
 }
 
 // ============================================================
@@ -346,7 +467,7 @@ $warning: #f59e0b;
 
     span {
       font-weight: 600;
-      color: $text-dark;
+      color:  #1a2a3a;
     }
   }
 
@@ -623,3 +744,181 @@ $warning: #f59e0b;
     }
   }
 }
+
+// subject-list.scss
+
+.subject-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: 1rem;
+  }
+
+  .subject-title {
+    font-weight: 500;
+    color: $text-dark;
+  }
+
+  .subject-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 20px;
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 600;
+  }
+}
+
+.parent-text {
+  color: $text-muted;
+  font-size: 0.85rem;
+}
+
+// ===== ردیف غیرفعال =====
+.inactive-row {
+  opacity: 0.6;
+  
+  td {
+    text-decoration: line-through;
+  }
+}
+
+// ===== دکمه وضعیت =====
+.status-btn {
+  border-radius: 20px !important;
+  padding: 0.25rem 0.9rem !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  min-width: 70px !important;
+
+  &.active {
+    background: #10b981 !important;
+    color: white !important;
+  }
+
+  &.inactive {
+    background: #ef4444 !important;
+    color: white !important;
+  }
+}
+
+// ===== عملیات =====
+.action-group {
+  display: flex;
+  gap: 0.25rem;
+
+  .edit-btn:hover {
+    color: #3b82f6 !important;
+    background: #eef2ff !important;
+  }
+
+  .delete-btn:hover {
+    color: #ef4444 !important;
+    background: #fef2f2 !important;
+  }
+}
+
+// ===== هدر =====
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid $border;
+
+  .header-title {
+    h1 {
+      font-size: 1.4rem;
+      margin: 0;
+      color: $text-dark;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+
+      i {
+        color: $primary;
+      }
+    }
+
+    p {
+      margin: 0.25rem 0 0;
+      color: $text-muted;
+      font-size: 0.85rem;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+  }
+}
+
+// ===== جستجو =====
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 0.4rem 0.8rem;
+
+  i {
+    color: $text-light;
+    margin-left: 0.5rem;
+  }
+
+  input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 0.85rem;
+    color: $text-dark;
+
+    &::placeholder {
+      color: $text-light;
+    }
+  }
+}
+
+// ===== دکمه اصلی =====
+.action-btn {
+  background: $primary-gradient !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.55rem 1.3rem !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 85, 164, 0.25) !important;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.children-table-wrapper tbody tr {
+  animation: fadeInUp 0.3s ease both;
+}
+
+.children-table-wrapper tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.children-table-wrapper tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.children-table-wrapper tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.children-table-wrapper tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.children-table-wrapper tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+

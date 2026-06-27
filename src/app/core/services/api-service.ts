@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { PermissionDto } from '../models/PermissionDto';
 import { LoginRequest, LoginResponse, SelectRoleRequest, SelectRoleResponse } from '../models/LoginRequest';
 import { UnitDto } from '../models/UnitDto';
+import { RequestWorkFlowDto } from '../models/RequestWorkFlowDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-
 
 
   readonly apiUrl = 'https://localhost:7178/api/';
@@ -120,7 +120,6 @@ ToggleUnitStatus(data: any) {
 
 
   updatePermission(data: any): Observable<any> {
-    // ✅ فقط فیلدهای مورد نیاز را ارسال کن
     const payload = {
       id: data.id,
       name: data.name,
@@ -152,4 +151,47 @@ AssignPermissionsToRole(roleId: number, permissionIds: number[]){
   selectRole(data: SelectRoleRequest): Observable<SelectRoleResponse> {
     return this.http.post<SelectRoleResponse>(`${this.apiUrl}Auth/SelectRole`, data);
   }
+  GetAllSubject(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl + 'Subject');
+  }
+
+  getAllSubjects(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}Subject/GetAll`);
+}
+
+getSubjectById(id: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}Subject/${id}`);
+}
+
+createSubject(formData: FormData): Observable<any> {
+  return this.http.post(`${this.apiUrl}Subject`, formData);
+}
+
+
+updateSubject(id: number, formData: FormData): Observable<any> {
+  return this.http.put(this.apiUrl + `Subject/${id}`, formData);
+}
+
+
+getChildren(parentId: number): Observable<any[]> {
+  return this.http.get<any[]>(this.apiUrl + `Subject/${parentId}/children`);
+}
+
+GetSubSubjects(subjectId: number) {
+  return this.http.get<any[]>(
+    `${this.apiUrl}subject/${subjectId}/subsubjects`
+  );
+}
+CreateRequest(formData: FormData): Observable<any> {
+  return this.http.post(`${this.apiUrl}request`, formData);
+}
+ToggleSubjectStatus(data: any) {
+  var headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+  return this.http.post(this.apiUrl + 'subject/ChangeStatus', JSON.stringify(data) , {headers: headers});
+}
+getWorkFlow(id: number): Observable<RequestWorkFlowDto[]> {
+  return this.http.get<RequestWorkFlowDto[]>(
+    `${this.apiUrl}Request/work-flow/${id}`
+  );
+}
 }

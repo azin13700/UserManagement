@@ -1,0 +1,225 @@
+<div class="dashboard-container">
+  <p-toast position="top-right"></p-toast>
+
+  <div class="main-card">
+    
+    <div class="table-header">
+      <div class="header-title">
+        <h1>
+          <i class="pi pi-sitemap"></i>
+          مدیریت موضوعات
+        </h1>
+        <p>مشاهده و مدیریت تمامی موضوعات و زیرمجموعه‌های سیستم</p>
+      </div>
+
+      <div class="header-actions">
+        <div class="search-wrapper">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchValue"
+            (input)="onSearch($event)"
+            placeholder="جستجوی موضوع..."
+          />
+        </div>
+
+        <button
+          (click)="openNew()"
+          pButton
+          icon="pi pi-plus"
+          label="موضوع جدید"
+          class="action-btn"
+        ></button>
+      </div>
+    </div>
+
+    <p-table 
+      [value]="getPaginatedSubjects()"
+      [rows]="rowsPerPage" 
+      [totalRecords]="totalRecords" 
+      [paginator]="true" 
+      [rowHover]="true" 
+      dataKey="subjectId" 
+      [showCurrentPageReport]="true" 
+      [rowsPerPageOptions]="[10,25,50]" 
+      (onPage)="onPageChange($event)"
+      selectionMode="multiple" 
+      [(selection)]="selectedSubjects" 
+      [loading]="loading"
+    >
+      
+      <ng-template pTemplate="caption">
+        <div class="table-caption">
+          <div class="total-info">
+            <i class="pi pi-info-circle"></i> 
+            <span>مجموع موضوعات: {{ totalRecords }}</span>
+          </div>
+          <div class="refresh-btn" (click)="refresh()">
+            <i class="pi pi-refresh"></i>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+
+          <th pSortableColumn="title">عنوان موضوع <p-sortIcon field="title"></p-sortIcon></th>
+          <th >تخصیص زیرموضوعات </th>
+          <th pSortableColumn="isActive">وضعیت <p-sortIcon field="isActive"></p-sortIcon></th>
+          <th style="width:100px">عملیات</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-subject>
+        <tr [class.inactive-row]="subject.isActive === false">
+
+          <td>
+            <div class="subject-info">
+              <i class="pi pi-folder" [style.color]="subject.parentId === 0 ? '#f59e0b' : '#64748b'"></i>
+              <span class="subject-title">{{ subject.title }}</span>
+              <span class="subject-badge" *ngIf="subject.parentId === 0">ریشه</span>
+            </div>
+          </td>
+
+          <td>
+            <button 
+            pButton 
+            icon="pi pi-eye" 
+            class="p-button-rounded p-button-text view-btn" 
+            (click)="showChildren(subject)"
+            pTooltip="مشاهده زیرمجموعه‌ها"
+          ></button>
+      
+          </td>
+
+          <td>
+            <button 
+              pButton
+              [label]="subject.isActive ? 'فعال' : 'غیرفعال'"
+              [icon]="subject.isActive ? 'pi pi-check-circle' : 'pi pi-ban'"
+              [class]="subject.isActive ? 'status-btn active' : 'status-btn inactive'"
+              (click)="toggleSubjectStatus(subject)"
+              [loading]="statusLoading[subject.subjectId]"
+              [disabled]="statusLoading[subject.subjectId]"
+            ></button>
+          </td>
+
+          <td>
+            <div class="action-group">
+              <button 
+                pButton 
+                icon="pi pi-pencil" 
+                class="p-button-rounded p-button-text edit-btn" 
+                (click)="editSubject(subject)"
+                pTooltip="ویرایش موضوع"
+              ></button>
+      
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <div class="card flex justify-center">
+        <p-toast />
+        <p-confirmdialog>
+            <ng-template #message let-message>
+                @if (message) {
+                    <div class="flex flex-col items-center w-full gap-4 border-b border-surface-200 dark:border-surface-700">
+                        <i [ngClass]="message.icon" class="!text-6xl text-primary-500"></i>
+                        <p>{{ message.message }}</p>
+                    </div>
+                }
+            </ng-template>
+        </p-confirmdialog>
+     
+    </div>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="empty-row">
+            <div class="empty-content">
+              <i class="pi pi-folder-open"></i>
+              <p>هیچ موضوعی یافت نشد</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+
+
+<!-- ========================================================== -->
+<p-dialog
+  [(visible)]="childrenDialogVisible"
+  [header]="'زیرمجموعه‌های: ' + selectedSubject?.title"
+  [modal]="true"
+  [style]="{width: '600px', maxWidth: '95vw'}"
+  [draggable]="false"
+>
+  <div class="children-dialog-content">
+    
+    <!-- اطلاعات موضوع والد -->
+    <div class="parent-info" *ngIf="selectedSubject">
+      <div class="parent-badge">
+        <i class="pi pi-folder-open"></i>
+        <span>{{ selectedSubject.title }}</span>
+        <span class="parent-id">#{{ selectedSubject.subjectId }}</span>
+      </div>
+      <p class="parent-desc">تعداد زیرمجموعه‌ها: {{ childrenList.length }}</p>
+    </div>
+
+    <!-- لیست زیرمجموعه‌ها -->
+    <div class="children-list" *ngIf="childrenList.length > 0; else noChildren">
+      <div 
+        *ngFor="let child of childrenList" 
+        class="child-item"
+        [class.inactive-child]="!child.isActive"
+      >
+        <div class="child-info">
+          <i class="pi pi-file"></i>
+          <span class="child-title">{{ child.title }}</span>
+          <span class="child-status" [class.active-status]="child.isActive" [class.inactive-status]="!child.isActive">
+            {{ child.isActive ? 'فعال' : 'غیرفعال' }}
+          </span>
+        </div>
+        <div class="child-actions">
+          <button 
+            pButton 
+            icon="pi pi-pencil" 
+            class="p-button-rounded p-button-text p-button-sm" 
+            (click)="editSubject(child)"
+          ></button>
+   
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noChildren>
+      <div class="no-children">
+        <i class="pi pi-inbox"></i>
+        <p>این موضوع هیچ زیرمجموعه‌ای ندارد</p>
+      </div>
+    </ng-template>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <button 
+        pButton 
+        label="بستن" 
+        icon="pi pi-times" 
+        class="p-button-outlined"
+        (click)="childrenDialogVisible = false"
+      ></button>
+      <!-- <button 
+        pButton 
+        label="افزودن زیرمجموعه" 
+        icon="pi pi-plus" 
+        class="p-button-primary"
+        (click)="addChildToSubject()"
+      ></button> -->
+    </div>
+  </ng-template>
+</p-dialog>

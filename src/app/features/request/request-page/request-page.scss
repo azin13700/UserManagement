@@ -1,0 +1,443 @@
+// ============================================================
+//  REQUEST FORM - Professional Style
+// ============================================================
+
+$primary: #0055a4;
+$primary-light: #1a6bb8;
+$primary-dark: #003d7a;
+$primary-gradient: linear-gradient(135deg, #0055a4 0%, #1a6bb8 100%);
+$accent: #00a3d6;
+$gold: #d4a843;
+$white: #ffffff;
+$bg: #f1f5f9;
+$text-dark: #1a2a3a;
+$text-muted: #5a6a7a;
+$text-light: #8a9aaa;
+$border: #dce4ec;
+$shadow: 0 8px 30px rgba(0, 85, 164, 0.08);
+$shadow-hover: 0 12px 40px rgba(0, 85, 164, 0.12);
+$success: #10b981;
+$danger: #ef4444;
+
+// ============================================================
+//  CONTAINER
+// ============================================================
+.request-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //padding: 2rem;
+  background: $bg;
+}
+
+.request-card {
+  background: $white;
+  border-radius: 24px;
+  box-shadow: $shadow;
+  max-width: 750px;
+  width: 100%;
+  padding: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $primary, $accent, $gold);
+    border-radius: 24px 24px 0 0;
+  }
+}
+
+// ============================================================
+//  FORM HEADER
+// ============================================================
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid $border;
+
+  .form-header-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: $primary-gradient;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: $white;
+    box-shadow: 0 4px 15px rgba(0, 85, 164, 0.2);
+    flex-shrink: 0;
+  }
+
+  .form-header-title {
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: $text-muted;
+      margin: 0.25rem 0 0;
+    }
+  }
+}
+
+// ============================================================
+//  FORM
+// ============================================================
+.request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $text-dark;
+
+    .required {
+      color: $danger;
+      margin-right: 3px;
+    }
+  }
+
+  .input-wrapper {
+    position: relative;
+
+    .input-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-light;
+      font-size: 1rem;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .textarea-icon {
+      top: 1.2rem;
+      transform: none;
+    }
+  }
+
+  .hint-text {
+    font-size: 0.7rem;
+    color: $text-light;
+    margin-top: 0.15rem;
+  }
+
+  .char-count {
+    font-size: 0.7rem;
+    color: $text-light;
+    text-align: left;
+    margin-top: 0.15rem;
+  }
+}
+
+// ============================================================
+//  DROPDOWN STYLES
+// ============================================================
+::ng-deep {
+  .p-dropdown {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid $border;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $primary-light;
+    }
+
+    &.p-focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+    }
+
+    .p-dropdown-label {
+      padding: 0.7rem 2.8rem 0.7rem 1rem;
+      font-size: 0.85rem;
+      color: $text-dark;
+
+      &.p-placeholder {
+        color: $text-light;
+      }
+    }
+
+    .p-dropdown-trigger {
+      width: 2.5rem;
+      color: $text-light;
+    }
+
+    &.p-disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .p-dropdown-panel {
+    border-radius: 10px;
+    border: 1px solid $border;
+    box-shadow: $shadow;
+
+    .p-dropdown-items {
+      .p-dropdown-item {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        color: $text-dark;
+
+        &.p-highlight {
+          background: #eef2ff;
+          color: $primary;
+        }
+
+        &:hover {
+          background: #f8fafc;
+        }
+      }
+    }
+  }
+}
+
+.selected-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    color: $primary-light;
+    font-size: 0.85rem;
+  }
+}
+
+// ============================================================
+//  TEXTAREA
+// ============================================================
+::ng-deep .p-inputtextarea {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.8rem;
+  background: #f8fafc;
+  border: 1px solid $border;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: $text-dark;
+  transition: all 0.2s ease;
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+    background: $white;
+  }
+
+  &::placeholder {
+    color: $text-light;
+  }
+}
+
+// ============================================================
+//  PHOTO UPLOAD
+// ============================================================
+.photo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .photo-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid $border;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .remove-photo {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: $danger;
+      border: none;
+      color: $white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: darken($danger, 10%);
+        transform: scale(1.05);
+      }
+
+      i {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .photo-upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+
+    &.has-preview {
+      align-items: flex-start;
+    }
+
+    ::ng-deep .p-fileupload {
+      .p-button {
+        background: $primary-gradient !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.5rem 1.2rem !important;
+        font-weight: 500 !important;
+        font-size: 0.8rem !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          transform: translateY(-1px) !important;
+          box-shadow: 0 4px 12px rgba(0, 85, 164, 0.2) !important;
+        }
+
+        .p-button-icon {
+          font-size: 0.9rem !important;
+        }
+      }
+    }
+
+    .hint-text {
+      font-size: 0.7rem;
+      color: $text-light;
+    }
+  }
+}
+
+// ============================================================
+//  FORM ACTIONS
+// ============================================================
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid $border;
+
+  ::ng-deep .p-button {
+    border-radius: 10px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    &.cancel-btn {
+      background: transparent;
+      border: 1px solid $border;
+      color: $text-muted;
+
+      &:hover {
+        background: $bg;
+        border-color: $text-light;
+        color: $text-dark;
+      }
+    }
+
+    &.submit-btn {
+      background: $primary-gradient !important;
+      border: none !important;
+      color: $white !important;
+      box-shadow: 0 4px 15px rgba(0, 85, 164, 0.2);
+
+      &:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(0, 85, 164, 0.3) !important;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// ============================================================
+//  RESPONSIVE
+// ============================================================
+@media (max-width: 768px) {
+  .request-container {
+    padding: 1rem;
+  }
+
+  .request-card {
+    padding: 1.5rem;
+  }
+
+  .form-header {
+    .form-header-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.4rem;
+    }
+
+    .form-header-title {
+      h1 {
+        font-size: 1.15rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .photo-section {
+    .photo-preview {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}

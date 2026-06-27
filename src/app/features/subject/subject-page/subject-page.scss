@@ -1,0 +1,158 @@
+// subject-form.scss
+.form-container {
+    padding: 1.5rem;
+  }
+  
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+  
+      .required {
+        color: #ef4444;
+        margin-right: 3px;
+      }
+    }
+  
+    .input-wrapper {
+      position: relative;
+  
+      .input-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1rem;
+        z-index: 1;
+      }
+  
+      input, ::ng-deep .p-dropdown {
+        width: 100%;
+      }
+  
+      input {
+        padding: 0.7rem 2.5rem 0.7rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        background: white;
+  
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+  
+        &.ng-invalid.ng-touched {
+          border-color: #ef4444;
+        }
+      }
+  
+      ::ng-deep .p-dropdown {
+        .p-dropdown-label {
+          padding: 0.7rem 2.5rem 0.7rem 1rem;
+        }
+      }
+    }
+  
+    .error-message {
+      color: #ef4444;
+      font-size: 0.7rem;
+    }
+  
+    .hint-text {
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .status-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.25rem;
+  
+    .status-option {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem;
+      border-radius: 10px;
+      background: #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+  
+      i {
+        font-size: 1rem;
+      }
+  
+      span {
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+  
+      &:hover {
+        background: #e2e8f0;
+      }
+  
+      &.active {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+      }
+    }
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+  
+    button {
+      border-radius: 40px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+    }
+  }
+  
+  // Responsive
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 1rem;
+    }
+  
+    .status-buttons {
+      flex-direction: column;
+    }
+  
+    .form-actions {
+      flex-direction: column-reverse;
+  
+      button {
+        width: 100%;
+      }
+    }
+  }

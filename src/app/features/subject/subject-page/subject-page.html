@@ -1,0 +1,50 @@
+<form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+    <p-toast position="top-right"></p-toast>
+    
+    <div class="form-container">
+      
+      <div class="form-grid">
+        
+        <div class="form-field full-width">
+          <label for="title">
+            عنوان موضوع <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <i class="pi pi-tag input-icon"></i>
+            <input 
+              pInputText 
+              id="title" 
+              formControlName="title" 
+              placeholder="عنوان موضوع را وارد کنید"
+              [class.ng-invalid]="isInvalid('title')"
+              autocomplete="off" />
+          </div>
+          <small class="error-message" *ngIf="isInvalid('title')">
+            عنوان الزامی است (حداقل 2 کاراکتر)
+          </small>
+        </div>
+  
+  
+  
+      </div>
+    </div>
+  
+    <div class="form-actions">
+      <button 
+        type="button" 
+        pButton 
+        label="انصراف" 
+        icon="pi pi-times" 
+        class="p-button-outlined"
+        (click)="close()">
+      </button>
+      <button 
+        type="submit" 
+        pButton 
+        [label]="isEditMode ? 'ویرایش موضوع' : 'ایجاد موضوع'"
+        [icon]="isEditMode ? 'pi pi-pencil' : 'pi pi-plus'"
+        [loading]="loading"
+        class="p-button-primary">
+      </button>
+    </div>
+  </form>

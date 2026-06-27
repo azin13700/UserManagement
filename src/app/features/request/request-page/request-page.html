@@ -1,0 +1,191 @@
+<div class="request-container">
+  <p-toast position="top-right"></p-toast>
+
+    <div class="request-card">
+            <div class="form-header">
+        <div class="form-header-icon">
+          <i class="pi pi-clipboard"></i>
+        </div>
+        <div class="form-header-title">
+          <h1>ثبت درخواست جدید</h1>
+          <p>لطفاً اطلاعات درخواست خود را تکمیل کنید</p>
+        </div>
+      </div>
+  
+      <form (ngSubmit)="onSubmit()"  [formGroup]="userForm" class="request-form">
+        
+        <div class="form-group">
+          <label for="subject">
+            موضوع <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <!-- <i class="pi pi-tag input-icon"></i> -->
+
+            <p-select 
+            fluid 
+            size="small"
+            class="w-full md:w-56"
+            [options]="subjects" 
+            formControlName="subjectId"
+            optionLabel="title" 
+            optionValue="subjectId"       
+            placeholder="انتخاب موضوع"
+            [showClear]="true" 
+            [filter]="true"
+            (onChange)="onSubjectChange($event)"
+            
+            >
+          </p-select>
+        
+        </div>
+        <!-- <small class="hint-text" >لطفاً موضوع درخواست را انتخاب کنید</small>  -->
+        </div>
+  
+        <!-- زیرموضوع -->
+        <div class="form-group">
+          <label for="subSubject">
+            زیرموضوع <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <!-- <i class="pi pi-sitemap input-icon"></i> -->
+            
+            <p-select 
+            fluid 
+            size="small"
+            [options]="filteredSubSubjects" 
+            formControlName="subSubjectId"
+            optionLabel="title" 
+            optionValue="subjectId"
+            placeholder="انتخاب زیرموضوع"
+            [showClear]="true" 
+            [filter]="true"
+            (onChange)="onSubSubjectChange($event)">
+          </p-select>
+            <!--
+          <small class="hint-text" *ngIf="!selectedSubject">ابتدا موضوع را انتخاب کنید</small> -->
+        </div>
+  
+        <!-- متن درخواست -->
+        <div class="form-group">
+          <label for="description">
+            متن درخواست <span class="required">*</span>
+          </label>
+          <div class="input-wrapper textarea-wrapper">
+            <!-- <i class="pi pi-align-left input-icon textarea-icon"></i> -->
+            <textarea
+            formControlName="description"
+              id="description"
+              pInputTextarea
+              fluid
+              rows="5"
+              size="small"
+              [autoResize]="true"
+              placeholder="متن درخواست خود را با جزئیات کامل وارد کنید..."
+              class="w-full"
+              name="description"
+            ></textarea>
+          </div>
+       
+        </div>
+  
+        <!-- واحد متولی -->
+        <div class="form-group">
+          <label for="unit">
+            واحد متولی <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <!-- <i class="pi pi-building input-icon"></i> -->
+            <p-select 
+            fluid 
+            [options]="units" 
+            formControlName="unitId"
+            optionLabel="name" 
+            optionValue="unitId"
+            placeholder="انتخاب واحد متولی"
+            [showClear]="true" 
+            size="small"
+            [filter]="true"
+            (onChange)="onUnitChange($event)"
+
+            >
+          </p-select>
+      
+          </div>
+        </div>
+  
+      
+        <div class="form-group">
+          <label>عکس (اختیاری)</label>
+          <div class="photo-section">
+            <div class="photo-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="عکس درخواست" style="height: 200px;width: 200px;">
+              <button type="button" class="remove-photo" (click)="removeImage()">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            <div class="avatar-section">
+                <div class="avatar-wrapper">
+                  <div class="avatar-preview" *ngIf="imagePreview">
+                    <img [src]="imagePreview" alt="پروفایل" style="height: 200px;width: 200px;">
+                    <button type="button" class="remove-avatar" (click)="removeImage()">
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </div>
+                  <div class="avatar-placeholder" *ngIf="!imagePreview">
+                    <i class="pi pi-user"></i>
+                  </div>
+                </div>
+                
+                <p-fileUpload 
+                  mode="basic"
+                  name="photo"
+                  accept="image/*"
+                  chooseLabel="انتخاب عکس"
+                  chooseIcon="pi pi-camera"
+                  (onSelect)="onFileSelected($event)"
+                  [auto]="true"
+                  [maxFileSize]="2000000">
+                </p-fileUpload>
+                <small class="upload-hint">حداکثر 2 مگابایت | فرمت‌های مجاز: JPG, PNG</small>
+              </div>
+            <!-- <div class="photo-upload-area" [class.has-preview]="imagePreview">
+              <p-fileUpload
+                mode="basic"
+                name="photo"
+                accept="image/*"
+                chooseLabel="انتخاب عکس"
+                chooseIcon="pi pi-camera"
+                (onSelect)="onFileSelected($event)"
+                [auto]="true"
+                [maxFileSize]="2000000"
+              ></p-fileUpload>
+              <small class="hint-text">حداکثر 2 مگابایت | فرمت‌های مجاز: JPG, PNG</small>
+            </div> -->
+          </div>
+        </div>
+  
+        <!-- دکمه‌ها -->
+        <div class="form-actions">
+          <button
+            type="button"
+            pButton
+            label="انصراف"
+            icon="pi pi-times"
+            class="p-button-outlined cancel-btn"
+            (click)="resetForm()"
+          ></button>
+          <button
+            type="submit"
+            pButton
+            [label]="isEditMode ? 'ویرایش درخواست' : 'ثبت درخواست'"
+            [icon]="isEditMode ? 'pi pi-pencil' : 'pi pi-save'"
+            [loading]="loading"
+            class="submit-btn"
+          ></button>
+        </div>
+    </div>
+
+      </form>
+  
+    </div>
+  </div>
