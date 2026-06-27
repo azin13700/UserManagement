@@ -1,5 +1,17 @@
 <div class="children-dialog-content">
-    
+  <div class="card flex justify-center">
+    <p-toast />
+    <p-confirmdialog>
+        <ng-template #message let-message>
+            @if (message) {
+                <div class="flex flex-col items-center w-full gap-4 border-b border-surface-200 dark:border-surface-700">
+                    <i [ngClass]="message.icon" class="!text-6xl text-primary-500"></i>
+                    <p>{{ message.message }}</p>
+                </div>
+            }
+        </ng-template>
+    </p-confirmdialog>
+</div>
   <div class="parent-info" *ngIf="selectedSubject">
     <div class="parent-badge">
       <i class="pi pi-folder-open"></i>
@@ -115,20 +127,7 @@
       </tbody>
     </table>
   </div>
-  <div class="card flex justify-center">
-    <p-toast />
-    <p-confirmdialog>
-        <ng-template #message let-message>
-            @if (message) {
-                <div class="flex flex-col items-center w-full gap-4 border-b border-surface-200 dark:border-surface-700">
-                    <i [ngClass]="message.icon" class="!text-6xl text-primary-500"></i>
-                    <p>{{ message.message }}</p>
-                </div>
-            }
-        </ng-template>
-    </p-confirmdialog>
-    <p-button (click)="confirm()" label="Save" />
-</div>
+
   <!-- Empty -->
   <ng-template #noChildren>
     <div class="no-children">

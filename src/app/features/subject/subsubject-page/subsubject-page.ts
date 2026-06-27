@@ -172,41 +172,38 @@ throw new Error('Method not implemented.');
 
 }
 
-  toggleSubjectStatus(subject:any) {
+toggleSubjectStatus(subject: SubjectDto) {
 
-    this.confirmationService.confirm({
-      target: subject.target as EventTarget,
-      message: 'آیا از تایید این درخواست مطمئن هستید؟',
-      header: 'تغییر وضعیت',
-      icon: 'pi pi-info-circle',
-      acceptButtonProps: {
-        label: 'بله',
-        severity: 'success' 
+  this.confirmationService.confirm({
+    message: 'آیا از تغییر وضعیت این موضوع مطمئن هستید؟',
+    header: 'تغییر وضعیت',
+    icon: 'pi pi-info-circle',
+
+    rejectButtonProps: {
+      label: 'خیر',
+      severity: 'danger',
+      outlined: true
+
     },
-      rejectLabel: 'خیر',
-      rejectButtonProps: {
-          label: 'لغو',
-          severity: 'danger',
-          outlined: true
-      },
- 
-  
-      accept: () => {
-           this.api.ToggleSubjectStatus(subject).subscribe({
-          next: () => {
-            this.loadSubjectData();
-          },
-          error: (err) => {
-     
-          }
-        });
-      },
-      reject: () => {
-         // this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
-      }
+    acceptButtonProps: {
+      label: 'بلی',
+      severity: 'success',
+      outlined: true
+    },
+
+    accept: () => {
+
+      this.api.ToggleSubjectStatus(subject).subscribe({
+        next: () => {
+          this.loadSubjectData();
+        }
+      });
+
+    }
+
   });
-  
-  }
+
+}
   subjectId!:number;
   async editSubject(sub: SubjectDto) {
     this.showAddInput = !this.showAddInput;
@@ -227,61 +224,6 @@ throw new Error('Method not implemented.');
 
 
 
-
-
-  // async saveNewChild() {
-  //   if (this.subjectForm.invalid) {
-  //     Object.keys(this.subjectForm.controls).forEach(key => {
-  //       const control = this.subjectForm.get(key);
-  //       if (control?.invalid) {
-  //         control.markAsTouched();
-  //         console.log(     this.subjectForm.value);
-  //       }
-  //     });
-  //     this.showError('لطفاً همه فیلدهای الزامی را به درستی پر کنید');
-  //     return;
-  //   }
-
-
- 
-  //   this.loading = true;
-  //   const formData = new FormData();
-  
-  //   if (this.isEditMode && this.parentId) {
-  //     formData.append('ParentId', this.parentId.toString());
-  //   }
-  //   formData.append('Title', this.subjectForm.get('title')?.value || '');
-    
-  //   // const parentId = this.subjectForm.get('parentId')?.value;
-  //   // if (parentId && parentId !== 0) {
-  //   //   formData.append('ParentId', parentId.toString());
-  //   // }
-    
-  //   formData.append('IsActive', this.subjectForm.get('isActive')?.value ? 'true' : 'false');
-  
-  //   const request = this.isEditMode && this.parentId
-  //     ? this.api.updateSubject(this.parentId, formData)
-  //     : this.api.createSubject(formData);
-  
-  //   request.subscribe({
-  //     next: () => {
-     
-  //       this.loading = false;
-  //       this.ref.close(true);
-  //     },
-  //     error: (err) => {
-  //       this.loading = false;
-  //       let errorMsg = 'خطا در انجام عملیات';
-  //       if (err.error?.errors) {
-  //         errorMsg = Object.values(err.error.errors).flat().join(', ');
-  //       } else if (err.error?.message) {
-  //         errorMsg = err.error.message;
-  //       }
-  //       this.showError(errorMsg);
-  //     }
-  //   });
-      
-  // }
 }
   
 

@@ -240,7 +240,22 @@ export class RequestPage implements OnInit {
          // const message = 'کاربر با موفقیت ایجاد شد';
           this.showSuccess(res.message);
           this.loading = false;
-        //  this.ref.close(true);
+          this.loading = false;
+
+          this.userForm.reset({
+            description: '',
+            subjectId: null,
+            subSubjectId: null,
+            unitId: null,
+            isActive: 'Active',
+            createdByUserId: null,
+            requestId: null
+          });
+          
+          this.filteredSubSubjects = [];
+          
+          this.selectedFile = null;
+          this.imagePreview = null;
         },
         error: (err) => {
           this.loading = false;
