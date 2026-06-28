@@ -57,6 +57,7 @@ export class SelectRole implements OnInit {
   loading = false;
   fullName = '';
   userData: LoginResponse | null = null;
+  noPermission = false;
 
   constructor(
     private api: ApiService,
@@ -104,7 +105,6 @@ export class SelectRole implements OnInit {
 
 
     if (this.roles.length === 1) {
-
       this.selectedRoleId = this.roles[0].roleId;
       this.onSelectRole();
     }
@@ -119,22 +119,27 @@ export class SelectRole implements OnInit {
       });
       return;
     }
-  
+
     this.loading = true;
-  
+
     try {
       const response = await lastValueFrom(this.api.selectRole({
         userId: this.authService.getUserId()!,
         roleId: this.selectedRoleId
       }));
-  
-  
+
       this.authService.setSelectedRole(response);
-  
-      setTimeout(() => {
-        this.router.navigate(['/dashboard']);
-      }, 0);
-  
+
+      const permissions = response.permissions || [];
+      
+      if (permissions.length === 0) {
+        this.noPermission = true;
+        this.loading = false;
+        return;
+      }
+
+      this.router.navigate(['/dashboard']);
+
     } catch (error: any) {
       this.messageService.add({
         severity: 'error',
@@ -145,6 +150,8 @@ export class SelectRole implements OnInit {
       this.loading = false;
     }
   }
-  
+  logout() {
+    this.authService.logout();
+  } 
   
 }
