@@ -29,10 +29,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   styleUrl: './subsubject-page.scss',
 })
 export class SubsubjectPage   implements OnInit {
-confirm() {
-throw new Error('Method not implemented.');
-}
-
   
   subjectForm!: FormGroup;
   loading = false;
@@ -109,6 +105,8 @@ throw new Error('Method not implemented.');
     this.showAddInput = false;
     this.newChildTitle = '';
   }
+
+
   async saveNewChild() {
     if (this.subjectForm.invalid) {
       Object.keys(this.subjectForm.controls).forEach(key => {
@@ -155,18 +153,6 @@ throw new Error('Method not implemented.');
         this.showError(errorMsg);
       }
     });
-    //   this.showSuccess('زیرمجموعه با موفقیت ایجاد شد');
-    //   this.newChildTitle = '';
-    //   this.showAddInput = false;
-      
-    //   this.loadSubjectData();
-      
-    // } catch (error: any) {
-    //   console.error('❌ خطا:', error);
-    //   const errorMsg = error?.error?.message || 'خطا در ایجاد زیرمجموعه';
-    //   this.showError(errorMsg);
-    // } finally {
-    //   this.savingChild = false;
 
 
 

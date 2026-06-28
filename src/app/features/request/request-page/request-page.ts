@@ -114,6 +114,7 @@ export class RequestPage implements OnInit {
 
  
   }
+  
   async LoadSubjects(){
     try {
       const res = await lastValueFrom(this.api.GetAllSubject());

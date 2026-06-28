@@ -11,8 +11,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from '../../../core/services/api-service';
 import { AuthService } from '../../../core/services/auth-service';
-import { lastValueFrom } from 'rxjs';
+import { async, lastValueFrom } from 'rxjs';
 import { RequestWorkFlowDto } from '../../../core/models/RequestWorkFlowDto';
+import { SelectModule } from 'primeng/select';
+import { SubjectDto } from '../../../core/models/SubjectDto';
+import { UnitDto } from '../../../core/models/UnitDto';
 
 interface Request {
   id: number;
@@ -48,33 +51,49 @@ interface Unit {
     ToastModule,
     InputTextModule,
     DialogModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    SelectModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
 export class Dashboard implements OnInit {
+globalSearch: any;
+
   private api = inject(ApiService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   requests: RequestWorkFlowDto[] = [];
   filteredRequests: RequestWorkFlowDto[] = [];
-
+  selectedCategory: string | null = null;
   selectedRequests: RequestWorkFlowDto[] = [];
   loading = false;
   searchValue = '';
+   userUnit:UnitDto[]=[];
+   currentPage = 1;
+   rowsPerPage = 10;
+   totalRecords = 0;
+   requestCode = '';
 
-  // ====== اطلاعات کاربر ======
+   selectedSubjectId: number | null = null;
+   selectedSubSubjectId: number | null = null;
+   selectedUnitId: number | null = null;
+   dialogVisible = false;
+   isEditMode = false;
+
+ 
+   subjects: SubjectDto[] = [];
+   filteredSubSubjects: SubjectDto[] = [];
+   units: Unit[] = [];
+ 
+
   userFullName = '';
   userRole = '';
   userUnitName = '';
   userUnitId: number | null = null;
-  // ====== صفحه‌بندی ======
-  currentPage = 1;
-  rowsPerPage = 10;
-  totalRecords = 0;
+
 
   // ====== فیلترها ======
   statusOptions = [
@@ -102,14 +121,14 @@ export class Dashboard implements OnInit {
   ngOnInit() {
     this.loadUserInfo();
     this.loadRequests();
+    this.LoadSubjects();
+    this.loadUits();
   }
 
   loadUserInfo() {
     const userData = this.authService.getUserData();
     this.userFullName = userData?.fullName || 'کاربر';
     this.userRole = this.authService.getSelectedRoleName() || '';
-  
-    // دریافت واحد کاربر از اطلاعات لاگین
     const selectedRole = this.authService.getSelectedRole();
     this.userUnitName = selectedRole?.unitName || 'واحد نامشخص';
     this.userUnitId = selectedRole?.unitId || null;
@@ -185,13 +204,113 @@ export class Dashboard implements OnInit {
     this.rowsPerPage = event.rows;
   }
 
-  // ====== مشاهده جزئیات ======
+  
+  async LoadSubjects(){
+    try {
+      const res = await lastValueFrom(this.api.GetAllSubject());
+      this.subjects = res.map(r => ({ 
+        subjectId: r.subjectId || r.subjectId, 
+        title: r.title ,
+        parentId: r.parentId ,
+        isActive:true
+      }));
+    } catch (error) {
+    //this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
+    }
+  }
+
+  async loadUits(){
+    try {
+      const res = await lastValueFrom(this.api.GetAllUnits());
+      this.units = res.map(r => ({ 
+        unitId: r.unitId || r.id, 
+        name: r.name 
+      }));
+    } catch (error) {
+    //  this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
+    }
+  }
+  onSubjectChange(event: any) {
+    const subjectId = event.value;
+   // this.userForm.patchValue({ subjectId: subjectId });
+    
+    if (subjectId) {
+  
+    this.api.GetSubSubjects(subjectId).subscribe({
+      next: (res) => {
+        this.filteredSubSubjects = res.map(r => ({ 
+          subjectId: r.subjectId || r.subjectId, 
+          title: r.title ,
+          parentId: r.parentId ,
+          isActive:true
+        }));
+      },
+      error: (err) => {
+        this.loading = false;
+        let errorMsg = 'خطا در انجام عملیات';
+      }
+    });
+    } else {
+      this.filteredSubSubjects = [];
+    }
+  }
+  onUnitChange(event: any) {
+    const unitId = event.value;
+   // this.userForm.patchValue({ unitId: unitId });
+    }
+
+    onSubSubjectChange(event:any){
+      const subSubjectId = event.value;
+    //  this.userForm.patchValue({ subSubjectId: subSubjectId });
+    }
+    onSearch() {
+
+      const dto = {
+    
+        userId: this.userId,
+    
+        unitId: this.selectedUnitId
+          ? [this.selectedUnitId]
+          : [],
+    
+        subjectId: this.selectedSubjectId
+          ? [this.selectedSubjectId]
+          : [],
+    
+        subSubjectId: this.selectedSubSubjectId
+          ? [this.selectedSubSubjectId]
+          : [],
+    
+        requestCode: this.requestCode
+      };
+    
+      this.api.SearchRequest(dto).subscribe({
+        next: (res) => {
+    
+          this.requests = res;
+          this.filteredRequests = res;
+          this.totalRecords = res.length;
+    
+        }
+      });
+    
+    }
   viewDetails(request: RequestWorkFlowDto) {
     this.selectedRequest = request;
     this.detailDialogVisible = true;
   }
+  clearAllFilters() {
 
-  // ====== تغییر وضعیت ======
+    this.requestCode = '';
+  
+    this.selectedSubjectId = null;
+    this.selectedSubSubjectId = null;
+    this.selectedUnitId = null;
+  
+    this.filteredSubSubjects = [];
+  
+    this.loadRequests();
+  }
   changeStatus(request: Request, newStatus: string) {
     // this.confirmationService.confirm({
     //   message: `آیا از تغییر وضعیت درخواست "${request.subjectTitle}" به "${newStatus}" مطمئن هستید؟`,
@@ -212,14 +331,12 @@ export class Dashboard implements OnInit {
     // });
   }
 
-  // ====== رفرش ======
   refresh() {
     this.loadRequests();
     this.searchValue = '';
     this.selectedStatus = '';
   }
 
-  // ====== وضعیت Severity ======
   getStatusSeverity(status: string): string {
     switch (status) {
       case 'تایید شده': return 'success';

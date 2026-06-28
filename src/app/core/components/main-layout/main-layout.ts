@@ -95,7 +95,7 @@ export class MainLayout implements OnInit {
     if (permissions.includes('workflow.View')) {
       userManagementItems.push({
         label: ' کارتابل من',
-        icon: 'pi pi-key',
+        icon: 'pi pi-inbox',
         routerLink: '/dashboard/workflow'
       });
     }
@@ -117,7 +117,7 @@ export class MainLayout implements OnInit {
     if (permissions.includes('Request.View')) {
       userManagementItems.push({
         label: ' ایجاد درخواست',
-        icon: 'pi pi-sitemap',
+        icon: 'pi pi-clipboard',
         routerLink: '/dashboard/request'
       });
     }

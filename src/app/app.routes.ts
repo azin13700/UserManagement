@@ -9,6 +9,7 @@ import { ListUser } from "./features/users/components/list-user/list-user";
 import { ListSubject } from "./features/subject/list-subject/list-subject";
 import { RequestPage } from "./features/request/request-page/request-page";
 import { Dashboard } from "./features/dashboard/dashboard/dashboard";
+import { Home } from "./features/home/home";
 
 export const routes: Routes = [
   {
@@ -34,7 +35,7 @@ export const routes: Routes = [
       { path: 'list-unit', component: UnitList },
       { path: 'list-subject', component: ListSubject },
       {path:'request',component:RequestPage},
-      { path: '', redirectTo: 'list-user', pathMatch: 'full' },
+      { path: '', pathMatch: 'full' , component:Home},
       { 
         path: 'workflow', 
         component: Dashboard 

@@ -72,7 +72,6 @@ $info: #3b82f6;
       align-items: center;
       gap: 0.6rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
 
       i {
         color: $primary;
@@ -110,93 +109,12 @@ $info: #3b82f6;
 }
 
 // ============================================================
-//  STATISTICS
-// ============================================================
-.statistics-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid $border;
-  background: #fafbfc;
-
-  .stat-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    background: $white;
-    border: 1px solid $border;
-    transition: all 0.2s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: $shadow;
-    }
-
-    .stat-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .stat-info {
-      display: flex;
-      flex-direction: column;
-
-      .stat-value {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: $text-dark;
-        line-height: 1.2;
-      }
-
-      .stat-label {
-        font-size: 0.7rem;
-        color: $text-muted;
-      }
-    }
-
-    &.total .stat-icon {
-      background: #eef2ff;
-      color: $info;
-    }
-
-    &.pending .stat-icon {
-      background: #fef3c7;
-      color: $warning;
-    }
-
-    &.in-progress .stat-icon {
-      background: #dbeafe;
-      color: $info;
-    }
-
-    &.approved .stat-icon {
-      background: #d1fae5;
-      color: $success;
-    }
-
-    &.rejected .stat-icon {
-      background: #fee2e2;
-      color: $danger;
-    }
-  }
-}
-
-// ============================================================
 //  FILTERS
 // ============================================================
 .filters-section {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid $border;
-  background: $bg-card;
+  background: #fafbfc;
 
   .filters-row {
     display: flex;
@@ -207,7 +125,7 @@ $info: #3b82f6;
 
   .filter-item {
     flex: 1;
-    min-width: 180px;
+    min-width: 170px;
 
     label {
       display: block;
@@ -219,66 +137,113 @@ $info: #3b82f6;
       letter-spacing: 0.5px;
     }
 
-    &.search-global {
-      flex: 2.5;
-      min-width: 260px;
-    }
-
     &.filter-actions {
       flex: 0 0 auto;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    ::ng-deep {
+      .p-select {
+        width: 100%;
+        background: $white;
+        border: 1px solid $border;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: darken($border, 10%);
+        }
+
+        .p-select-label {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+          color: $text-dark;
+
+          &.p-placeholder {
+            color: $text-light;
+          }
+        }
+
+        .p-select-trigger {
+          width: 2.5rem;
+          color: $text-light;
+        }
+
+        &.p-focus {
+          border-color: $primary;
+          box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+        }
+      }
     }
   }
-}
-
-.search-wrapper {
-  display: flex;
-  align-items: center;
-  background: #f8fafc;
-  border: 1px solid $border;
-  border-radius: 10px;
-  padding: 0.4rem 0.8rem;
-  transition: all 0.2s ease;
-
-  &:focus-within {
-    border-color: $primary;
+  .search-wrapper {
+    display: flex;
+    align-items: center;
     background: $white;
-    box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
-  }
-
-  i {
-    color: $text-light;
-    font-size: 1rem;
-    margin-left: 0.5rem;
-  }
-
-  input {
-    border: none;
-    background: transparent;
-    width: 100%;
-    outline: none;
-    font-size: 0.85rem;
-    color: $text-dark;
-
-    &::placeholder {
-      color: $text-light;
-    }
-  }
-}
-
-.filter-actions {
-  ::ng-deep .p-button {
-    background: transparent;
     border: 1px solid $border;
     border-radius: 10px;
-    color: $text-muted;
-    padding: 0.4rem 1rem;
-    font-size: 0.8rem;
+    padding: 0.45rem 0.8rem;
     transition: all 0.2s ease;
-
-    &:hover {
-      background: #f1f5f9;
+    min-height: 40px;
+  
+    &:focus-within {
       border-color: $primary;
-      color: $primary;
+      box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+    }
+  
+    i {
+      color: $text-light;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
+    }
+  
+    input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      outline: none;
+      font-size: 0.85rem;
+      color: $text-dark;
+      padding: 0.2rem 0;
+  
+      &::placeholder {
+        color: $text-light;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .search-btn {
+    background: $primary-gradient !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 0.5rem 1.2rem !important;
+    transition: all 0.3s ease !important;
+    &:hover {
+      transform: scale(1.02) !important;
+      box-shadow: 0 4px 14px rgba(0, 85, 164, 0.25) !important;
+    }
+  }
+
+  .filter-actions {
+    ::ng-deep .p-button {
+      background: transparent;
+      border: 1px solid $border;
+      border-radius: 10px;
+      color: $text-muted;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      color: #cbd5e1;
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: $primary;
+        color: $primary;
+      }
     }
   }
 }
@@ -290,16 +255,16 @@ $info: #3b82f6;
   .p-datatable-thead > tr > th {
     background: #f8fafc;
     color: $text-dark;
-    padding: 0.85rem 1rem;
+    padding: 0.8rem 1rem;
     border-bottom: 2px solid $border;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.3px;
   }
 
   .p-datatable-tbody > tr > td {
-    padding: 0.85rem 1rem;
+    padding: 0.8rem 1rem;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
     font-size: 0.85rem;
@@ -309,6 +274,12 @@ $info: #3b82f6;
   .p-datatable-tbody > tr:hover > td {
     background: #f8fafc;
   }
+}
+
+.request-id {
+  font-weight: 700;
+  color: $primary;
+  font-family: monospace;
 }
 
 .subject-title {
@@ -321,67 +292,37 @@ $info: #3b82f6;
   font-weight: 500;
 }
 
+.unit-name {
+  background: #eef2ff;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: $primary;
+  display: inline-block;
+}
+
 .request-description {
   color: $text-muted;
   font-size: 0.8rem;
   display: block;
-  max-width: 200px;
+  max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .date-text {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: $text-light;
   font-family: monospace;
-}
-
-// ============================================================
-//  ACTION GROUP
-// ============================================================
-.action-group {
-  display: flex;
-  gap: 0.25rem;
-  justify-content: center;
-
-  ::ng-deep .p-button {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px !important;
-    color: $text-muted !important;
-    transition: all 0.2s ease !important;
-
-    &:hover {
-      background: #f1f5f9 !important;
-    }
-
-    .p-button-icon {
-      font-size: 0.8rem !important;
-    }
-  }
-
-  .view-btn:hover {
-    color: $info !important;
-    background: #eef2ff !important;
-  }
-
-  .approve-btn:hover {
-    color: $success !important;
-    background: #d1fae5 !important;
-  }
-
-  .reject-btn:hover {
-    color: $danger !important;
-    background: #fee2e2 !important;
-  }
 }
 
 // ============================================================
 //  TABLE CAPTION
 // ============================================================
 .table-caption {
-  padding: 0.6rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   background: #f8fafc;
   border-bottom: 1px solid $border;
 
@@ -446,8 +387,8 @@ $info: #3b82f6;
 
   .p-paginator-element {
     border-radius: 8px;
-    min-width: 38px;
-    height: 38px;
+    min-width: 36px;
+    height: 36px;
     font-size: 0.8rem;
     font-weight: 500;
     transition: all 0.2s ease;
@@ -465,72 +406,8 @@ $info: #3b82f6;
 }
 
 // ============================================================
-//  DETAIL DIALOG
-// ============================================================
-.detail-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-
-  .detail-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0.25rem 0;
-
-    .detail-label {
-      font-weight: 600;
-      color: $text-dark;
-      min-width: 100px;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
-    .detail-value {
-      color: $text-muted;
-      font-size: 0.85rem;
-      flex: 1;
-      word-break: break-word;
-    }
-
-    &.description {
-      flex-direction: column;
-
-      .detail-value {
-        background: #f8fafc;
-        padding: 0.75rem;
-        border-radius: 8px;
-        line-height: 1.8;
-        margin: 0;
-        width: 100%;
-        color: $text-dark;
-      }
-    }
-
-    .detail-photo {
-      max-width: 200px;
-      max-height: 200px;
-      border-radius: 8px;
-      border: 1px solid $border;
-      object-fit: cover;
-    }
-
-    p-tag {
-      display: inline-block;
-    }
-  }
-}
-
-// ============================================================
 //  RESPONSIVE
 // ============================================================
-@media (max-width: 1200px) {
-  .statistics-row {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 0.75rem;
@@ -542,66 +419,44 @@ $info: #3b82f6;
     align-items: stretch;
   }
 
-  .statistics-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    padding: 1rem;
-  }
-
-  .filters-section {
-    padding: 0.75rem 1rem;
-
-    .filters-row {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .filter-item {
-      min-width: auto;
-
-      &.search-global {
-        min-width: auto;
-      }
-
-      &.filter-actions {
-        flex: auto;
-      }
-    }
-  }
-
-  .request-description {
-    max-width: 120px;
-  }
-
-  .action-group {
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .detail-content .detail-row {
+  .filters-section .filters-row {
     flex-direction: column;
+    align-items: stretch;
+  }
 
-    .detail-label {
-      min-width: auto;
+  .filter-item {
+    min-width: auto;
+    
+    &.filter-actions {
+      flex: auto;
+      flex-wrap: wrap;
+
+      ::ng-deep .p-button {
+        flex: 1;
+      }
     }
-  }
-}
-
-@media (max-width: 480px) {
-  .statistics-row {
-    grid-template-columns: 1fr;
-  }
-
-  .table-header .header-title h1 {
-    font-size: 1.1rem;
   }
 
   ::ng-deep .p-datatable {
     .p-datatable-thead > tr > th,
     .p-datatable-tbody > tr > td {
-      padding: 0.5rem 0.5rem;
+      padding: 0.4rem 0.5rem;
       font-size: 0.75rem;
     }
+  }
+
+  .request-description {
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 0.5rem;
+  }
+
+  .table-header .header-title h1 {
+    font-size: 1.1rem;
   }
 
   .request-description {
@@ -613,8 +468,8 @@ $info: #3b82f6;
 //  SCROLLBAR
 // ============================================================
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {

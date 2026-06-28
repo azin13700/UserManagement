@@ -194,4 +194,8 @@ getWorkFlow(id: number): Observable<RequestWorkFlowDto[]> {
     `${this.apiUrl}Request/work-flow/${id}`
   );
 }
+
+SearchRequest(dto: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}request/Search`, dto);
+}
 }
