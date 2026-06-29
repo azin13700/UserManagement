@@ -56,13 +56,7 @@ getUnitById(id: number): Observable<any> {
   return this.http.get<any>(this.apiUrl + `Unit/GetUnitById/${id}`);
 }
 
-createUnit(data: any): Observable<any> {
-  return this.http.post(this.apiUrl + 'Unit/Create', data);
-}
 
-updateUnit(id: number, data: any): Observable<any> {
-  return this.http.put(this.apiUrl + `Unit/Update/${id}`, data);
-}
 createRole(data: any): Observable<any> {
   return this.http.post(this.apiUrl + 'Role/Create', data);
 }
@@ -96,10 +90,10 @@ ToggleRoleStatus(data: any): Observable<any> {
   return this.http.post(this.apiUrl + 'Role/ChangeStatus', JSON.stringify(data) , {headers: headers});
 }
 
-ToggleUnitStatus(data: any) {
-  var headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-  return this.http.post(this.apiUrl + 'unit/ChangeStatus', JSON.stringify(data) , {headers: headers});
-}
+// ToggleUnitStatus(data: any) {
+//   var headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+//   return this.http.post(this.apiUrl + 'unit/ChangeStatus', JSON.stringify(data) , {headers: headers});
+// }
 
 
 
@@ -194,8 +188,19 @@ getWorkFlow(id: number): Observable<RequestWorkFlowDto[]> {
     `${this.apiUrl}Request/work-flow/${id}`
   );
 }
+ToggleUnitStatus(unitId: number): Observable<any> {
+  return this.http.patch(`${this.apiUrl}Unit/ToggleStatus/${unitId}`, {});
+}
 
 SearchRequest(dto: any): Observable<any> {
   return this.http.post(`${this.apiUrl}request/Search`, dto);
+}
+
+createUnit(formData: FormData): Observable<any> {
+  return this.http.post(`${this.apiUrl}Unit/Create`, formData);
+}
+
+updateUnit(id: number, formData: FormData): Observable<any> {
+  return this.http.put(`${this.apiUrl}Unit/Update/${id}`, formData);
 }
 }

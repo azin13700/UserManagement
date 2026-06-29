@@ -101,18 +101,16 @@
         </div>
       </div>
   
-      <!-- ====== TABLE ====== -->
-      <p-table 
-        [value]="getPaginatedRequests()"
-        [rows]="rowsPerPage" 
-        [totalRecords]="totalRecords" 
-        [paginator]="true" 
-        [rowHover]="true" 
-        dataKey="id" 
-        [showCurrentPageReport]="true" 
-        [rowsPerPageOptions]="[10,25,50]" 
-        (onPage)="onPageChange($event)"
-        [loading]="loading"
+
+      
+      <p-table
+    [value]="filteredRequests"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10,25,50]"
+    [loading]="loading"
+    dataKey="id"
+    [showCurrentPageReport]="true">
       >
         
         <ng-template pTemplate="caption">
@@ -138,7 +136,8 @@
         <ng-template pTemplate="body" let-request>
           <tr>
             <td>
-              <span class="request-id">#{{ request.id }}</span>
+              <span class="request-id">#{{ request.requestCode   }}</span>
+
             </td>
             <td>
               <span class="subject-title">{{ request.subjectTitle }}</span>
@@ -153,7 +152,7 @@
               <span class="request-description">{{ request.description | slice:0:40 }}{{ request.description?.length > 40 ? '...' : '' }}</span>
             </td>
             <td>
-              <span class="date-text">{{ request.createdAt | date:'yyyy/MM/dd' }}</span>
+              <span class="date-text">{{ request.createdDate | date:'yyyy/MM/dd' }}</span>
             </td>
           </tr>
         </ng-template>

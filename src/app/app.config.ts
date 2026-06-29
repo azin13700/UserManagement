@@ -27,6 +27,6 @@ export const appConfig: ApplicationConfig = {
 
     MessageService,
     ConfirmationService,
-    DialogService
+    DialogService,
   ]
 };

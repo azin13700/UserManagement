@@ -1,27 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { TreeNode, MessageService, ConfirmationService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
 
-import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ApiService } from '../../../core/services/api-service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { ApiService } from '../../../core/services/api-service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { lastValueFrom } from 'rxjs';
-
-interface Unit {
-  id: number;
-  name: string;
-  description: string;
-  parentUnitId?: number;
-  isActive: boolean;
-  userCount: number;
-  createdAt: string;
-  children?: Unit[];
-}
 
 @Component({
   selector: 'app-unit-page',
@@ -34,68 +22,68 @@ interface Unit {
     ToastModule,
     TextareaModule
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService],
   templateUrl: './unit-page.html',
   styleUrls: ['./unit-page.scss']
 })
 export class UnitPage implements OnInit {
-
   private api = inject(ApiService);
   private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
+
   userForm!: FormGroup;
   isEditMode = false;
   unitId: number | null = null;
   loading = false;
+  
+ 
+  parentId: number | null = null;
+
   statusOptions = [
-    { label: 'فعال', value: true},
+    { label: 'فعال', value: true },
     { label: 'غیرفعال', value: false }
   ];
+
   constructor(
     private fb: FormBuilder,
-
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig
   ) {
     this.isEditMode = this.config.data?.mode === 'edit';
     this.unitId = this.config.data?.unitId || null;
+    this.parentId = this.config.data?.parentUnitId || null;  // ✅ دریافت ParentId
   }
 
   ngOnInit() {
     this.initForm();
-
-    
     if (this.isEditMode && this.unitId) {
-      this.loadUserData();
+      this.loadUnitData();
     }
   }
+
   initForm() {
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      isActive:['Active'],
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      description: [''],
+      isActive: [true, Validators.required]
     });
   }
-  async loadUserData() {
+
+  async loadUnitData() {
     try {
       const data = await lastValueFrom(this.api.getUnitById(this.unitId!));
       
-      let birthDate = null;
-    
-      
       this.userForm.patchValue({
         name: data.name,
-        description: data.description,
-        isActive: data.isActive ,
-   
+        description: data.description || '',
+        isActive: data.isActive
       });
       
     } catch (error) {
-      this.showError('خطا در دریافت اطلاعات کاربر');
+      this.showError('خطا در دریافت اطلاعات واحد');
     }
   }
-  onSubmit() {
 
+  onSubmit() {
     if (this.userForm.invalid) {
       Object.keys(this.userForm.controls).forEach(key => {
         const control = this.userForm.get(key);
@@ -108,37 +96,47 @@ export class UnitPage implements OnInit {
     }
 
     this.loading = true;
+
+
     const formData = new FormData();
-    if (this.isEditMode && this.unitId) {
-      formData.append('unitId', this.unitId.toString());
+    formData.append('Name', this.userForm.get('name')?.value || '');
+    formData.append('Description', this.userForm.get('description')?.value || '');
+    formData.append('IsActive', this.userForm.get('isActive')?.value ? 'true' : 'false');
+
+
+    if (this.parentId) {
+      formData.append('ParentId', this.parentId.toString());
     }
-    formData.append('Name', this.userForm.get('name')?.value);
-    formData.append('description', this.userForm.get('description')?.value);
-    formData.append('isActive', this.userForm.get('isActive')?.value);
 
-    const request = this.isEditMode && this.unitId
-      ? this.api.updateUnit(this.unitId, formData)
-      : this.api.createUnit(formData);
-
-    request.subscribe({
-      next: () => {
-        this.loading = false;
-        this.ref.close(true);
-      },
-      error: (err) => {
-        this.loading = false;
-     
-        let errorMsg = 'خطا در انجام عملیات';
-        if (err.error?.errors) {
-          errorMsg = Object.values(err.error.errors).flat().join(', ');
-        } else if (err.error?.message) {
-          errorMsg = err.error.message;
-        } else if (err.message) {
-          errorMsg = err.message;
+    if (this.isEditMode && this.unitId) {
+      formData.append('UnitId', this.unitId.toString());
+      
+      this.api.updateUnit(this.unitId, formData).subscribe({
+        next: () => {
+          this.showSuccess('واحد با موفقیت ویرایش شد');
+          this.loading = false;
+          this.ref.close(true);
+        },
+        error: (err) => {
+          this.loading = false;
+          this.showError(err.error?.message || 'خطا در ویرایش واحد');
         }
-        this.showError(errorMsg);
-      }
-    });
+      });
+    } else {
+
+      this.api.createUnit(formData).subscribe({
+        next: () => {
+          this.showSuccess(this.parentId ? 'زیرمجموعه با موفقیت ایجاد شد' : 'واحد با موفقیت ایجاد شد');
+          this.loading = false;
+          this.ref.close(true);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error('❌ خطا:', err);
+          this.showError(err.error?.message || 'خطا در ایجاد واحد');
+        }
+      });
+    }
   }
 
   isInvalid(controlName: string): boolean {

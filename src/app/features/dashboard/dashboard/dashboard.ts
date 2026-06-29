@@ -134,33 +134,33 @@ globalSearch: any;
     this.userUnitId = selectedRole?.unitId || null;
   }
   userId:any;
-  loadRequests(): void {
 
-    this.loading = true;
-    this.userId = this.authService.getUserId();
+ loadRequests(): void {
 
-    this.api.getWorkFlow(this.userId).subscribe({
-  
-      next: (res) => {
-  
-        this.requests = res;
-        this.filteredRequests = res;
-        this.totalRecords = res.length;
-  
-        this.loading = false;
-  
-      },
-  
-      error: () => {
-  
-        this.loading = false;
-  
-      }
-  
-    });
-  
-  }
+  this.loading = true;
+  this.userId = this.authService.getUserId();
 
+  this.api.getWorkFlow(this.userId).subscribe({
+
+    next: (res) => {
+
+      console.log(res[0].requestCode);
+
+      this.requests = res;
+      this.filteredRequests = res;
+      this.totalRecords = res.length;
+
+      this.loading = false;
+    },
+
+    error: (err) => {
+      console.log(err);
+      this.loading = false;
+    }
+
+  });
+
+}
 
   applyFilters() {
     let result = [...this.requests];
@@ -212,6 +212,7 @@ globalSearch: any;
         subjectId: r.subjectId || r.subjectId, 
         title: r.title ,
         parentId: r.parentId ,
+ 
         isActive:true
       }));
     } catch (error) {

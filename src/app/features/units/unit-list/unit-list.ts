@@ -1,218 +1,260 @@
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { ChipModule } from 'primeng/chip';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DialogModule } from 'primeng/dialog';
-import { DialogService } from 'primeng/dynamicdialog';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
-import { Table, TableModule } from 'primeng/table';
+import { TreeTableModule } from 'primeng/treetable';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from '../../../core/services/api-service';
-import { UnitDto } from '../../../core/models/UnitDto';
+import { DialogService } from 'primeng/dynamicdialog';
+import { lastValueFrom } from 'rxjs';
 import { UnitPage } from '../unit-page/unit-page';
-import Swal from 'sweetalert2';
+
+interface Unit {
+  unitId: number;
+  name: string;
+  description?: string;
+  parentUnitId?: number | null;
+  isActive: boolean;
+  userCount: number;
+  createdAt: string;
+  children?: Unit[];
+  parentId: number;
+}
+
+interface TreeNode {
+  data: Unit;
+  children?: TreeNode[];
+  expanded?: boolean;
+}
 
 @Component({
-  selector: 'app-unit-list',
+  selector: 'app-list-unit',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     ButtonModule,
-    ConfirmDialogModule,
-    DialogModule,
-    InputIconModule,
-    TableModule,
+    TreeTableModule,
     TagModule,
     ToastModule,
-    CommonModule,
     InputTextModule,
-    MessageModule,
-    ReactiveFormsModule,
-    ChipModule
+    DialogModule,
+    ConfirmDialogModule
   ],
+  providers: [MessageService, ConfirmationService, DialogService],
   templateUrl: './unit-list.html',
-  styleUrl: './unit-list.scss',
+  styleUrls: ['./unit-list.scss']
 })
 export class UnitList implements OnInit {
+  private api = inject(ApiService);
   private messageService = inject(MessageService);
-  private dialogService = inject(DialogService);
-  private userService = inject(ApiService);
   private confirmationService = inject(ConfirmationService);
+  private dialogService = inject(DialogService);
 
-  units: UnitDto[] = [];
-  filteredUnits: UnitDto[] = [];
-  selectedUnits: UnitDto[] = [];
-  
+  // ====== داده‌ها ======
+  units: Unit[] = [];
+  treeData: TreeNode[] = [];
+  filteredTreeData: TreeNode[] = [];
   loading = false;
   searchValue = '';
-  statusLoading: { [key: number]: boolean } = {};
-  
+
+
+  columns = [
+    { field: 'name', header: 'نام واحد' },
+    { field: 'userCount', header: 'تعداد کاربران' },
+    { field: 'isActive', header: 'وضعیت' },
+    { field: 'edit', header: 'ویرایش' },
+    { field: 'addChild', header: 'زیرمجموعه' }
+  ];
+
+
   currentPage = 1;
   rowsPerPage = 10;
   totalRecords = 0;
 
-  constructor() {}
+
+  statusLoading: { [key: number]: boolean } = {};
 
   ngOnInit() {
     this.loadUnits();
   }
 
-  loadUnits() {
+  async loadUnits() {
     this.loading = true;
-    this.userService.GetAllUnits().subscribe({
-      next: (res: UnitDto[]) => {
-        this.units = res.map(unit => ({
-          ...unit,
-          isActive: unit.isActive !== undefined ? unit.isActive : true
-        }));
-        this.filteredUnits = [...this.units];
-        this.totalRecords = this.filteredUnits.length;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'خطا',
-          detail: 'بارگذاری واحدها با مشکل مواجه شد',
-          life: 3000
-        });
-        this.loading = false;
+    try {
+      const data = await lastValueFrom(this.api.GetAllUnits());
+      this.units = data;
+      this.buildTree();
+      this.totalRecords = this.units.length;
+    } catch (error) {
+      this.showError('خطا در بارگذاری واحدها');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+
+  buildTree() {
+    const unitMap = new Map<number, TreeNode>();
+
+    this.units.forEach(unit => {
+      unitMap.set(unit.unitId, {
+        data: { ...unit, children: [] },
+        children: [],
+        expanded: true
+      });
+    });
+
+    const roots: TreeNode[] = [];
+
+    this.units.forEach(unit => {
+      const node = unitMap.get(unit.unitId);
+      if (!node) return;
+      
+      if (unit.parentId && unitMap.has(unit.parentId)) {
+        const parent = unitMap.get(unit.parentId);
+        if (parent) {
+          parent.children!.push(node);
+        }
+      } else {
+        roots.push(node);
       }
     });
+
+    this.treeData = roots;
+    this.filteredTreeData = roots;
   }
+
 
   onSearch(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.searchValue = value;
-    
-    if (!value.trim()) {
-      this.filteredUnits = [...this.units];
-    } else {
-      const searchTerm = value.toLowerCase().trim();
-      this.filteredUnits = this.units.filter(unit =>
-        unit.name?.toLowerCase().includes(searchTerm) ||
-        unit.description?.toLowerCase().includes(searchTerm)
-      );
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    if (!this.searchValue.trim()) {
+      this.filteredTreeData = this.treeData;
+      this.totalRecords = this.units.length;
+      return;
     }
-    this.totalRecords = this.filteredUnits.length;
-    this.currentPage = 1;
+
+    const term = this.searchValue.toLowerCase().trim();
+    const filtered = this.filterTree(this.treeData, term);
+    this.filteredTreeData = filtered;
+    this.totalRecords = this.countNodes(filtered);
   }
 
-  getPaginatedUnits(): UnitDto[] {
-    const start = (this.currentPage - 1) * this.rowsPerPage;
-    const end = start + this.rowsPerPage;
-    return this.filteredUnits.slice(start, end);
+  filterTree(nodes: TreeNode[], term: string): TreeNode[] {
+    const result: TreeNode[] = [];
+
+    nodes.forEach(node => {
+      const matches = node.data.name.toLowerCase().includes(term) ||
+                      (node.data.description?.toLowerCase().includes(term) || false);
+      
+      const filteredChildren = node.children ? this.filterTree(node.children, term) : [];
+
+      if (matches || filteredChildren.length > 0) {
+        result.push({
+          ...node,
+          children: filteredChildren.length > 0 ? filteredChildren : node.children,
+          expanded: true
+        });
+      }
+    });
+
+    return result;
   }
 
-  onPageChange(event: any) {
-    this.currentPage = event.first / event.rows + 1;
-    this.rowsPerPage = event.rows;
+  countNodes(nodes: TreeNode[]): number {
+    let count = nodes.length;
+    nodes.forEach(node => {
+      if (node.children) {
+        count += this.countNodes(node.children);
+      }
+    });
+    return count;
   }
 
-  toggleUnitStatus(unit: UnitDto) {
+
+  openNew() {
+    const ref = this.dialogService.open(UnitPage, {
+      header: 'ایجاد واحد جدید',
+      width: '600px',
+      contentStyle: { overflow: 'auto' },
+      data: { mode: 'create' }
+    });
+    ref?.onClose.subscribe(result => {
+      if (result) this.loadUnits();
+    });
+  }
+
+
+  editUnit(unit: Unit) {
+    const ref = this.dialogService.open(UnitPage, {
+      header: 'ویرایش واحد',
+      width: '600px',
+      contentStyle: { overflow: 'auto' },
+      data: { mode: 'edit', unitId: unit.unitId }
+    });
+    ref?.onClose.subscribe(result => {
+      if (result) this.loadUnits();
+    });
+  }
+
+
+  addChild(unit: Unit) {
+    const ref = this.dialogService.open(UnitPage, {
+      header: `افزودن زیرمجموعه برای ${unit.name}`,
+      width: '600px',
+      contentStyle: { overflow: 'auto' },
+      data: { 
+        mode: 'create', 
+        parentUnitId: unit.unitId 
+      }
+    });
+    ref?.onClose.subscribe(result => {
+      if (result) this.loadUnits();
+    });
+  }
+
+
+  toggleStatus(unit: Unit) {
     const newStatus = !unit.isActive;
     const action = newStatus ? 'فعال' : 'غیرفعال';
     
-    Swal.fire({
-      title: `${action} کردن واحد`,
-      text: `آیا از ${action} کردن "${unit.name}" مطمئن هستید؟`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'بله',
-      cancelButtonText: 'انصراف'
-    }).then((result) => {
-      if (result.isConfirmed) {
+    this.confirmationService.confirm({
+      message: `آیا از ${action} کردن واحد "${unit.name}" مطمئن هستید؟`,
+      header: 'تأیید تغییر وضعیت',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
         this.statusLoading[unit.unitId] = true;
-        
-        this.userService.ToggleUnitStatus(unit).subscribe({
+        this.api.ToggleUnitStatus(unit.unitId).subscribe({
           next: () => {
             unit.isActive = newStatus;
             this.showSuccess(`واحد با موفقیت ${action} شد`);
             this.statusLoading[unit.unitId] = false;
           },
-          error: (err) => {
-            this.showError('تغییر وضعیت انجام نشد');
+          error: () => {
+            this.showError('خطا در تغییر وضعیت');
             this.statusLoading[unit.unitId] = false;
-            console.error(err);
           }
         });
       }
     });
   }
 
-  openNew() {
-    const ref = this.dialogService.open(UnitPage, {
-      header: 'ایجاد واحد جدید',
-      width: '80%',
-      closable: true,  
-      closeOnEscape: true, 
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      data: { mode: 'create' }
-    });
-
-
-    ref?.onClose.subscribe((result) => {
-      if (result) {
-        this.loadUnits();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'موفق',
-          detail: 'واحد با موفقیت ایجاد شد',
-          life: 4000
-        });
-      }
-    });
-  }
-
-  editUnit(unit: UnitDto) {
-    const ref = this.dialogService.open(UnitPage, {
-      header: 'ویرایش واحد',
-      width: '80%',
-      closable: true,  
-      closeOnEscape: true, 
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      data: { 
-        mode: 'edit', 
-        unitId: unit.unitId 
-      }
-    });
-    ref?.onClose.subscribe((result) => {
-      if (result) {
-        this.loadUnits();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'موفق',
-          detail: 'واحد با موفقیت ویرایش شد',
-          life: 4000
-        });
-      }
-    });
-  
-  }
-
-
 
   refresh() {
     this.loadUnits();
     this.searchValue = '';
-    this.selectedUnits = [];
-    this.currentPage = 1;
   }
 
-  clearSearch(table: Table) {
-    this.searchValue = '';
-    this.filteredUnits = [...this.units];
-    this.totalRecords = this.filteredUnits.length;
-    table.filterGlobal('', 'contains');
-  }
 
   showSuccess(msg: string) {
     this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
