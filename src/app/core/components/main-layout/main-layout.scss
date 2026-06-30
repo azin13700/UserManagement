@@ -142,7 +142,7 @@
 .sidebar {
   position: fixed;
   top: 0;
-  left: -320px; // ← از چپ باز می‌شود
+  right: -320px;
   width: 320px;
   height: 100vh;
   background: #ffffff;
@@ -153,7 +153,7 @@
   flex-direction: column;
 
   &.open {
-    left: 0;
+    right: 0;
   }
 
   // ===== HEADER =====

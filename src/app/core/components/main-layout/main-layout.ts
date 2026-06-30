@@ -61,7 +61,9 @@ export class MainLayout implements OnInit {
   }
 
   closeDrawer() {
-    this.visible = false;
+    this.visible = !this.visible;
+    this.cd.detectChanges();
+
   }
 
   buildMenu() {

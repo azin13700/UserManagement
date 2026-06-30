@@ -239,8 +239,11 @@ export class RequestPage implements OnInit {
       this.api.CreateRequest(formData).subscribe({
         next: (res) => {
          // const message = 'کاربر با موفقیت ایجاد شد';
-          this.showSuccess(res.message);
-          this.loading = false;
+         this.messageService.add({
+          severity: 'success',
+          summary: 'ثبت شد',
+          detail: `درخواست ثبت شد. کد پیگیری: ${res.requestCode}`
+        });
           this.loading = false;
 
           this.userForm.reset({
