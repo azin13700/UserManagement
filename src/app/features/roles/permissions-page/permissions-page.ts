@@ -10,6 +10,8 @@ import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PermissionDto, Permissions } from '../../../core/models/PermissionDto';
 import { DividerModule } from 'primeng/divider';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
 
 @Component({
   selector: 'app-permissions-page',
@@ -21,14 +23,16 @@ import { DividerModule } from 'primeng/divider';
     CheckboxModule,
     ToastModule,
     DialogModule,
-    DividerModule
+    DividerModule,
+       MessageDialogComponent,
+  
   ],
   templateUrl: './permissions-page.html',
   styleUrl: './permissions-page.scss',
 })
 export class PermissionsPage implements OnInit {
   private api = inject(ApiService);
-  private messageService = inject(MessageService);
+
 
   permissionGroups: PermissionDto[] = [];
   allPermissions: Permissions[] = [];
@@ -110,7 +114,7 @@ export class PermissionsPage implements OnInit {
 
     this.api.AssignPermissionsToRole(this.roleId, selectedIds).subscribe({
       next: () => {
-       // this.showSuccess('دسترسی‌ها با موفقیت تخصیص داده شدند');
+        this.showSuccess('دسترسی‌ها با موفقیت تخصیص داده شدند');
         this.saving = false;
         this.ref.close(true);
       },
@@ -123,12 +127,70 @@ export class PermissionsPage implements OnInit {
   }
 
 
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
   }
 
 

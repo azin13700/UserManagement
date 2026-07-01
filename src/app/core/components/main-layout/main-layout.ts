@@ -104,7 +104,7 @@ export class MainLayout implements OnInit {
     
     if (permissions.includes('Unit.View')) {
       userManagementItems.push({
-        label: 'لیست واحدها',
+        label: 'چارت سازمانی',
         icon: 'pi pi-building',
         routerLink: '/dashboard/list-unit'
       });

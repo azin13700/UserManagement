@@ -1,6 +1,26 @@
 <div class="children-dialog-content">
   <div class="card flex justify-center">
-    <p-toast />
+    <app-message-dialog
+  [(visible)]="messageDialogVisible"
+  [title]="messageDialogTitle"
+  [message]="messageDialogMessage"
+  [type]="messageDialogType"
+  [loading]="messageDialogLoading"
+  (onConfirm)="handleMessageConfirm()"
+></app-message-dialog>
+
+
+<app-confirm-dialog
+  [(visible)]="confirmDialogVisible"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [loading]="confirmDialogLoading"
+  [confirmSeverity]="confirmDialogSeverity"
+  (onConfirm)="handleConfirm()"
+  (onCancel)="confirmDialogVisible = false"
+></app-confirm-dialog>
+
+    <!-- <p-toast />
     <p-confirmdialog>
         <ng-template #message let-message>
             @if (message) {
@@ -10,7 +30,7 @@
                 </div>
             }
         </ng-template>
-    </p-confirmdialog>
+    </p-confirmdialog> -->
 </div>
   <div class="parent-info" *ngIf="selectedSubject">
     <div class="parent-badge">

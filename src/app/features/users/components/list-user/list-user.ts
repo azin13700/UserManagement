@@ -17,6 +17,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ApiService } from '../../../../core/services/api-service';
 import { UserForm } from '../user-form/user-form';
 import Swal from 'sweetalert2';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../../shared/message-dialog-component/message-dialog-component';
 
 interface User {
   userId: number;
@@ -48,6 +50,8 @@ interface User {
     SelectModule,
     MultiSelectModule,
     TooltipModule,
+    MessageDialogComponent,
+    ConfirmDialogComponent
   ],
   providers: [MessageService, ConfirmationService, DialogService],
   templateUrl: './list-user.html',
@@ -76,7 +80,7 @@ export class ListUser implements OnInit {
   ];
   
   statusLoading: { [key: number]: boolean } = {};
-
+  visible: boolean = false;
   
   get isFilterActive(): boolean {
     return !!(this.globalSearch || this.selectedRoles.length > 0 || this.selectedStatus);
@@ -240,12 +244,8 @@ onSearch() {
     ref?.onClose.subscribe((result) => {
       if (result) {
         this.loadUsers();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'موفق',
-          detail: 'کاربر با موفقیت ایجاد شد',
-          life: 4000
-        });
+        this.showSuccess(`کاربر با موفقیت ایجاد شد`);
+       
       }
     });
   }
@@ -263,44 +263,33 @@ onSearch() {
     ref?.onClose.subscribe((result) => {
       if (result) {
         this.loadUsers();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'موفق',
-          detail: 'کاربر با موفقیت ویرایش شد',
-          life: 4000
-        });
+        this.showSuccess(`کاربر با موفقیت ویرایش شد`);
       }
     });
   }
 
   toggleUserStatus(user: User) {
-    const newStatus = user.isActive === false ? 'Inactive' : 'Active';
-  
+    const newStatus = !user.isActive;
+    const action = newStatus ? 'فعال' : 'غیرفعال';
+    this.showConfirm(
+      'تغییر وضعیت',
+      `آیا از ${action} کردن واحد "${user.fullName}" مطمئن هستید؟`,
+      async () => {
+        this.statusLoading[user.userId] = true;
+        try {
+          await lastValueFrom(this.userService.ToggleUnitStatus(user.userId));
+          user.isActive = newStatus;
+          this.showSuccess(`واحد با موفقیت ${action} شد`);
+        } catch (error) {
+          this.showError('خطا در تغییر وضعیت');
+        } finally {
+          this.statusLoading[user.userId] = false;
+        }
+      },
+      newStatus ? 'success' : 'danger'
+    );
     
-    Swal.fire({
-      title: newStatus ? 'فعال‌سازی کاربر' : 'غیرفعال‌سازی کاربر',
-      text: `آیا از تغییر وضعیت ${user.fullName}  مطمئن هستید؟`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'بله',
-      cancelButtonText: 'انصراف'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        
-        this.userService.ToggleEmployeeStatus(user)
-          .subscribe({
-            next: () => {
-              this.loadUsers();
-          //    Swal.fire('موفقیت', `کاربر ${newStatus ? 'فعال' : 'غیرفعال'} شد`, 'success');
-            },
-            error: (err) => {
-              Swal.fire('خطا', 'تغییر وضعیت انجام نشد', 'error');
-              console.error(err);
-            }
-          });
 
-      }
-    });
 
   }
 
@@ -321,22 +310,7 @@ onSearch() {
     });
   }
 
-  deleteSelectedUsers() {
-    if (!this.selectedUsers?.length) return;
-    this.confirmationService.confirm({
-      message: `آیا از حذف ${this.selectedUsers.length} کاربر انتخاب شده اطمینان دارید؟`,
-      header: 'تأیید حذف گروهی',
-      icon: 'pi pi-exclamation-triangle',
-      accept: async () => {
-        for (const user of this.selectedUsers) {
-          await lastValueFrom(this.userService.DeleteUser(user.userId));
-        }
-        this.loadUsers();
-        this.selectedUsers = [];
-        this.showSuccess('کاربران انتخاب شده حذف شدند');
-      }
-    });
-  }
+
 
   refresh() {
     this.loadUsers();
@@ -346,11 +320,69 @@ onSearch() {
 
 
   
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
   }
 }

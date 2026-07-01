@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService, ConfirmationService, TreeNode } from 'primeng/api';
 import { ApiService } from '../../../core/services/api-service';
 import { AuthService } from '../../../core/services/auth-service';
 import { async, lastValueFrom } from 'rxjs';
@@ -16,6 +16,9 @@ import { RequestWorkFlowDto } from '../../../core/models/RequestWorkFlowDto';
 import { SelectModule } from 'primeng/select';
 import { SubjectDto } from '../../../core/models/SubjectDto';
 import { UnitDto } from '../../../core/models/UnitDto';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
+import { TreeSelectModule } from 'primeng/treeselect';
 
 interface Request {
   id: number;
@@ -53,6 +56,10 @@ interface Unit {
     DialogModule,
     ConfirmDialogModule,
     SelectModule,
+        MessageDialogComponent,
+        ConfirmDialogComponent,
+        TreeSelectModule,
+
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './dashboard.html',
@@ -88,7 +95,7 @@ globalSearch: any;
    filteredSubSubjects: SubjectDto[] = [];
    units: Unit[] = [];
  
-
+   unitNodes: TreeNode[] = [];
   userFullName = '';
   userRole = '';
   userUnitName = '';
@@ -135,6 +142,7 @@ globalSearch: any;
   }
   userId:any;
 
+  selectedUnitKey: string | null = null;
  loadRequests(): void {
 
   this.loading = true;
@@ -165,12 +173,10 @@ globalSearch: any;
   applyFilters() {
     let result = [...this.requests];
 
-    // فیلتر وضعیت
     if (this.selectedStatus) {
    //   result = result.filter(r => r.status === this.selectedStatus);
     }
 
-    // فیلتر جستجو
     if (this.searchValue.trim()) {
       const term = this.searchValue.toLowerCase().trim();
       result = result.filter(r =>
@@ -216,21 +222,64 @@ globalSearch: any;
         isActive:true
       }));
     } catch (error) {
-    //this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
+    this.showError('بارگذاری موضوع ها با مشکل مواجه شد');
     }
   }
 
   async loadUits(){
     try {
       const res = await lastValueFrom(this.api.GetAllUnits());
-      this.units = res.map(r => ({ 
-        unitId: r.unitId || r.id, 
-        name: r.name 
-      }));
+      this.unitNodes = this.buildTree(res);
     } catch (error) {
-    //  this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
+     this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
     }
   }
+
+  private buildTree(units: UnitDto[]): TreeNode[] {
+
+    const map = new Map<number, TreeNode>();
+  
+    units.forEach(u => {
+  
+        map.set(u.unitId, {
+  
+            key: u.unitId.toString(),
+  
+            label: u.name,
+  
+            data: u,
+  
+            children: []
+  
+        });
+  
+    });
+  
+    const roots: TreeNode[] = [];
+  
+    units.forEach(u => {
+  
+        const node = map.get(u.unitId)!;
+  
+        if (u.parentId && map.has(u.parentId)) {
+  
+            map.get(u.parentId)!.children!.push(node);
+  
+        } else {
+  
+            roots.push(node);
+  
+        }
+  
+    });
+  
+    return roots;
+  
+  }
+
+
+
+
   onSubjectChange(event: any) {
     const subjectId = event.value;
    // this.userForm.patchValue({ subjectId: subjectId });
@@ -264,15 +313,19 @@ globalSearch: any;
       const subSubjectId = event.value;
     //  this.userForm.patchValue({ subSubjectId: subSubjectId });
     }
-    onSearch() {
 
+    onUnitSelect(event: any) {
+      this.selectedUnitId = event.node.data.unitId;
+    }
+    onSearch() {
+  
       const dto = {
     
         userId: this.userId,
     
         unitId: this.selectedUnitId
-          ? [this.selectedUnitId]
-          : [],
+        ? [this.selectedUnitId]
+        : [],
     
         subjectId: this.selectedSubjectId
           ? [this.selectedSubjectId]
@@ -356,11 +409,70 @@ globalSearch: any;
     }
   }
 
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
   }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
+  }
+
 }

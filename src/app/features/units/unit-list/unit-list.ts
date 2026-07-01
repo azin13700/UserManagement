@@ -13,6 +13,8 @@ import { ApiService } from '../../../core/services/api-service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { lastValueFrom } from 'rxjs';
 import { UnitPage } from '../unit-page/unit-page';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
 
 interface Unit {
   unitId: number;
@@ -44,7 +46,9 @@ interface TreeNode {
     ToastModule,
     InputTextModule,
     DialogModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    MessageDialogComponent,
+    ConfirmDialogComponent
   ],
   providers: [MessageService, ConfirmationService, DialogService],
   templateUrl: './unit-list.html',
@@ -56,14 +60,79 @@ export class UnitList implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private dialogService = inject(DialogService);
 
-  // ====== داده‌ها ======
+
   units: Unit[] = [];
   treeData: TreeNode[] = [];
   filteredTreeData: TreeNode[] = [];
   loading = false;
   searchValue = '';
 
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
 
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
+  }
+
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
+  }
+
+  
   columns = [
     { field: 'name', header: 'نام واحد' },
     { field: 'userCount', header: 'تعداد کاربران' },
@@ -190,7 +259,9 @@ export class UnitList implements OnInit {
       data: { mode: 'create' }
     });
     ref?.onClose.subscribe(result => {
-      if (result) this.loadUnits();
+      if (result)
+        this.showSuccess(`واحد با موفقیت ایجاد شد`);
+        this.loadUnits();
     });
   }
 
@@ -203,7 +274,9 @@ export class UnitList implements OnInit {
       data: { mode: 'edit', unitId: unit.unitId }
     });
     ref?.onClose.subscribe(result => {
-      if (result) this.loadUnits();
+      if (result)
+        this.showSuccess(`واحد با موفقیت ویرایش شد`);
+        this.loadUnits();
     });
   }
 
@@ -219,7 +292,9 @@ export class UnitList implements OnInit {
       }
     });
     ref?.onClose.subscribe(result => {
-      if (result) this.loadUnits();
+      if (result) 
+        this.showSuccess(`واحد با موفقیت ایجاد شد`);
+        this.loadUnits();
     });
   }
 
@@ -228,26 +303,25 @@ export class UnitList implements OnInit {
     const newStatus = !unit.isActive;
     const action = newStatus ? 'فعال' : 'غیرفعال';
     
-    this.confirmationService.confirm({
-      message: `آیا از ${action} کردن واحد "${unit.name}" مطمئن هستید؟`,
-      header: 'تأیید تغییر وضعیت',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+    this.showConfirm(
+      'تغییر وضعیت',
+      `آیا از ${action} کردن واحد "${unit.name}" مطمئن هستید؟`,
+      async () => {
         this.statusLoading[unit.unitId] = true;
-        this.api.ToggleUnitStatus(unit.unitId).subscribe({
-          next: () => {
-            unit.isActive = newStatus;
-            this.showSuccess(`واحد با موفقیت ${action} شد`);
-            this.statusLoading[unit.unitId] = false;
-          },
-          error: () => {
-            this.showError('خطا در تغییر وضعیت');
-            this.statusLoading[unit.unitId] = false;
-          }
-        });
-      }
-    });
+        try {
+          await lastValueFrom(this.api.ToggleUnitStatus(unit.unitId));
+          unit.isActive = newStatus;
+          this.showSuccess(`واحد با موفقیت ${action} شد`);
+        } catch (error) {
+          this.showError('خطا در تغییر وضعیت');
+        } finally {
+          this.statusLoading[unit.unitId] = false;
+        }
+      },
+      newStatus ? 'success' : 'danger'
+    );
   }
+
 
 
   refresh() {
@@ -256,11 +330,5 @@ export class UnitList implements OnInit {
   }
 
 
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
-  }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
-  }
 }

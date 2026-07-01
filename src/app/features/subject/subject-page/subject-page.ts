@@ -9,6 +9,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ApiService } from '../../../core/services/api-service';
 import { lastValueFrom } from 'rxjs';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
 
 @Component({
   selector: 'app-subject-page',
@@ -20,7 +22,9 @@ import { lastValueFrom } from 'rxjs';
     InputTextModule,
     ToastModule,
     InputTextModule,
-    TextareaModule
+    TextareaModule,
+    MessageDialogComponent,
+    ConfirmDialogComponent
   ], 
    templateUrl: './subject-page.html',
   styleUrl: './subject-page.scss',
@@ -76,7 +80,7 @@ export class SubjectPage implements OnInit  {
        isActive: data.isActive,
        subjectId:data.subjectId
       });
-      console.log(     this.subjectForm.value);
+     
       
     } catch (error) {
       this.showError('خطا در دریافت اطلاعات موضوع');
@@ -89,7 +93,7 @@ export class SubjectPage implements OnInit  {
         const control = this.subjectForm.get(key);
         if (control?.invalid) {
           control.markAsTouched();
-          console.log(     this.subjectForm.value);
+
         }
       });
       this.showError('لطفاً همه فیلدهای الزامی را به درستی پر کنید');
@@ -126,11 +130,6 @@ export class SubjectPage implements OnInit  {
     error: (err) => {
       this.loading = false;
       let errorMsg = 'خطا در انجام عملیات';
-      if (err.error?.errors) {
-        errorMsg = Object.values(err.error.errors).flat().join(', ');
-      } else if (err.error?.message) {
-        errorMsg = err.error.message;
-      }
       this.showError(errorMsg);
     }
   });
@@ -141,12 +140,70 @@ export class SubjectPage implements OnInit  {
     return control ? (control.invalid && (control.touched || control.dirty)) : false;
   }
 
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
   }
 
   close() {

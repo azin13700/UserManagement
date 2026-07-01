@@ -1,5 +1,14 @@
 <div class="permission-container">
-  <p-toast position="top-right"></p-toast>
+  <app-message-dialog
+  [(visible)]="messageDialogVisible"
+  [title]="messageDialogTitle"
+  [message]="messageDialogMessage"
+  [type]="messageDialogType"
+  [loading]="messageDialogLoading"
+  (onConfirm)="handleMessageConfirm()"
+></app-message-dialog>
+
+
 
   <div class="permission-header">
     <h2>

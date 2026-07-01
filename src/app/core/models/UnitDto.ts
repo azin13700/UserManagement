@@ -1,8 +1,20 @@
 export interface UnitDto {
+    unitId: number;
+
+    name: string;
+
     description?: string;
-    name?: string;
-    unitId :number;
-    UserCount?:number;
-    isActive?:boolean;
+
+    parentId?: number | null;
+
+    parentName?: string | null;
+
+    isActive?: boolean;
+
+    userCount?: number;
+
+    childrenCount?: number;
+
+    createdAt?: string | null;
 
 }

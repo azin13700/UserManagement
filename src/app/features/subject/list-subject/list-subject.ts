@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -17,6 +16,9 @@ import { ApiService } from '../../../core/services/api-service';
 import { SubjectDto } from '../../../core/models/SubjectDto';
 import { SubjectPage } from '../subject-page/subject-page';
 import { SubsubjectPage } from '../subsubject-page/subsubject-page';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-list-subject',
@@ -35,19 +37,19 @@ import { SubsubjectPage } from '../subsubject-page/subsubject-page';
     MessageModule,
     ReactiveFormsModule,
     ChipModule,
+    MessageDialogComponent,
+    ConfirmDialogComponent
   ],
   templateUrl: './list-subject.html',
   styleUrl: './list-subject.scss',
 })
 export class ListSubject implements OnInit  {
-confirm() {
-throw new Error('Method not implemented.');
-}
 
-  private messageService = inject(MessageService);
+
+
   private dialogService = inject(DialogService);
   private userService = inject(ApiService);
-  private confirmationService=inject(ConfirmationService); 
+
 
     roles: SubjectDto[] = [];
     filteredRoles: SubjectDto[] = [];
@@ -61,7 +63,14 @@ throw new Error('Method not implemented.');
     childrenDialogVisible = false;
     selectedSubject: SubjectDto | null = null;
     childrenList: SubjectDto[] = [];
-
+    columns = [
+      { field: 'title', header: ' عنوان موضوع' },
+      { field: 'userCount', header: 'تخصیص زیرموضوعات ' },
+      { field: 'isActive', header: 'وضعیت' },
+      { field: 'edit', header: 'ویرایش' },
+    
+    ];
+  
 
 
   ngOnInit(): void {
@@ -80,12 +89,8 @@ throw new Error('Method not implemented.');
           this.loading = false;
         },
         error: (err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'خطا',
-            detail: 'بارگذاری نقش‌ها با مشکل مواجه شد',
-            life: 3000
-          });
+          this.showError('بارگذاری موضوع ها با مشکل مواجه شد');
+     
           this.loading = false;
         }
       });
@@ -163,13 +168,71 @@ throw new Error('Method not implemented.');
 
    }  
 
-   showSuccess(msg: string) {
-      this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
-  }
-      
-  showError(msg: string) {
-      this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
- } 
+
+   messageDialogVisible = false;
+   messageDialogTitle = '';
+   messageDialogMessage = '';
+   messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+   messageDialogLoading = false;
+ 
+ 
+   confirmDialogVisible = false;
+   confirmDialogTitle = '';
+   confirmDialogMessage = '';
+   confirmDialogLoading = false;
+   confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+   confirmCallback: (() => void) | null = null;
+ 
+ 
+   showSuccess(message: string, callback?: () => void) {
+     this.messageDialogTitle = 'موفق';
+     this.messageDialogMessage = message;
+     this.messageDialogType = 'success';
+     this.messageDialogVisible = true;
+     this.messageDialogLoading = false;
+    
+     if (callback) {
+    
+     }
+   }
+ 
+ 
+   showError(message: string) {
+     this.messageDialogTitle = 'خطا';
+     this.messageDialogMessage = message;
+     this.messageDialogType = 'error';
+     this.messageDialogVisible = true;
+   }
+ 
+ 
+   showConfirm(
+     title: string,
+     message: string,
+     onConfirm: () => void,
+     severity: 'success' | 'danger' | 'primary' = 'primary'
+   ) {
+     this.confirmDialogTitle = title;
+     this.confirmDialogMessage = message;
+     this.confirmDialogSeverity = severity;
+     this.confirmDialogVisible = true;
+     this.confirmCallback = onConfirm;
+   }
+ 
+ 
+   handleConfirm() {
+     this.confirmDialogLoading = true;
+     if (this.confirmCallback) {
+       this.confirmCallback();
+     }
+     this.confirmDialogLoading = false;
+     this.confirmDialogVisible = false;
+   }
+ 
+ 
+   handleMessageConfirm() {
+     this.messageDialogVisible = false;
+     
+   }
    refresh(){
 
     }
@@ -198,39 +261,26 @@ throw new Error('Method not implemented.');
     }
  
     toggleSubjectStatus(subject:any) {
-      this.confirmationService.confirm({
-        target: subject.target as EventTarget,
-        message: 'آیا از تایید این درخواست مطمئن هستید؟',
-        header: 'تغییر وضعیت',
-        icon: 'pi pi-info-circle',
-        acceptButtonProps: {
-          label: 'بله',
-          severity: 'success' 
-      },
-        rejectLabel: 'خیر',
-        rejectButtonProps: {
-            label: 'لغو',
-            severity: 'danger',
-            outlined: true
-        },
-   
-    
-        accept: () => {
-             this.userService.ToggleSubjectStatus(subject).subscribe({
-            next: () => {
-              this.loadSubject();
+         const newStatus = !subject.isActive;
+          const action = newStatus ? 'فعال' : 'غیرفعال';
+          
+          this.showConfirm(
+            'تغییر وضعیت',
+            `آیا از ${action} کردن موضوع "${subject.title}" مطمئن هستید؟`,
+            async () => {
+              //this.statusLoading[subject.] = true;
+              try {
+                await lastValueFrom(this.userService.ToggleSubjectStatus(subject));
+                subject.isActive = newStatus;
+                this.showSuccess(`موضوع با موفقیت ${action} شد`);
+              } catch (error) {
+                this.showError('خطا در تغییر وضعیت');
+              } finally {
+               // this.statusLoading[subject.unitId] = false;
+              }
             },
-            error: (err) => {
-       
-            }
-          });
-        },
-        reject: () => {
-           // this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
-        }
-    });
-
-
-    
+            newStatus ? 'success' : 'danger'
+          );
+  
     }
 }

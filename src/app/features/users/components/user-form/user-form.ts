@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MessageService, TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -12,6 +12,9 @@ import { ApiService } from '../../../../core/services/api-service';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { lastValueFrom } from 'rxjs';
 import { UnitDto } from '../../../../core/models/UnitDto';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../../shared/message-dialog-component/message-dialog-component';
+import { TreeSelectModule } from 'primeng/treeselect';
 
 interface UserRole {
   roleId: number;
@@ -30,6 +33,10 @@ interface UserRole {
     MultiSelectModule,
     FileUploadModule,
     ToastModule,
+    MessageDialogComponent,
+    ConfirmDialogComponent,
+    TreeSelectModule,
+    FormsModule 
   ],
   templateUrl: './user-form.html',
   styleUrls: ['./user-form.scss'],
@@ -44,11 +51,12 @@ export class UserForm implements OnInit {
   isEditMode = false;
   userId: number | null = null;
   rolesLoading = false;
-
+  selectedUnitKey: TreeNode | null = null;
   statusOptions = [
     { label: 'فعال', value: 'Active' },
     { label: 'غیرفعال', value: 'Inactive' }
   ];
+  unitNodes: TreeNode[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -61,16 +69,16 @@ export class UserForm implements OnInit {
     this.userId = this.config.data?.userId || null;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initForm();
-    this.loadRoles();
-    this.loadUits();
-    
-    if (this.isEditMode && this.userId) {
-      this.loadUserData();
-    }
-  }
 
+    await this.loadRoles();
+    await this.loadUits();
+
+    if (this.isEditMode && this.userId) {
+        await this.loadUserData();
+    }
+}
   initForm() {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -81,7 +89,7 @@ export class UserForm implements OnInit {
       password: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]],
             status: ['Active'],
       roleId: [[], Validators.required],
-      unitId: [[], Validators.required],
+      unitId: [null, Validators.required],
       nationalNo: ['', Validators.required],
       phoneNumber: ['', Validators.required],
 
@@ -105,10 +113,7 @@ export class UserForm implements OnInit {
 
   async loadUits(){
     const res = await lastValueFrom(this.api.GetAllUnits());
-    this.userUnit = res.map(r => ({ 
-      unitId: r.unitId || r.id, 
-      name:  r.name || ''
-    }));
+    this.unitNodes = this.buildTree(res);
   }
 
 
@@ -121,7 +126,37 @@ getUnitNameById(unitId: number): string {
   return unit?.name ?? 'نامشخص';
 }
 
+private buildTree(units: UnitDto[]): TreeNode[] {
 
+  const map = new Map<number, TreeNode>();
+
+  units.forEach(u => {
+      map.set(u.unitId, {
+          key: u.unitId.toString(),
+          label: u.name,
+          data: u,
+          children: []
+      });
+  });
+
+  const roots: TreeNode[] = [];
+
+  units.forEach(u => {
+
+      const node = map.get(u.unitId)!;
+
+      if (u.parentId && map.has(u.parentId)) {
+          map.get(u.parentId)!.children!.push(node);
+      } else {
+          roots.push(node);
+      }
+
+  });
+
+  return roots;
+}
+
+unitId!: null
 async loadUserData() {
   try {
     const data = await lastValueFrom(this.api.GetUserById(this.userId!));
@@ -131,22 +166,37 @@ async loadUserData() {
     if (data.dateOfBirth) {
       birthDate = new Date(data.dateOfBirth);
     }
-    
-    const unitIds = data.unitIds || data.unitId || data.unitid || [];
+
+ 
+   // const unitIds = data.unitIds || data.unitId || data.unitid || [];
     const roleIds = data.roleIds || data.roleId || [];
 
-    this.userForm.patchValue({
-      name: data.name || '',
-      family: data.family || '',
-      username: data.userName || data.username || '',
-      email: data.email || '',
-      dateOfBirth: birthDate,
-      status: data.status || 'Active',
-      roleId: roleIds,
-      unitId: unitIds,
-      nationalNo: data.nationalNo ? data.nationalNo.toString() : '',
-      phoneNumber: data.phoneNumber ? data.phoneNumber.toString() : '',
-    });
+    const unitId =
+    data.unitid?.length
+        ? data.unitid[0].toString()
+        : null;
+
+const selectedNode =
+    unitId
+        ? this.findNode(this.unitNodes, unitId)
+        : null;
+
+this.userForm.patchValue({
+
+    name: data.name,
+    family: data.family,
+    username: data.userName,
+    email: data.email,
+    dateOfBirth: birthDate,
+    status: data.status,
+    roleId: roleIds,
+
+    unitId: selectedNode,
+
+    nationalNo: data.nationalNo,
+    phoneNumber: data.phoneNumber
+
+});
     
     if (data.photo) {
       this.imagePreview = `data:image/jpeg;base64,${data.photo}`;
@@ -155,6 +205,25 @@ async loadUserData() {
   } catch (error) {
     this.showError('خطا در دریافت اطلاعات کاربر');
   }
+}
+
+private findNode(nodes: TreeNode[], key: string): TreeNode | null {
+
+  for (const node of nodes) {
+
+      if (node.key === key)
+          return node;
+
+      if (node.children?.length) {
+
+          const found = this.findNode(node.children, key);
+
+          if (found)
+              return found;
+      }
+  }
+
+  return null;
 }
 
   onFileSelected(event: any) {
@@ -167,6 +236,13 @@ async loadUserData() {
     }
   }
 
+  onUnitSelect(event: any) {
+
+    this.userForm.patchValue({
+        unitId: [event.node.data.unitId]
+    });
+
+}
   removeImage() {
     this.selectedFile = null;
     this.imagePreview = null;
@@ -224,21 +300,25 @@ async loadUserData() {
       formData.append('DateOfBirth', formattedDate);
     }
   
-    const password = this.userForm.get('password')?.value;
-    if (password) {
-      formData.append('Password', password);
-    }
+    if (!this.isEditMode) {
+      formData.append(
+          'Password',
+          this.userForm.get('password')!.value
+      );
+  }
   
     const roleIds = this.userForm.get('roleId')?.value || [];
     roleIds.forEach((id: number) => {
       formData.append('RoleId', id.toString());
     });
   
-    const unitIds = this.userForm.get('unitId')?.value || [];
-    unitIds.forEach((id: number) => {
-      formData.append('UnitId', id.toString());
-    });
-  
+    const node: TreeNode = this.userForm.value.unitId;
+
+    formData.append(
+        'UnitId',
+        node.data.unitId.toString()
+    );
+
     if (this.selectedFile) {
       formData.append('Photo', this.selectedFile);
     }
@@ -286,12 +366,70 @@ async loadUserData() {
     }
     return control ? (control.invalid && (control.touched || control.dirty)) : false;
   }
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
   }
 
   close() {

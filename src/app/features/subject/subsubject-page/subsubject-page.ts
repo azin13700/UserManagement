@@ -11,6 +11,8 @@ import { lastValueFrom } from 'rxjs';
 import { ApiService } from '../../../core/services/api-service';
 import { SubjectDto } from '../../../core/models/SubjectDto';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
 
 @Component({
   selector: 'app-subsubject-page',
@@ -23,7 +25,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ToastModule,
     InputTextModule,
     TextareaModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    MessageDialogComponent,
+    ConfirmDialogComponent
   ],
   templateUrl: './subsubject-page.html',
   styleUrl: './subsubject-page.scss',
@@ -69,13 +73,71 @@ export class SubsubjectPage   implements OnInit {
   childrenList: SubjectDto[] = [];
   selectedSubject: SubjectDto | null = null;
 
+  statusLoading: { [key: number]: boolean } = {};
 
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
   }
 
   close() {
@@ -160,37 +222,31 @@ export class SubsubjectPage   implements OnInit {
 
 toggleSubjectStatus(subject: SubjectDto) {
 
-  this.confirmationService.confirm({
-    message: 'آیا از تغییر وضعیت این موضوع مطمئن هستید؟',
-    header: 'تغییر وضعیت',
-    icon: 'pi pi-info-circle',
 
-    rejectButtonProps: {
-      label: 'خیر',
-      severity: 'danger',
-      outlined: true
-
+  const newStatus = !subject.isActive;
+  const action = newStatus ? 'فعال' : 'غیرفعال';
+  
+  this.showConfirm(
+    'تغییر وضعیت',
+    `آیا از ${action} کردن واحد "${subject.title}" مطمئن هستید؟`,
+    async () => {
+      this.statusLoading[subject.subjectId] = true;
+      try {
+        await lastValueFrom(this.api.ToggleSubjectStatus(subject));
+        subject.isActive = newStatus;
+        this.showSuccess(`موضوع با موفقیت ${action} شد`);
+      } catch (error) {
+        this.showError('خطا در تغییر وضعیت');
+      } finally {
+        this.statusLoading[subject.subjectId] = false;
+      }
     },
-    acceptButtonProps: {
-      label: 'بلی',
-      severity: 'success',
-      outlined: true
-    },
-
-    accept: () => {
-
-      this.api.ToggleSubjectStatus(subject).subscribe({
-        next: () => {
-          this.loadSubjectData();
-        }
-      });
-
-    }
-
-  });
+    newStatus ? 'success' : 'danger'
+  );
 
 }
   subjectId!:number;
+
   async editSubject(sub: SubjectDto) {
     this.showAddInput = !this.showAddInput;
     this.isEditMode = true;
@@ -205,10 +261,6 @@ toggleSubjectStatus(subject: SubjectDto) {
      });
      console.log(     this.subjectForm.value);
    } 
-
-
-
-
 
 }
   

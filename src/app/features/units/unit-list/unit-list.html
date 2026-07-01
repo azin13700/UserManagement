@@ -1,8 +1,24 @@
 <div class="dashboard-container">
-  <p-toast position="top-right"></p-toast>
-  
 
-  <p-confirmdialog></p-confirmdialog>
+<app-message-dialog
+  [(visible)]="messageDialogVisible"
+  [title]="messageDialogTitle"
+  [message]="messageDialogMessage"
+  [type]="messageDialogType"
+  [loading]="messageDialogLoading"
+  (onConfirm)="handleMessageConfirm()"
+></app-message-dialog>
+
+
+<app-confirm-dialog
+  [(visible)]="confirmDialogVisible"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [loading]="confirmDialogLoading"
+  [confirmSeverity]="confirmDialogSeverity"
+  (onConfirm)="handleConfirm()"
+  (onCancel)="confirmDialogVisible = false"
+></app-confirm-dialog>
 
   <div class="main-card">
     

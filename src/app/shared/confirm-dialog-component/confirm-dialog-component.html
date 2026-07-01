@@ -1,0 +1,37 @@
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [closable]="false" 
+  [header]="title" 
+  [style]="{ width: '420px' }"
+  [baseZIndex]="9999"
+  (onHide)="close()"
+>
+  <div class="confirm-dialog-content">
+    
+    <div class="confirm-icon" [class]="severityClass">
+      <i class="pi pi-exclamation-triangle"></i>
+    </div>
+
+    <p class="confirm-message">{{ message }}</p>
+
+    <div class="confirm-dialog-footer">
+      <button
+        pButton
+        [label]="cancelText"
+        icon="pi pi-times"
+        class="p-button-outlined"
+        (click)="cancel()"
+      ></button>
+      <button
+        pButton
+        [label]="confirmText"
+        icon="pi pi-check"
+        [loading]="loading"
+        [class]="'confirm-btn ' + severityClass"
+        (click)="confirm()"
+      ></button>
+    </div>
+
+  </div>
+</p-dialog>

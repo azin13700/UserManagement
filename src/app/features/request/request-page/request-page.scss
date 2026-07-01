@@ -441,3 +441,81 @@ $danger: #ef4444;
     }
   }
 }
+
+
+// ============================================================
+//  TREE SELECT STYLES
+// ============================================================
+.tree-select-wrapper {
+  min-width: 220px;
+  
+  ::ng-deep .p-treeselect {
+    width: 100%;
+    background: $white;
+    border: 1px solid $border;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: darken($border, 10%);
+    }
+    
+    &.p-focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+    }
+    
+    .p-treeselect-label {
+      padding: 0.45rem 0.8rem;
+      font-size: 0.85rem;
+      color: $text-dark;
+      
+      &.p-placeholder {
+        color: $text-light;
+      }
+    }
+    
+    .p-treeselect-trigger {
+      width: 2.5rem;
+      color: $text-light;
+    }
+  }
+  
+  ::ng-deep .p-treeselect-panel {
+    border-radius: 10px;
+    border: 1px solid $border;
+    box-shadow: $shadow;
+    margin-top: 0.25rem;
+    
+    .p-treeselect-items-wrapper {
+      .p-treeselect-items {
+        .p-treeselect-item {
+          padding: 0.3rem 0.8rem;
+          font-size: 0.85rem;
+          color: $text-dark;
+          
+          &:hover {
+            background: #f8fafc;
+          }
+          
+          &.p-highlight {
+            background: #eef2ff;
+            color: $primary;
+          }
+          
+          .p-checkbox {
+            .p-checkbox-box {
+              border-radius: 6px;
+              border-color: $border;
+              
+              &.p-highlight {
+                background: $primary;
+                border-color: $primary;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

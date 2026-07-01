@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService, ConfirmationService, TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
@@ -15,33 +15,15 @@ import { UnitDto } from '../../../core/models/UnitDto';
 import { SubjectDto } from '../../../core/models/SubjectDto';
 import { TextareaModule } from 'primeng/textarea';
 import { AuthService } from '../../../core/services/auth-service';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
+import { TreeSelectModule } from 'primeng/treeselect';
 
-
-
-interface Unit {
-  unitId: number;
-  name: string;
-}
-
-interface Request {
-  id: number;
-  subjectId: number;
-  subjectTitle: string;
-  subSubjectId: number;
-  subSubjectTitle: string;
-  description: string;
-  unitId: number;
-  unitName: string;
-  photo: string | null;
-  status: string;
-  createdAt: string;
-  createdBy: string;
-}
 @Component({
   selector: 'app-request-page',
   standalone: true,
   imports: [ 
-     CommonModule,
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
@@ -49,239 +31,329 @@ interface Request {
     TagModule,
     ToastModule,
     InputTextModule,
-    SelectModule ,
+    SelectModule,
     TextareaModule,
-   // InputTextareaModule,
-   // DropdownModule,
-    FileUploadModule,],
+    MessageDialogComponent,
+    ConfirmDialogComponent,
+    TreeSelectModule,
+    FileUploadModule,
+  ],
   templateUrl: './request-page.html',
   styleUrl: './request-page.scss',
 })
 export class RequestPage implements OnInit {
-
-  userForm!: FormGroup;
+isEditMode: any;
+removeImage() {
+throw new Error('Method not implemented.');
+}
+  private fb = inject(FormBuilder);
   private api = inject(ApiService);
+
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
     private authService = inject(AuthService);
-  
-  private fb = inject(FormBuilder);
-   requests: Request[] = [];
-   filteredRequests: Request[] = [];
-   selectedRequests: Request[] = [];
-   loading = false;
-   searchValue = '';
-   userUnit:UnitDto[]=[];
-   currentPage = 1;
-   rowsPerPage = 10;
-   totalRecords = 0;
- 
-   dialogVisible = false;
-   isEditMode = false;
+  loading = false;
 
- 
-   subjects: SubjectDto[] = [];
-   filteredSubSubjects: SubjectDto[] = [];
-   units: Unit[] = [];
- 
-   statusOptions = [
-     { label: 'در انتظار', value: 'در انتظار' },
-     { label: 'در حال بررسی', value: 'در حال بررسی' },
-     { label: 'تایید شده', value: 'تایید شده' },
-     { label: 'رد شده', value: 'رد شده' }
-   ];
- 
-   statusLoading: { [key: number]: boolean } = {};
-   selectedFile: File | null = null;
-   imagePreview: string | null = null;
- 
+  requestForm!: FormGroup;
+
+  subjects: SubjectDto[] = [];
+  subSubjects: SubjectDto[] = [];
+
+  unitNodes: TreeNode[] = [];
+
+  selectedUnitKey: string | null = null;
+
+  selectedFile?: File;
+  imagePreview?: string;
+
   ngOnInit(): void {
-    this.initForm();
-    this.LoadSubjects();
-    this.loadUits();
+
+      this.createForm();
+
+      this.loadInitialData();
+
   }
-  initForm() {
-    this.userForm = this.fb.group({
-      description: ['', Validators.required],
-      photo: ['', Validators.required],
-      isActive: ['Active'],
-      subSubjectId: ['', Validators.required],
-      subjectId: [''],
-      unitId: ['', Validators.required],
-      createdByUserId:[''],
-      requestId:['']
+  private loadInitialData(){
+
+    this.loadSubjects();
+
+    this.loadUnits();
+
+}
+loadSubjects(){
+
+  this.api.GetAllSubject().subscribe({
+
+      next:res=>{
+
+          this.subjects=res;
+
+      }
+
+  });
+
+}
+
+  private createForm(){
+
+    this.requestForm=this.fb.group({
+
+        subjectId:[null,Validators.required],
+
+        subSubjectId:[null,Validators.required],
+
+        description:['',Validators.required],
+
+        unitId:[null,Validators.required],
+
+        isActive:['Active']
+
     });
 
- 
-  }
-  
-  async LoadSubjects(){
-    try {
-      const res = await lastValueFrom(this.api.GetAllSubject());
-      this.subjects = res.map(r => ({ 
-        subjectId: r.subjectId || r.subjectId, 
-        title: r.title ,
-        parentId: r.parentId ,
-        isActive:true
-      }));
-    } catch (error) {
-    //this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
-    }
-  }
+}
 
-  async loadUits(){
-    try {
-      const res = await lastValueFrom(this.api.GetAllUnits());
-      this.units = res.map(r => ({ 
-        unitId: r.unitId || r.id, 
-        name: r.name 
-      }));
-    } catch (error) {
-    //  this.showError('بارگذاری نقش‌ها با مشکل مواجه شد');
-    }
-  }
-  onSubjectChange(event: any) {
-    const subjectId = event.value;
-    this.userForm.patchValue({ subjectId: subjectId });
-    
-    if (subjectId) {
-  
-    this.api.GetSubSubjects(subjectId).subscribe({
-      next: (res) => {
-        this.filteredSubSubjects = res.map(r => ({ 
-          subjectId: r.subjectId || r.subjectId, 
-          title: r.title ,
-          parentId: r.parentId ,
-          isActive:true
-        }));
-      },
-      error: (err) => {
-        this.loading = false;
-        let errorMsg = 'خطا در انجام عملیات';
+onSubjectChange(event:any){
+
+  const id=event.value;
+
+  this.requestForm.patchValue({
+
+      subjectId:id,
+
+      subSubjectId:null
+
+  });
+
+  this.subSubjects=[];
+
+  if(!id)
+      return;
+
+  this.api.GetSubSubjects(id).subscribe({
+
+      next:res=>{
+
+          this.subSubjects=res;
+
       }
-    });
-    } else {
-      this.filteredSubSubjects = [];
+
+  });
+
+}
+loadUnits(){
+
+
+  this.api.GetAllUnits().subscribe({
+    next: res => {
+
+      console.log(res);
+
+      this.unitNodes = this.buildTree(res);
+
+      console.log(this.unitNodes);
+
     }
-  }
-  onUnitChange(event: any) {
-    const unitId = event.value;
-    this.userForm.patchValue({ unitId: unitId });
-    }
+  });
 
-    onSubSubjectChange(event:any){
-      const subSubjectId = event.value;
-      this.userForm.patchValue({ subSubjectId: subSubjectId });
-    }
+}
+private buildTree(units: UnitDto[]): TreeNode[] {
 
-    isInvalid(controlName: string): boolean {
-      const control = this.userForm.get(controlName);
-      if (control) {
-        console.log(`🔍 ${controlName}:`, {
-          value: control.value,
-          invalid: control.invalid,
-          touched: control.touched,
-          dirty: control.dirty,
-          errors: control.errors
-        });
-      }
-      return control ? (control.invalid && (control.touched || control.dirty)) : false;
-    }
-  
-    resetForm() {
-    throw new Error('Method not implemented.');
-    }
+  const map = new Map<number, TreeNode>();
 
+  units.forEach(u => {
 
-    removeImage() {
-      this.selectedFile = null;
-      this.imagePreview = null;
-        }
+      map.set(u.unitId, {
 
-    onFileSelected(event: any) {
-      const file = event.files[0];
-      if (file) {
-        this.selectedFile = file;
-        const reader = new FileReader();
-        reader.onload = (e: any) => (this.imagePreview = e.target.result);
-        reader.readAsDataURL(file);
-      }
-    }
-    onSubmit() {
-    
-      // if (this.userForm.invalid) {
-      //   Object.keys(this.userForm.controls).forEach(key => {
-      //     const control = this.userForm.get(key);
-      //     if (control?.invalid) {
-      //       control.markAsTouched();
-      //     }
-      //   });
-               
-      //   this.showError('لطفاً همه فیلدهای الزامی را به درستی پر کنید');
-      //   return;
-      // }
-      const userId = this.authService.getUserId();
+          key: u.unitId.toString(),
 
-      this.loading = true;
-      const formData = new FormData();   
-      formData.append('CreatedByUserId', userId?.toString() || '');
-      formData.append('Description', this.userForm.get('description')?.value || '');
-      formData.append('SubSubjectId', this.userForm.get('subSubjectId')?.value || '');
-      formData.append('UnitId', this.userForm.get('unitId')?.value || '');
-      
-      formData.append('IsActive', this.userForm.get('isActive')?.value || 'Active');
-    
-      if (this.selectedFile) {
-        formData.append('Photo', this.selectedFile);
-      }
-    
-    
-      this.api.CreateRequest(formData).subscribe({
-        next: (res) => {
-         // const message = 'کاربر با موفقیت ایجاد شد';
-         this.messageService.add({
-          severity: 'success',
-          summary: 'ثبت شد',
-          detail: `درخواست ثبت شد. کد پیگیری: ${res.requestCode}`
-        });
-          this.loading = false;
+          label: u.name,
 
-          this.userForm.reset({
-            description: '',
-            subjectId: null,
-            subSubjectId: null,
-            unitId: null,
-            isActive: 'Active',
-            createdByUserId: null,
-            requestId: null
-          });
-          
-          this.filteredSubSubjects = [];
-          
-          this.selectedFile = null;
-          this.imagePreview = null;
-        },
-        error: (err) => {
-          this.loading = false;
-          let errorMsg = 'خطا در انجام عملیات';
-          
-          if (err.error?.errors) {
-            errorMsg = Object.values(err.error.errors).flat().join(', ');
-          } else if (err.error?.message) {
-            errorMsg = err.error.message;
-          } else if (err.message) {
-            errorMsg = err.message;
-          }
-          
-          this.showError(errorMsg);
-        }
+          data: u,
+
+          children: []
+
       });
+
+  });
+
+  const roots: TreeNode[] = [];
+
+  units.forEach(u => {
+
+      const node = map.get(u.unitId)!;
+
+      if (u.parentId && map.has(u.parentId)) {
+
+          map.get(u.parentId)!.children!.push(node);
+
+      } else {
+
+          roots.push(node);
+
+      }
+
+  });
+
+  return roots;
+
+}
+
+onUnitChange(event:any){
+
+  this.requestForm.patchValue({
+
+    unitId:Number(event.value)
+
+});
+
+}
+
+
+onFileSelected(event:any){
+
+  const file=event.files[0];
+
+  if(!file)
+      return;
+
+  this.selectedFile=file;
+
+  const reader=new FileReader();
+
+  reader.onload=e=>{
+
+      this.imagePreview=(e.target as any).result;
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+submit(){
+  console.log(this.unitNodes);
+  const selectedNode = this.selectedUnitKey as any;
+
+  const unitId = selectedNode.data.unitId;
+  this.loading=true;
+
+  const value=this.requestForm.value;
+
+  const formData=new FormData();
+  formData.append("UnitId", String(unitId));
+
+
+  const userId = this.authService.getUserId();
+  console.log(this.selectedUnitKey);
+
+  formData.append("CreatedByUserId", String(userId));
+  formData.append("Description",value.description);
+
+  formData.append("SubSubjectId",value.subSubjectId);
+
+
+  formData.append("IsActive",value.isActive);
+
+  if(this.selectedFile){
+
+      formData.append("Photo",this.selectedFile);
+
+  }
+
+  this.api.CreateRequest(formData).subscribe({
+
+      next:res=>{
+
+          this.loading=false;
+this.showSuccess(res.message);
+          this.reset();
+
+      },
+
+      error:()=>{
+
+          this.loading=false;
+
+      }
+
+  });
+
+}
+
+reset(){
+
+  this.requestForm.reset({
+
+      isActive:"Active"
+
+  });
+
+  this.selectedFile=undefined;
+
+  this.imagePreview=undefined;
+
+  this.selectedUnitKey=null;
+
+  this.subSubjects=[];
+
+}
+statusLoading: { [key: number]: boolean } = {};
+
+
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+  // ====== متدهای دیالوگ ======
+  showSuccess(message: string) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+  }
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
+  }
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
     }
-    showSuccess(msg: string) {
-      this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
-    }
-  
-    showError(msg: string) {
-      this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
-    } 
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+  }
 }

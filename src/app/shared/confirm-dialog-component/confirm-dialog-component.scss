@@ -1,0 +1,107 @@
+// core/components/confirm-dialog/confirm-dialog.component.scss
+.confirm-dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
+    text-align: center;
+  }
+  
+  .confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  
+    &.success {
+      background: #d1fae5;
+      color: #10b981;
+    }
+  
+    &.danger {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+  
+    &.primary {
+      background: #dbeafe;
+      color: #3b82f6;
+    }
+  
+    i {
+      font-size: 2rem;
+    }
+  }
+  
+  .confirm-message {
+    font-size: 1rem;
+    color: #1a2a3a;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+  }
+  
+  .confirm-dialog-footer {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+  
+    ::ng-deep .p-button {
+      border-radius: 10px;
+      padding: 0.6rem 1.8rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      min-width: 100px;
+  
+      &.p-button-outlined {
+        background: transparent;
+        border: 1px solid #dce4ec;
+        color: #5a6a7a;
+  
+        &:hover {
+          background: #f1f5f9;
+          border-color: #8a9aaa;
+        }
+      }
+  
+      &.confirm-btn {
+        border: none !important;
+        color: white !important;
+  
+        &.success {
+          background: #10b981 !important;
+          &:hover { background: #059669 !important; }
+        }
+  
+        &.danger {
+          background: #ef4444 !important;
+          &:hover { background: #dc2626 !important; }
+        }
+  
+        &.primary {
+          background: #0055a4 !important;
+          &:hover { background: #003d7a !important; }
+        }
+  
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .confirm-dialog-footer {
+      flex-direction: column-reverse;
+  
+      ::ng-deep .p-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }

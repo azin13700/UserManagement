@@ -1,4 +1,23 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <app-message-dialog
+  [(visible)]="messageDialogVisible"
+  [title]="messageDialogTitle"
+  [message]="messageDialogMessage"
+  [type]="messageDialogType"
+  [loading]="messageDialogLoading"
+  (onConfirm)="handleMessageConfirm()"
+></app-message-dialog>
+
+
+<app-confirm-dialog
+  [(visible)]="confirmDialogVisible"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [loading]="confirmDialogLoading"
+  [confirmSeverity]="confirmDialogSeverity"
+  (onConfirm)="handleConfirm()"
+  (onCancel)="confirmDialogVisible = false"
+></app-confirm-dialog>
 
   <div class="form-container">
 
@@ -73,27 +92,13 @@
            واحد / سازمان <span class="required">*</span>
         </label>
         <div class="input-wrapper">
-          <p-multiselect 
-            [options]="userUnit" 
-            formControlName="unitId" 
-            optionLabel="name" 
-            optionValue="unitId"
-            placeholder="انتخاب واحد / سازمان "
-            [maxSelectedLabels]="4"
-            [showClear]="true"
-            [filter]="true"
-            [loading]="rolesLoading"
-            [class.ng-invalid]="isInvalid('unitId')"
-            styleClass="w-full">
-            <ng-template pTemplate="selectedItems">
-              <span *ngIf="userForm.get('unitId')?.value?.length === 0">
-                انتخاب واحدها
-              </span>
-              <span *ngFor="let unitId of userForm.get('unitId')?.value" class="role-badge">
-                {{ getUnitNameById(unitId) }}
-              </span>
-            </ng-template>
-          </p-multiselect>
+          <p-treeselect
+          fluid
+          formControlName="unitId"
+          [options]="unitNodes"
+          [filter]="true">
+      </p-treeselect>
+      
         </div>
         <small class="error-message" *ngIf="isInvalid('unitId')">
           حداقل یک نقش باید انتخاب شود

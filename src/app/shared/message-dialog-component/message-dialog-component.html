@@ -1,0 +1,41 @@
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [closable]="false" 
+  [header]="title" 
+  [style]="{ width: '420px' }"
+  [baseZIndex]="10000"
+  (onHide)="close()"
+>
+  <div class="message-dialog-content">
+    
+    <!-- آیکون -->
+    <div class="message-icon" [class]="iconColorClass">
+      <i [class]="iconClass"></i>
+    </div>
+
+    <!-- پیام -->
+    <p class="message-content">{{ message }}</p>
+
+    <!-- دکمه‌ها -->
+    <div class="message-dialog-footer">
+      <button
+        *ngIf="showCancel"
+        pButton
+        [label]="cancelText"
+        icon="pi pi-times"
+        class="p-button-outlined"
+        (click)="cancel()"
+      ></button>
+      <button
+        pButton
+        [label]="confirmText"
+        icon="pi pi-check"
+        [loading]="loading"
+        [class]="'message-confirm-btn ' + iconColorClass"
+        (click)="confirm()"
+      ></button>
+    </div>
+
+  </div>
+</p-dialog>

@@ -1,0 +1,113 @@
+// core/components/message-dialog/message-dialog.component.scss
+.message-dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
+    text-align: center;
+  }
+  
+  .message-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  
+    &.success {
+      background: #d1fae5;
+      color: #10b981;
+    }
+  
+    &.error {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+  
+    &.warning {
+      background: #fef3c7;
+      color: #f59e0b;
+    }
+  
+    &.info {
+      background: #dbeafe;
+      color: #3b82f6;
+    }
+  }
+  
+  .message-content {
+    font-size: 1rem;
+    color: #1a2a3a;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+  }
+  
+  .message-dialog-footer {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+  
+    ::ng-deep .p-button {
+      border-radius: 10px;
+      padding: 0.6rem 2rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      min-width: 100px;
+  
+      &.p-button-outlined {
+        background: transparent;
+        border: 1px solid #dce4ec;
+        color: #5a6a7a;
+  
+        &:hover {
+          background: #f1f5f9;
+          border-color: #8a9aaa;
+        }
+      }
+  
+      &.message-confirm-btn {
+        border: none !important;
+        color: white !important;
+  
+        &.success {
+          background: #10b981 !important;
+          &:hover { background: #059669 !important; }
+        }
+  
+        &.error {
+          background: #ef4444 !important;
+          &:hover { background: #dc2626 !important; }
+        }
+  
+        &.warning {
+          background: #f59e0b !important;
+          &:hover { background: #d97706 !important; }
+        }
+  
+        &.info {
+          background: #3b82f6 !important;
+          &:hover { background: #2563eb !important; }
+        }
+  
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .message-dialog-footer {
+      flex-direction: column-reverse;
+  
+      ::ng-deep .p-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }

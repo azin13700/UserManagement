@@ -18,6 +18,9 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import Swal from 'sweetalert2';
 import { PermissionsPage } from '../permissions-page/permissions-page';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
+import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-role-list',
@@ -35,7 +38,9 @@ import { PermissionsPage } from '../permissions-page/permissions-page';
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-    ChipModule
+    ChipModule,
+       MessageDialogComponent,
+        ConfirmDialogComponent
   ],
   templateUrl: './role-list.html',
   styleUrl: './role-list.scss',
@@ -44,7 +49,6 @@ export class RoleList implements OnInit {
   private messageService = inject(MessageService);
   private dialogService = inject(DialogService);
   private userService = inject(ApiService);
-  private confirmationService = inject(ConfirmationService);
   roles: roleDto[] = [];
   filteredRoles: roleDto[] = [];
   selectedRoles: roleDto[] = [];
@@ -115,35 +119,28 @@ export class RoleList implements OnInit {
   }
 
   toggleRoleStatus(role: roleDto) {
-    const newStatus = !role.isActive;
-    const action = newStatus ? 'فعال' : 'غیرفعال';
-    
-    Swal.fire({
-      title: `${action} کردن نقش`,
-      text: `آیا از ${action} کردن "${role.roleName}" مطمئن هستید؟`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'بله',
-      cancelButtonText: 'انصراف'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.statusLoading[role.roleId] = true;
+      const newStatus = !role.isActive;
+        const action = newStatus ? 'فعال' : 'غیرفعال';
         
-        this.userService.ToggleRoleStatus(role).subscribe({
-          next: () => {
-            role.isActive = newStatus;
-            this.showSuccess(`نقش با موفقیت ${action} شد`);
-            this.statusLoading[role.roleId] = false;
+        this.showConfirm(
+          'تغییر وضعیت',
+          `آیا از ${action} کردن نقش "${role.roleName}" مطمئن هستید؟`,
+          async () => {
+            this.statusLoading[role.roleId] = true;
+            try {
+              await lastValueFrom(this.userService.ToggleRoleStatus(role));
+              role.isActive = newStatus;
+              this.showSuccess(`نقش با موفقیت ${action} شد`);
+            } catch (error) {
+              this.showError('خطا در تغییر وضعیت');
+            } finally {
+              this.statusLoading[role.roleId] = false;
+            }
           },
-          error: (err) => {
-            this.showError('تغییر وضعیت انجام نشد');
-            this.statusLoading[role.roleId] = false;
-            console.error(err);
-          }
-        });
-      }
-    });
-  }
+          newStatus ? 'success' : 'danger'
+        );
+
+ }
 
   openNew() {
     const ref = this.dialogService.open(RolePage, {
@@ -221,11 +218,70 @@ export class RoleList implements OnInit {
     table.filterGlobal('', 'contains');
   }
 
-  showSuccess(msg: string) {
-    this.messageService.add({ severity: 'success', summary: 'موفق', detail: msg, life: 3000 });
+
+  messageDialogVisible = false;
+  messageDialogTitle = '';
+  messageDialogMessage = '';
+  messageDialogType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  messageDialogLoading = false;
+
+
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmDialogLoading = false;
+  confirmDialogSeverity: 'success' | 'danger' | 'primary' = 'primary';
+  confirmCallback: (() => void) | null = null;
+
+
+  showSuccess(message: string, callback?: () => void) {
+    this.messageDialogTitle = 'موفق';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'success';
+    this.messageDialogVisible = true;
+    this.messageDialogLoading = false;
+   
+    if (callback) {
+   
+    }
   }
 
-  showError(msg: string) {
-    this.messageService.add({ severity: 'error', summary: 'خطا', detail: msg, life: 3000 });
+
+  showError(message: string) {
+    this.messageDialogTitle = 'خطا';
+    this.messageDialogMessage = message;
+    this.messageDialogType = 'error';
+    this.messageDialogVisible = true;
   }
+
+
+  showConfirm(
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    severity: 'success' | 'danger' | 'primary' = 'primary'
+  ) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmDialogSeverity = severity;
+    this.confirmDialogVisible = true;
+    this.confirmCallback = onConfirm;
+  }
+
+
+  handleConfirm() {
+    this.confirmDialogLoading = true;
+    if (this.confirmCallback) {
+      this.confirmCallback();
+    }
+    this.confirmDialogLoading = false;
+    this.confirmDialogVisible = false;
+  }
+
+
+  handleMessageConfirm() {
+    this.messageDialogVisible = false;
+    
+  }
+
 }
