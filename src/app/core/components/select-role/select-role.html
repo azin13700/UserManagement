@@ -39,23 +39,30 @@
       </div>
 
       <div class="roles-grid" *ngIf="roles.length > 0">
-        <div 
-          *ngFor="let role of roles"
-          class="role-card"
-          [class.selected]="selectedRoleId === role.roleId"
-          (click)="selectedRoleId = role.roleId"
-        >
-          <div class="role-icon">
+        <div
+        *ngFor="let role of roles"
+        class="role-card"
+        [class.selected]="selectedRoleId === role.roleId"
+        (click)="selectedRoleId = role.roleId">
+    
+        <div class="role-icon">
             <i class="pi pi-shield"></i>
-          </div>
-          <div class="role-info">
-            <h3>{{ role.roleName }}</h3>
-            <p>{{ role.description }}</p>
-          </div>
-          <div class="role-check" [class.selected]="selectedRoleId === role.roleId">
-            <i class="pi pi-check-circle"></i>
-          </div>
         </div>
+    
+        <div class="role-info">
+            <h3>{{role.roleName}}</h3>
+            <p>{{role.description}}</p>
+        </div>
+    
+        <div
+            class="role-check"
+            [class.selected]="selectedRoleId === role.roleId">
+    
+            <i class="pi pi-check-circle"></i>
+    
+        </div>
+    
+    </div>
       </div>
 
       <div class="actions" *ngIf="roles.length > 0">

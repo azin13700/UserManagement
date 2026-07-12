@@ -24,7 +24,7 @@ import { MessageDialogComponent } from '../../../shared/message-dialog-component
     ToastModule,
     DialogModule,
     DividerModule,
-       MessageDialogComponent,
+     MessageDialogComponent,
   
   ],
   templateUrl: './permissions-page.html',

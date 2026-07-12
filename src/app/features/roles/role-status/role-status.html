@@ -1,0 +1,108 @@
+<div class="role-status-container">
+  
+
+  <app-message-dialog
+    [(visible)]="messageDialogVisible"
+    [title]="messageDialogTitle"
+    [message]="messageDialogMessage"
+    [type]="messageDialogType"
+    [loading]="messageDialogLoading"
+    (onConfirm)="handleMessageConfirm()"
+  ></app-message-dialog>
+
+
+  
+  <div class="status-header">
+    <div class="header-left">
+      <h2>
+        <i class="pi pi-key"></i>
+        state-out   مدیریت وضعیت‌های نقش
+      </h2>
+      <p>
+        <span class="role-tag">{{ roleName }}</span>
+        <span class="sep">|</span>
+        <span>{{ allPermissions.length }} وضعیت</span>
+      </p>
+    </div>
+    <div class="header-right">
+      <span class="count-badge">
+        <i class="pi pi-check-circle"></i>
+        {{ selectedCount }} انتخاب شده
+      </span>
+    </div>
+  </div>
+
+
+  
+  <div class="loading-box" *ngIf="loading">
+    <i class="pi pi-spin pi-spinner"></i>
+    <span>در حال بارگذاری...</span>
+  </div>
+
+
+  
+  <div class="status-content" *ngIf="!loading">
+    
+    <div class="select-all-box" *ngIf="allPermissions.length > 0">
+      <div class="select-all-left">
+        <p-checkbox 
+          [(ngModel)]="selectAll"
+          [binary]="true"
+          (onChange)="toggleAllPermissions($event)"
+        ></p-checkbox>
+        <label>
+          <span *ngIf="selectAll">لغو انتخاب همه</span>
+          <span *ngIf="!selectAll">انتخاب همه</span>
+        </label>
+      </div>
+      <div class="select-all-right">
+        <span>{{ selectedCount }} از {{ allPermissions.length }}</span>
+        <div class="progress">
+          <div class="progress-fill" [style.width.%]="(selectedCount / allPermissions.length) * 100"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-grid">
+      <div class="status-item" *ngFor="let perm of allPermissions">
+        <p-checkbox
+          [(ngModel)]="perm.isAssigned"
+          [binary]="true"
+          (onChange)="onPermissionChange()"
+        ></p-checkbox>
+        <div class="status-info">
+          <span class="name">{{ perm.stateCaption }}</span>
+          <!-- <span class="caption" *ngIf="perm.stateCaption">{{ perm.stateCaption }}</span> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-state" *ngIf="allPermissions.length === 0">
+      <i class="pi pi-inbox"></i>
+      <p>هیچ وضعیتی یافت نشد</p>
+    </div>
+
+  </div>
+
+
+  
+  <div class="status-actions">
+    <button
+      pButton
+      label="انصراف"
+      icon="pi pi-times"
+      class="p-button-outlined"
+      (click)="close()"
+    ></button>
+    <button
+      pButton
+      label="ذخیره"
+      icon="pi pi-save"
+      [loading]="saving"
+      [disabled]="loading || allPermissions.length === 0"
+      (click)="savePermissions()"
+    ></button>
+  </div>
+
+</div>

@@ -1,0 +1,77 @@
+<form [formGroup]="answerserForm" (ngSubmit)="onSubmit()">
+
+    <div class="answer-card">
+
+        <div class="card-header">
+            <i class="pi pi-comment"></i>
+            <div>
+                <h3>ثبت پاسخ درخواست</h3>
+                <span>وضعیت جدید و پاسخ را ثبت کنید.</span>
+            </div>
+        </div>
+
+
+
+        <div class="form-row">
+
+            <div class="field-group">
+                <label>پاسخ</label>
+
+                <textarea
+                    pInputTextarea
+                    rows="2"
+                    formControlName="answer"
+                    placeholder="متن پاسخ را وارد کنید..."
+                    autoResize="true">
+                </textarea>
+
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="field-group">
+                <label>وضعیت</label>
+
+                <p-select
+                [options]="status"
+                optionLabel="stateCaption"
+                optionValue="stateOut"
+                formControlName="stateId"
+                placeholder="انتخاب وضعیت"
+                [filter]="true"
+                [showClear]="true"
+                appendTo="body"
+                styleClass="w-full select-custom">
+            </p-select>
+
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button
+                pButton
+                type="button"
+                label="انصراف"
+                icon="pi pi-times"
+                class="p-button-outlined"
+                (click)="close()">
+            </button>
+
+            <button
+                pButton
+                type="submit"
+                icon="pi pi-check"
+                label="ثبت پاسخ"
+                class="p-button-success"
+                [loading]="loading">
+            </button>
+
+        </div>
+
+    </div>
+
+</form>

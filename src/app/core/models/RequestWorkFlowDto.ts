@@ -6,4 +6,5 @@ export interface RequestWorkFlowDto {
     createdDate: Date;
     unitName: string;
     requestCode:any;
+    unitId:number;
   }

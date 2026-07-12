@@ -49,7 +49,7 @@ export class MainLayout implements OnInit {
   loadMenu() {
 
     const selectedRole = this.authService.getSelectedRole();
-    this.selectedRoleName = selectedRole?.roleName || '';
+    this.selectedRoleName = selectedRole?.roleDescription || '';
     this.buildMenu();
   }
 
@@ -93,6 +93,14 @@ export class MainLayout implements OnInit {
           routerLink: '/dashboard/role-permission'
         });
       } }
+
+      if (permissions.includes('state.View')) {
+        userManagementItems.push({
+          label: 'لیست وضعیت ها',
+          icon: 'pi pi-inbox',
+          routerLink: '/dashboard/list-state'
+        });
+      }
   
     if (permissions.includes('workflow.View')) {
       userManagementItems.push({

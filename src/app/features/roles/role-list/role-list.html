@@ -87,6 +87,8 @@
           <th>دسترسی‌ها</th>
           <th pSortableColumn="isActive">وضعیت <p-sortIcon field="isActive"></p-sortIcon></th>
           <th style="width:80px">تخصیص دسترسی</th>
+          <th style="width:80px">تخصیص وضعیت</th>
+          <th style="width:260px">تخصیص وضعبتهای قابل مشاهده</th>
           <th style="width:80px">ویرایش</th>
         </tr>
       </ng-template>
@@ -137,7 +139,28 @@
               ></button>
             </div>
           </td>
-
+          <td>
+            <div class="action-group">
+              <button 
+                pButton 
+                icon="pi pi-sitemap" 
+                class="p-button-rounded p-button-text assign-btn" 
+                (click)="assignStatus(role)"
+               
+              ></button>
+            </div>
+          </td>
+          <td>
+            <div class="action-group">
+              <button 
+                pButton 
+                icon="pi pi-sitemap" 
+                class="p-button-rounded p-button-text assign-btn" 
+                (click)="assignStateIn(role)"
+               
+              ></button>
+            </div>
+          </td>
           <td>
             <div class="action-group">
               <button 

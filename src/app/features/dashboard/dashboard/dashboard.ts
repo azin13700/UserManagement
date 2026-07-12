@@ -19,6 +19,9 @@ import { UnitDto } from '../../../core/models/UnitDto';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
 import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
 import { TreeSelectModule } from 'primeng/treeselect';
+import { DialogService } from 'primeng/dynamicdialog';
+import { Answer } from '../answer/answer';
+import { RequestHistory } from '../request-history/request-history';
 
 interface Request {
   id: number;
@@ -66,12 +69,12 @@ interface Unit {
   styleUrls: ['./dashboard.scss']
 })
 export class Dashboard implements OnInit {
+
 globalSearch: any;
 
   private api = inject(ApiService);
   private authService = inject(AuthService);
-  private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
+  private dialogService = inject(DialogService);
   requests: RequestWorkFlowDto[] = [];
   filteredRequests: RequestWorkFlowDto[] = [];
   selectedCategory: string | null = null;
@@ -89,17 +92,17 @@ globalSearch: any;
    selectedUnitId: number | null = null;
    dialogVisible = false;
    isEditMode = false;
-
+roleId:any;
  
    subjects: SubjectDto[] = [];
    filteredSubSubjects: SubjectDto[] = [];
    units: Unit[] = [];
  
    unitNodes: TreeNode[] = [];
-  userFullName = '';
-  userRole = '';
-  userUnitName = '';
-  userUnitId: number | null = null;
+    userFullName = '';
+    userRole = '';
+    userUnitName = '';
+    userUnitId: number | null = null;
 
 
   // ====== فیلترها ======
@@ -138,7 +141,8 @@ globalSearch: any;
     this.userRole = this.authService.getSelectedRoleName() || '';
     const selectedRole = this.authService.getSelectedRole();
     this.userUnitName = selectedRole?.unitName || 'واحد نامشخص';
-    this.userUnitId = selectedRole?.unitId || null;
+    this.userUnitId = selectedRole?.unitId ;
+    this.roleId = selectedRole?.roleId;
   }
   userId:any;
 
@@ -148,11 +152,9 @@ globalSearch: any;
   this.loading = true;
   this.userId = this.authService.getUserId();
 
-  this.api.getWorkFlow(this.userId).subscribe({
+  this.api.getWorkflowRequests(this.roleId,this.userUnitId).subscribe({
 
     next: (res) => {
-
-      console.log(res[0].requestCode);
 
       this.requests = res;
       this.filteredRequests = res;
@@ -349,10 +351,67 @@ globalSearch: any;
       });
     
     }
+
+    onAnswer(request:any) {
+   
+      const ref = this.dialogService.open(Answer, {
+        header: 'ثبت پاسخ',
+        width: '700px',
+        modal: true,
+        closable: true,
+        maximizable: false,
+        draggable: false,
+        resizable: false,
+        contentStyle: {
+            overflow: 'auto'
+        },
+        data: {
+            mode: 'edit',
+            requestId: request.id,
+            unitId :request.unitId,
+            userId: this.userId
+        }
+    });
+    ref?.onClose.subscribe(result => {
+      if (result)
+        this.showSuccess(`پاسخ با موفقیت ایجاد شد`);
+       this.loadRequests();
+    });
+
+   }
+
+
+    onRequestHistory(request:any){
+      const ref = this.dialogService.open(RequestHistory, {
+        header: 'گردش درخواست',
+        width: '1400px',
+        modal: true,
+        closable: true,
+        maximizable: false,
+        draggable: false,
+        resizable: false,
+        contentStyle: {
+            overflow: 'auto'
+        },
+        data: {
+            mode: 'edit',
+            requestId: request.id,
+      
+        }
+    });
+    ref?.onClose.subscribe(result => {
+      if (result)
+       // this.showSuccess(`پاسخ با موفقیت ایجاد شد`);
+       this.loadRequests();
+    });
+      }
+
   viewDetails(request: RequestWorkFlowDto) {
     this.selectedRequest = request;
     this.detailDialogVisible = true;
   }
+
+
   clearAllFilters() {
 
     this.requestCode = '';
@@ -365,6 +424,13 @@ globalSearch: any;
   
     this.loadRequests();
   }
+
+
+
+
+
+
+
   changeStatus(request: Request, newStatus: string) {
     // this.confirmationService.confirm({
     //   message: `آیا از تغییر وضعیت درخواست "${request.subjectTitle}" به "${newStatus}" مطمئن هستید؟`,

@@ -39,7 +39,7 @@ export class Home implements OnInit {
       const userData  = this.authService.getUserData();
        this.userFullName = userData.fullName;
     const selectedRole = this.authService.getSelectedRole();
-    this.userRole = selectedRole?.roleName || '';
+    this.userRole = selectedRole?.roleDescription || '';
     this.userUnitName = selectedRole?.unitName || 'واحد نامشخص';
   }
   logout() {

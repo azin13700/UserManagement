@@ -21,6 +21,8 @@ import { PermissionsPage } from '../permissions-page/permissions-page';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component/confirm-dialog-component';
 import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
 import { lastValueFrom } from 'rxjs';
+import { RoleStatus } from '../role-status/role-status';
+import { StateIn } from '../state-in/state-in';
 
 @Component({
   selector: 'app-role-list',
@@ -202,8 +204,43 @@ export class RoleList implements OnInit {
       }
     });
   }
-
-
+  assignStatus(role: roleDto){
+    const ref = this.dialogService.open(RoleStatus, {
+      header: 'تخصیص وضعیت به نقش',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      data: { 
+        roleId: role.roleId,
+        roleName: role.roleName
+      }
+    });
+    
+    ref?.onClose.subscribe((result) => {
+      if (result) {
+        this.loadRoles();  
+        this.showSuccess('دسترسی‌ها با موفقیت تخصیص داده شدند');
+      }
+    });
+  }
+  
+  assignStateIn(role: roleDto){
+    const ref = this.dialogService.open(StateIn, {
+      header: 'تخصیص وضعیت به نقش',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      data: { 
+        roleId: role.roleId,
+        roleName: role.roleName
+      }
+    });
+    
+    ref?.onClose.subscribe((result) => {
+      if (result) {
+        this.loadRoles();  
+        this.showSuccess('دسترسی‌ها با موفقیت تخصیص داده شدند');
+      }
+    });
+  }
   refresh() {
     this.loadRoles();
     this.searchValue = '';

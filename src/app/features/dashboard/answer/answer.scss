@@ -1,0 +1,132 @@
+.answer-card {
+
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 8px 30px rgba(15,23,42,.05);
+
+}
+
+.card-header {
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+
+  i{
+
+      width:50px;
+      height:50px;
+
+      border-radius:50%;
+
+      background:#edf5ff;
+
+      color:#0f5ec7;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+
+      font-size:22px;
+
+  }
+
+  h3{
+
+      margin:0;
+      font-size:20px;
+      font-weight:700;
+      color:#1e293b;
+
+  }
+
+  span{
+
+      color:#64748b;
+      font-size:13px;
+
+  }
+
+}
+
+.form-row{
+
+  margin-bottom:22px;
+
+}
+
+.field-group{
+
+  display:flex;
+  flex-direction:column;
+
+  gap:8px;
+
+}
+
+.field-group label{
+
+  font-weight:600;
+  color:#334155;
+  font-size:14px;
+
+}
+
+textarea{
+
+  min-height:180px;
+
+  border-radius:10px;
+
+  font-size:14px;
+
+  line-height:1.9;
+
+}
+
+.form-actions{
+
+  margin-top:30px;
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:10px;
+
+}
+
+:host ::ng-deep{
+
+  .p-select{
+
+      border-radius:10px;
+
+      height:46px;
+
+  }
+
+  .p-inputtextarea{
+
+      border-radius:10px;
+
+  }
+
+  .p-button-success{
+
+      background:#16a34a;
+
+      border:none;
+
+      &:hover{
+
+          background:#15803d;
+
+      }
+
+  }
+
+}

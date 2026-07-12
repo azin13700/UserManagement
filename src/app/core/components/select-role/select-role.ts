@@ -9,33 +9,10 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ApiService } from '../../services/api-service';
 import { AuthService } from '../../services/auth-service';
-import { LoginResponse } from '../../models/LoginRequest';
+import { LoginResponse, LoginRole } from '../../models/LoginRequest';
 import { lastValueFrom } from 'rxjs';
 
-// ✅ نقش‌های کامل (هم فارسی و هم انگلیسی)
-const ROLE_MAP: { [key: string]: { id: number; description: string } } = {
-  // ===== انگلیسی =====
-  'Admin': { id: 1, description: 'دسترسی کامل به تمام بخش‌های سیستم' },
-  'Manager': { id: 2, description: 'مدیریت کاربران و نقش‌ها' },
-  'Expert': { id: 3, description: 'دسترسی به محتوا و گزارشات' },
-  'Auditor': { id: 4, description: 'دسترسی به گزارشات مالی' },
-  'Guest': { id: 5, description: 'دسترسی محدود' },
-  'User': { id: 6, description: 'دسترسی پایه به سیستم' },
-  
-  // ===== فارسی =====
-  'ادمین': { id: 1, description: 'دسترسی کامل به تمام بخش‌های سیستم' },
-  'مدیر': { id: 2, description: 'مدیریت کاربران و نقش‌ها' },
-  'مدیر سیستم': { id: 2, description: 'مدیریت کاربران و نقش‌ها' },
-  'کارشناس': { id: 3, description: 'دسترسی به محتوا و گزارشات' },
-  'کارشناس ارشد': { id: 3, description: 'دسترسی به محتوا و گزارشات' },
-  'حسابرس': { id: 4, description: 'دسترسی به گزارشات مالی' },
-  'مهمان': { id: 5, description: 'دسترسی محدود' },
-  'کاربر': { id: 6, description: 'دسترسی پایه به سیستم' },
-  
-  // ===== نگارش‌های مختلف =====
-  'ادمین سیستم': { id: 1, description: 'دسترسی کامل به تمام بخش‌های سیستم' },
-  'مدیر ارشد': { id: 2, description: 'مدیریت کاربران و نقش‌ها' },
-};
+
 
 @Component({
   selector: 'app-select-role',
@@ -52,11 +29,17 @@ const ROLE_MAP: { [key: string]: { id: number; description: string } } = {
   styleUrls: ['./select-role.scss']
 })
 export class SelectRole implements OnInit {
-  roles: { roleId: number; roleName: string; description: string }[] = [];
+
+  roles: LoginRole[] = [];
+
   selectedRoleId: number | null = null;
+
   loading = false;
+
   fullName = '';
+
   userData: LoginResponse | null = null;
+
   noPermission = false;
 
   constructor(
@@ -74,35 +57,10 @@ export class SelectRole implements OnInit {
     }
 
     this.userData = this.authService.getUserData();
-    
-    this.fullName = this.userData?.fullName || '';
-    
-    const roleNames = this.userData?.roles || [];
-    
-  
-    this.roles = roleNames.map(name => {
-      const trimmedName = name.trim();
-      const roleInfo = ROLE_MAP[trimmedName];
-      
 
-      
+    this.fullName = this.userData?.fullName ?? '';
 
-      if (!roleInfo) {
-
-        return {
-          roleId: 999,
-          roleName: trimmedName,
-          description: 'نقش کاربری'
-        };
-      }
-      
-      return {
-        roleId: roleInfo.id,
-        roleName: trimmedName,
-        description: roleInfo.description
-      };
-    }).filter(role => role.roleId !== 0);
-
+    this.roles = this.userData?.roles ?? [];
 
     if (this.roles.length === 1) {
       this.selectedRoleId = this.roles[0].roleId;
@@ -111,47 +69,55 @@ export class SelectRole implements OnInit {
   }
 
   async onSelectRole() {
+
     if (!this.selectedRoleId) {
+
       this.messageService.add({
         severity: 'warn',
         summary: 'خطا',
         detail: 'لطفاً یک نقش را انتخاب کنید'
       });
+
       return;
     }
 
     this.loading = true;
 
     try {
-      const response = await lastValueFrom(this.api.selectRole({
-        userId: this.authService.getUserId()!,
-        roleId: this.selectedRoleId
-      }));
+
+      const response = await lastValueFrom(
+        this.api.selectRole({
+          userId: this.authService.getUserId()!,
+          roleId: this.selectedRoleId
+        })
+      );
 
       this.authService.setSelectedRole(response);
 
-      const permissions = response.permissions || [];
-      
-      if (permissions.length === 0) {
+      if ((response.permissions ?? []).length === 0) {
         this.noPermission = true;
-        this.loading = false;
         return;
       }
 
       this.router.navigate(['/dashboard']);
 
-    } catch (error: any) {
+    } catch (err: any) {
+
       this.messageService.add({
         severity: 'error',
         summary: 'خطا',
-        detail: error?.error?.message || 'خطا در انتخاب نقش'
+        detail: err.error?.message ?? 'خطا'
       });
+
     } finally {
+
       this.loading = false;
     }
+
   }
+
   logout() {
     this.authService.logout();
-  } 
-  
+  }
+
 }

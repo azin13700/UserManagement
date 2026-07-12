@@ -203,4 +203,62 @@ createUnit(formData: FormData): Observable<any> {
 updateUnit(id: number, formData: FormData): Observable<any> {
   return this.http.put(`${this.apiUrl}Unit/Update/${id}`, formData);
 }
+
+
+GetAllStatus(): Observable<any[]> {
+  return this.http.get<any[]>(this.apiUrl + 'status');
+}
+
+
+getStatusesByRole(roleId: number): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${this.apiUrl}Status/StateOut/${roleId}`
+  );
+}
+getStatusByRole(roleId: number) {
+  return this.http.get<any[]>(
+    `${this.apiUrl}Status/ByRole/${roleId}`
+  );
+}
+
+getStateInByRole(roleId: number) {
+  return this.http.get<any[]>(
+    `${this.apiUrl}Status/StateIn/${roleId}`
+  );
+}
+
+// بروزرسانی وضعیت‌های نقش
+updateRoleStateOut(payload: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}role/AssignRoleStateOut`, payload);
+}
+
+updateRoleStateIn(payload: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}role/AssignRoleStateIn`, payload);
+}
+createStatus(formData: FormData): Observable<any> 
+{
+   return this.http.post( `${this.apiUrl}status/Create`, formData ); 
+}
+
+UpdateState(id: number, formData: FormData): Observable<any> {
+  return this.http.put(this.apiUrl + `status/Update/${id}`, formData);
+}
+
+createAnswer(formData: FormData): Observable<any> 
+{
+   return this.http.post( `${this.apiUrl}Request/Answer`, formData ); 
+}
+
+
+getRequestHistory(requestId: number) {
+  return this.http.get<any[]>(
+    `${this.apiUrl}request/${requestId}/history`
+  );
+}
+
+getWorkflowRequests(roleId: any, unitId: any) {
+  return this.http.get<RequestWorkFlowDto[]>(
+    `${this.apiUrl}Request/workflow?roleId=${roleId}&unitId=${unitId}`
+  );
+}
 }

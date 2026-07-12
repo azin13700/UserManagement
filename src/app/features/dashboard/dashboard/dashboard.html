@@ -146,6 +146,9 @@
             <th>واحد متولی</th>
             <th>توضیحات</th>
             <th>تاریخ</th>
+            <th>پاسخ</th>
+            <th>گردش درخواست</th>
+
           </tr>
         </ng-template>
   
@@ -169,6 +172,27 @@
             </td>
             <td>
               <span class="date-text">{{ request.createdDate | date:'yyyy/MM/dd' }}</span>
+            </td>
+            <td>
+              <button 
+              pButton 
+              icon="pi pi-plus" 
+              class="p-button-rounded p-button-text add-child-btn" 
+              (click)="onAnswer(request)"
+
+            ></button>
+          
+            </td>
+
+            <td>
+              <button 
+              pButton 
+              icon="pi pi-history" 
+              class="p-button-rounded p-button-text add-child-btn" 
+              (click)="onRequestHistory(request)"
+         
+            ></button>
+          
             </td>
           </tr>
         </ng-template>

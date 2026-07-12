@@ -10,6 +10,7 @@ import { ListSubject } from "./features/subject/list-subject/list-subject";
 import { RequestPage } from "./features/request/request-page/request-page";
 import { Dashboard } from "./features/dashboard/dashboard/dashboard";
 import { Home } from "./features/home/home";
+import { ListState } from "./features/state/list-state/list-state";
 
 export const routes: Routes = [
   {
@@ -34,6 +35,7 @@ export const routes: Routes = [
       { path: 'list-role', component: RoleList },
       { path: 'list-unit', component: UnitList },
       { path: 'list-subject', component: ListSubject },
+      {path:'list-state',component:ListState},
       {path:'request',component:RequestPage},
       { path: '', pathMatch: 'full' , component:Home},
       { 
