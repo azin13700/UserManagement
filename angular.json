@@ -28,12 +28,24 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/primeicons",
+                "output": "assets/primeicons"
               }
             ],
             "styles": [
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
               "src/styles.scss"
-           
-            ]
+            ],
+            "scripts": []
           },
           "configurations": {
             "production": {

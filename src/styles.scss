@@ -1,28 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeicons/primeicons.css";
-// body {
-//     font-family: 'Vazirmatn', sans-serif;
-//     padding: 0px;
-//     margin: 0px;
-//   }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+// ============================================================
+// ✅ فونت IRANSans
+// ============================================================
+
+@font-face {
+  font-family: "IRANSans";
+  src:
+    url("assets/fonts/IRANSans/IRANSansWeb(FaNum).woff2") format("woff2"),
+    url("assets/fonts/IRANSans/IRANSansWeb(FaNum).woff") format("woff"),
+    url("assets/fonts/IRANSans/IRANSansWeb(FaNum).ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
-  // min-height: 100vh;
-  // overflow: hidden;
+@font-face {
+  font-family: "IRANSans";
+  src:
+    url("assets/fonts/IRANSans/IRANSansWeb(FaNum).woff2") format("woff2"),
+    url("assets/fonts/IRANSans/IRANSansWeb(FaNum).woff") format("woff"),
+    url("assets/fonts/IRANSans/IRANSansWeb(FaNum).ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
-// ========== Colors ==========
+// ============================================================
+// ✅ ========== Colors ==========
+// ============================================================
+
 $primary: #0055a4;
 $primary-light: #1a6bb8;
 $primary-dark: #003d7a;
@@ -41,9 +49,6 @@ $shadow-hover: 0 12px 40px rgba(0, 85, 164, 0.1);
 $success: #10b981;
 $danger: #ef4444;
 $warning: #f59e0b;
-$accent: #00a3d6;
-$gold: #d4a843;
-$gold-light: #f5edd6;
 $purple: #7c3aed;
 $purple-light: #ede9fe;
 $rose: #f43f5e;
@@ -56,18 +61,221 @@ $indigo: #4f46e5;
 $indigo-light: #e8e6ff;
 $teal: #0d9488;
 $teal-light: #d5f5f0;
-$white: #ffffff;
-$bg: #f1f5f9;
-$bg-card: #ffffff;
-$text-dark: #1a2a3a;
-$text-muted: #5a6a7a;
+$gold-light: #f5edd6;
+
 // ============================================================
-//  CONTAINER
+// ✅ استایل‌های پایه
 // ============================================================
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 16px;
+  line-height: 1.8;
+  color: $text-dark;
+  background: $bg;
+}
+
+// ============================================================
+// ✅ آیکون‌ها
+// ============================================================
+
+.pi {
+  font-family: "primeicons" !important;
+  font-size: 0.9rem !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// آیکون‌های هدر
+.pi-users,
+.pi-key,
+.pi-building,
+.pi-shield,
+.pi-tag,
+.pi-comment {
+  font-size: 1.2rem !important;
+}
+
+// آیکون‌های دکمه‌ها
+.p-button .pi {
+  font-size: 0.85rem !important;
+}
+
+// آیکون‌های عملیات
+.action-group .pi {
+  font-size: 0.85rem !important;
+}
+
+// آیکون‌های وضعیت
+.status-btn .pi {
+  font-size: 0.65rem !important;
+}
+
+// آیکون‌های جدول
+.p-datatable .pi {
+  font-size: 0.8rem !important;
+}
+
+// آیکون‌های پاگینیتور
+.p-paginator .pi {
+  font-size: 0.8rem !important;
+}
+
+// آیکون‌های جستجو
+.search-wrapper .pi {
+  font-size: 0.9rem !important;
+}
+
+// آیکون‌های خالی
+.empty-content .pi {
+  font-size: 2.5rem !important;
+}
+
+// آیکون‌های رفرش
+.refresh-btn .pi {
+  font-size: 0.9rem !important;
+}
+
+// ============================================================
+// ✅ PRIMENG - فونت
+// ============================================================
+
+::ng-deep {
+  .p-component,
+  .p-button,
+  .p-inputtext,
+  .p-dropdown,
+  .p-dialog,
+  .p-datatable,
+  .p-paginator,
+  .p-menu,
+  .p-card,
+  .p-panel,
+  .p-toolbar,
+  .p-toast,
+  .p-tooltip,
+  .p-checkbox-label,
+  .p-radiobutton-label,
+  .p-select,
+  .p-sidebar,
+  .p-drawer,
+  .p-tabview,
+  .p-accordion,
+  .p-fieldset,
+  .p-panelmenu,
+  .p-breadcrumb,
+  .p-inputtext,
+  .p-dropdown-label,
+  .p-select-label,
+  .p-multiselect-label,
+  .p-calendar {
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 15px !important;
+  }
+}
+
+// ============================================================
+// ✅ ✅ ✅ جدول - تنظیم سایز
+// ============================================================
+
+::ng-deep .p-datatable {
+  // ===== هدر جدول (th) =====
+  .p-datatable-thead > tr > th {
+    font-size: 0.9rem !important; // ✅ متناسب با td
+    font-weight: 700 !important;
+    padding: 0.85rem 1rem !important;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    color: $text-dark;
+    background: #f8fafc;
+    border-bottom: 2px solid $border;
+    white-space: nowrap;
+  }
+
+  // ===== سطرهای جدول (td) =====
+  .p-datatable-tbody > tr > td {
+    font-size: 0.9rem !important; // ✅ یکم کوچیک‌تر (قبلاً 1.05rem)
+    padding: 0.75rem 1rem !important;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    color: $text-dark;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+
+  // هاور سطرها
+  .p-datatable-tbody > tr:hover > td {
+    background: #f8fafc;
+  }
+}
+
+// ============================================================
+// ✅ ✅ ✅ استایل Span های داخل td
+// ============================================================
+
+// نام کاربری / نام واحد
+.unit-name-text {
+  font-size: 0.9rem !important; // ✅ متناسب با td
+  font-weight: 600;
+  color: $text-dark;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+// توضیحات
+.unit-desc-text {
+  font-size: 0.85rem !important; // ✅ کمی کوچیک‌تر
+  color: $text-muted;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+// ایمیل
+.user-email-text {
+  font-size: 0.85rem !important;
+  color: $text-muted;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  direction: ltr;
+  display: inline-block;
+}
+
+// تاریخ
+.date-text {
+  font-size: 0.82rem !important;
+  color: $text-muted;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  direction: ltr;
+  display: inline-block;
+}
+
+// نام کاربری (با @)
+.user-username-text {
+  font-size: 0.82rem !important;
+  font-weight: 500;
+  color: $primary;
+  background: rgba($primary, 0.08);
+  padding: 0.15rem 0.65rem;
+  border-radius: 20px;
+  display: inline-block;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+// ============================================================
+// ✅ CONTAINER
+// ============================================================
+
 .dashboard-container {
   padding: 1.5rem;
   background: $bg;
-  
   min-height: 100vh;
 }
 
@@ -91,8 +299,9 @@ $text-muted: #5a6a7a;
 }
 
 // ============================================================
-//  HEADER
+// ✅ HEADER
 // ============================================================
+
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -100,28 +309,31 @@ $text-muted: #5a6a7a;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid $border;
   background: $bg-card;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
   .header-title {
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.5rem !important;
       margin: 0;
-      color:  #1a2a3a;;
+      color: $text-dark;
       display: flex;
       align-items: center;
       gap: 0.6rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
       i {
         color: $primary;
-        font-size: 1.5rem;
+        font-size: 1.3rem !important;
+        font-family: "primeicons" !important;
       }
     }
 
     p {
       margin: 0.25rem 0 0;
       color: $text-muted;
-      font-size: 0.85rem;
+      font-size: 0.9rem !important;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     }
   }
 
@@ -133,17 +345,20 @@ $text-muted: #5a6a7a;
 }
 
 // ============================================================
-//  BUTTONS
+// ✅ BUTTONS
 // ============================================================
+
 .action-btn {
   background: $primary-gradient !important;
   border: none !important;
   border-radius: 10px !important;
-  padding: 0.55rem 1.3rem !important;
+  padding: 0.5rem 1.2rem !important;
   font-weight: 500 !important;
   font-size: 0.85rem !important;
   transition: all 0.3s ease !important;
   box-shadow: 0 4px 12px rgba(0, 85, 164, 0.15);
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  color: $white !important;
 
   &:hover {
     transform: translateY(-2px) !important;
@@ -151,9 +366,21 @@ $text-muted: #5a6a7a;
   }
 }
 
+.p-button {
+  font-size: 0.9rem !important;
+  padding: 0.5rem 1.2rem !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+.p-button-label {
+  font-size: 0.9rem !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
 // ============================================================
-//  SEARCH
+// ✅ SEARCH
 // ============================================================
+
 .search-wrapper {
   display: flex;
   align-items: center;
@@ -171,8 +398,9 @@ $text-muted: #5a6a7a;
 
   i {
     color: $text-light;
-    font-size: 1rem;
+    font-size: 0.9rem !important;
     margin-left: 0.5rem;
+    font-family: "primeicons" !important;
   }
 
   input {
@@ -180,8 +408,9 @@ $text-muted: #5a6a7a;
     background: transparent;
     width: 100%;
     outline: none;
-    font-size: 0.85rem;
-    color: #1a2a3a;
+    font-size: 0.85rem !important;
+    color: $text-dark;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
     &::placeholder {
       color: $text-light;
@@ -190,118 +419,44 @@ $text-muted: #5a6a7a;
 }
 
 // ============================================================
-//  TABLE
+// ✅ USER COUNT BADGE
 // ============================================================
-::ng-deep .p-datatable {
-  .p-datatable-thead > tr > th {
-    background: #f8fafc;
-    color:  #1a2a3a;
-    padding: 0.85rem 1rem;
-    border-bottom: 2px solid $border;
-    font-weight: 600;
-    font-size: 0.4rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-  }
 
-  .p-datatable-tbody > tr > td {
-    padding: 0.85rem 1rem;
-    border-bottom: 1px solid #f1f5f9;
-    vertical-align: middle;
-    font-size: 0.85rem;
-    color: $text-muted;
-  }
-
-  .p-datatable-tbody > tr:hover > td {
-    background: #f8fafc;
-  }
-}
-
-// ============================================================
-//  UNIT ITEMS
-// ============================================================
-.unit-name-text {
-  font-weight: 600;
-  color:  #1a2a3a;
-}
-
-.unit-desc-text {
-  font-size: 0.85rem;
-  color: $text-muted;
-}
-
-// ============================================================
-//  USER COUNT BADGE
-// ============================================================
 .user-count-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
   background: #eef2ff;
-  padding: 0.25rem 0.7rem;
+  padding: 0.2rem 0.7rem !important;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.75rem !important;
   font-weight: 600;
   color: $primary;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
   i {
-    font-size: 0.7rem;
+    font-size: 0.65rem !important;
+    font-family: "primeicons" !important;
   }
 }
 
 // ============================================================
-//  STATUS BUTTON
+// ✅ STATUS BUTTON
 // ============================================================
-// .status-btn {
-//   border-radius: 20px !important;
-//   padding: 0.25rem 0.9rem !important;
-//   font-size: 0.7rem !important;
-//   font-weight: 600 !important;
-//   min-width: 72px !important;
-//   border: none !important;
 
-//   i {
-//     font-size: 0.7rem !important;
-//     margin-left: 0.3rem !important;
-//   }
-
-//   &.active {
-//     background: $success !important;
-//     color: #ffffff !important;
-
-//     &:hover {
-//       background: darken($success, 10%) !important;
-//       transform: scale(1.04);
-//       box-shadow: 0 4px 12px rgba($success, 0.3);
-//     }
-//   }
-
-//   &.inactive {
-//     background: $danger !important;
-//     color: #ffffff !important;
-
-//     &:hover {
-//       background: darken($danger, 10%) !important;
-//       transform: scale(1.04);
-//       box-shadow: 0 4px 12px rgba($danger, 0.3);
-//     }
-//   }
-
-//   &:disabled {
-//     opacity: 0.6 !important;
-//   }
-// }
 .status-btn {
   border-radius: 20px !important;
-  padding: 0.25rem 0.9rem !important;
-  font-size: 0.7rem !important;
+  padding: 0.25rem 0.85rem !important;
+  font-size: 0.75rem !important;
   font-weight: 600 !important;
-  min-width: 72px !important;
+  min-width: 70px !important;
   border: none !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
   i {
-    font-size: 0.7rem !important;
+    font-size: 0.65rem !important;
     margin-left: 0.3rem !important;
+    font-family: "primeicons" !important;
   }
 
   &.active {
@@ -309,7 +464,6 @@ $text-muted: #5a6a7a;
     color: #ffffff !important;
 
     &:hover {
-      // ✅ استفاده از darken معمولی (هنوز کار می‌کند)
       background: darken($success, 10%) !important;
       transform: scale(1.04);
       box-shadow: 0 4px 12px rgba($success, 0.3);
@@ -321,7 +475,6 @@ $text-muted: #5a6a7a;
     color: #ffffff !important;
 
     &:hover {
-      // ✅ استفاده از darken معمولی
       background: darken($danger, 10%) !important;
       transform: scale(1.04);
       box-shadow: 0 4px 12px rgba($danger, 0.3);
@@ -332,101 +485,78 @@ $text-muted: #5a6a7a;
     opacity: 0.6 !important;
   }
 }
+
 // ============================================================
-//  ACTION GROUP
+// ✅ ACTION GROUP
 // ============================================================
+
 .action-group {
   display: flex;
   gap: 0.25rem;
   justify-content: center;
 
-  // ::ng-deep .p-button.p-button-text {
-  //   width: 34px;
-  //   height: 34px;
-  //   border-radius: 8px;
-  //   color: $text-muted;
-  //   transition: all 0.2s ease;
+  ::ng-deep .p-button.p-button-text {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    color: $text-muted !important;
 
-  //   &:hover {
-  //     background: #f1f5f9;
-  //   }
-  // }
-
-  // .edit-btn:hover {
-  //   color: $primary !important;
-  //   background: #eef2ff !important;
-  // }
-
-  // .delete-btn:hover {
-  //   color: $danger !important;
-  //   background: #fef2f2 !important;
-  // }
-
-  
-
-::ng-deep .p-button.p-button-text  {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px !important;
-  transition: all 0.3s ease !important;
-
-  .p-button-icon {
-    font-size: 0.85rem;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  // 🔵 دکمه ویرایش - آبی
-  &.edit-btn {
-    color: $blue !important;
-
-    &:hover {
-      color: $white !important;
-      background: $blue !important;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    .p-button-icon {
+      font-size: 0.8rem !important;
+      font-family: "primeicons" !important;
     }
-  }
-
-  // 🔴 دکمه حذف - قرمز رز
-  &.delete-btn {
-    color: $rose !important;
 
     &:hover {
-      color: $white !important;
-      background: $rose !important;
-      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+      transform: translateY(-2px);
     }
-  }
 
-  // 🟣 دکمه مشاهده - بنفش
-  &.view-btn {
-    color: $purple !important;
+    &.edit-btn {
+      color: $blue !important;
 
-    &:hover {
-      color: $white !important;
-      background: $purple !important;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      &:hover {
+        color: $white !important;
+        background: $blue !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
     }
-  }
 
-  // 🟢 دکمه ذخیره - سبز
-  &.save-btn {
-    color: $emerald !important;
+    &.delete-btn {
+      color: $rose !important;
 
-    &:hover {
-      color: $white !important;
-      background: $emerald !important;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      &:hover {
+        color: $white !important;
+        background: $rose !important;
+        box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+      }
+    }
+
+    &.view-btn {
+      color: $purple !important;
+
+      &:hover {
+        color: $white !important;
+        background: $purple !important;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      }
+    }
+
+    &.save-btn {
+      color: $emerald !important;
+
+      &:hover {
+        color: $white !important;
+        background: $emerald !important;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
     }
   }
 }
-}
 
 // ============================================================
-//  INACTIVE ROW
+// ✅ INACTIVE ROW
 // ============================================================
+
 .inactive-row {
   background-color: #fef2f2 !important;
 
@@ -444,10 +574,11 @@ $text-muted: #5a6a7a;
 }
 
 // ============================================================
-//  CAPTION
+// ✅ CAPTION
 // ============================================================
+
 .table-caption {
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.5rem;
   background: #f8fafc;
   border-bottom: 1px solid $border;
   display: flex;
@@ -458,29 +589,34 @@ $text-muted: #5a6a7a;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem !important;
     color: $text-muted;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
     i {
       color: $primary;
+      font-size: 0.8rem !important;
+      font-family: "primeicons" !important;
     }
 
     span {
       font-weight: 600;
-      color:  #1a2a3a;
+      font-size: 0.9rem !important;
+      color: $text-dark;
     }
   }
 
   .refresh-btn {
     cursor: pointer;
-    padding: 0.4rem;
+    padding: 0.35rem;
     border-radius: 50%;
     transition: all 0.2s ease;
 
     i {
-      font-size: 1rem;
+      font-size: 0.9rem !important;
       color: $text-light;
       transition: all 0.2s ease;
+      font-family: "primeicons" !important;
     }
 
     &:hover {
@@ -495,8 +631,9 @@ $text-muted: #5a6a7a;
 }
 
 // ============================================================
-//  EMPTY STATE
+// ✅ EMPTY STATE
 // ============================================================
+
 .empty-row td {
   text-align: center;
   padding: 3rem !important;
@@ -509,39 +646,49 @@ $text-muted: #5a6a7a;
   gap: 0.75rem;
 
   i {
-    font-size: 3.5rem;
+    font-size: 2.5rem !important;
     color: #cbd5e1;
+    font-family: "primeicons" !important;
   }
 
   p {
     color: $text-muted;
-    font-size: 0.9rem;
+    font-size: 0.9rem !important;
     margin: 0;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   }
 }
 
 // ============================================================
-//  PAGINATOR
+// ✅ PAGINATOR
 // ============================================================
+
 ::ng-deep .p-paginator {
   background: transparent;
   border-top: 1px solid $border;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.5rem;
   justify-content: flex-end;
 
   .p-paginator-current {
     color: $text-muted;
-    font-size: 0.8rem;
+    font-size: 0.85rem !important;
     margin-left: auto;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   }
 
   .p-paginator-element {
     border-radius: 8px;
-    min-width: 38px;
-    height: 38px;
-    font-size: 0.8rem;
+    min-width: 36px !important;
+    height: 36px !important;
+    font-size: 0.85rem !important;
     font-weight: 500;
     transition: all 0.2s ease;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+
+    .pi {
+      font-family: "primeicons" !important;
+      font-size: 0.75rem !important;
+    }
 
     &:hover {
       background: #f1f5f9;
@@ -556,8 +703,79 @@ $text-muted: #5a6a7a;
 }
 
 // ============================================================
-//  RESPONSIVE
+// ✅ INPUTS
 // ============================================================
+
+.p-inputtext {
+  font-size: 0.9rem !important;
+  padding: 0.6rem 1rem !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  border-radius: 10px;
+  border: 1.5px solid $border;
+  background: #f8fafc;
+  color: $text-dark;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.08);
+    background: $white;
+  }
+}
+
+.p-inputtextarea {
+  font-size: 0.9rem !important;
+  padding: 0.6rem 1rem !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  border-radius: 10px;
+  border: 1.5px solid $border;
+}
+
+// ============================================================
+// ✅ SELECT
+// ============================================================
+
+.p-select {
+  .p-select-label {
+    font-size: 0.9rem !important;
+    padding: 0.6rem 1rem !important;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    color: $text-dark;
+  }
+}
+
+.p-select-item {
+  font-size: 0.9rem !important;
+  padding: 0.4rem 1rem !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+// ============================================================
+// ✅ CHECKBOX
+// ============================================================
+
+.p-checkbox {
+  .p-checkbox-box {
+    width: 17px !important;
+    height: 17px !important;
+    border-radius: 6px !important;
+    border-color: $border !important;
+
+    &.p-highlight {
+      background: $primary !important;
+      border-color: $primary !important;
+    }
+  }
+}
+
+.p-checkbox-label {
+  font-size: 0.9rem !important;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+// ============================================================
+// ✅ RESPONSIVE
+// ============================================================
+
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 0.75rem;
@@ -567,6 +785,12 @@ $text-muted: #5a6a7a;
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
+
+    .header-title {
+      h1 {
+        font-size: 1.2rem !important;
+      }
+    }
   }
 
   .search-wrapper input {
@@ -574,18 +798,18 @@ $text-muted: #5a6a7a;
   }
 
   .user-count-badge {
-    font-size: 0.65rem;
-    padding: 0.15rem 0.5rem;
+    font-size: 0.65rem !important;
+    padding: 0.15rem 0.5rem !important;
   }
 
   .status-btn {
-    min-width: 60px !important;
-    font-size: 0.6rem !important;
-    padding: 0.2rem 0.6rem !important;
+    min-width: 55px !important;
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.5rem !important;
   }
 
   ::ng-deep .p-paginator {
-    padding: 0.75rem;
+    padding: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
 
@@ -594,6 +818,35 @@ $text-muted: #5a6a7a;
       width: 100%;
       text-align: center;
     }
+  }
+
+  ::ng-deep .p-datatable {
+    .p-datatable-thead > tr > th,
+    .p-datatable-tbody > tr > td {
+      font-size: 0.8rem !important;
+      padding: 0.5rem !important;
+    }
+  }
+
+  .unit-name-text {
+    font-size: 0.8rem !important;
+  }
+
+  .unit-desc-text {
+    font-size: 0.75rem !important;
+  }
+
+  .user-email-text {
+    font-size: 0.75rem !important;
+  }
+
+  .date-text {
+    font-size: 0.7rem !important;
+  }
+
+  .user-username-text {
+    font-size: 0.7rem !important;
+    padding: 0.1rem 0.5rem;
   }
 }
 
@@ -607,22 +860,32 @@ $text-muted: #5a6a7a;
   }
 
   .table-header {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .action-btn {
     width: 100%;
     justify-content: center;
+    font-size: 0.8rem !important;
   }
 
-  .unit-desc-text {
-    font-size: 0.75rem;
+  ::ng-deep .p-datatable {
+    .p-datatable-thead > tr > th,
+    .p-datatable-tbody > tr > td {
+      font-size: 0.75rem !important;
+      padding: 0.4rem !important;
+    }
+  }
+
+  .unit-name-text {
+    font-size: 0.75rem !important;
   }
 }
 
 // ============================================================
-//  DARK THEME (Optional)
+// ✅ DARK THEME
 // ============================================================
+
 .dark-theme {
   .dashboard-container {
     background: #0f172a;
@@ -745,7 +1008,9 @@ $text-muted: #5a6a7a;
   }
 }
 
-// subject-list.scss
+// ============================================================
+// ✅ SUBJECT LIST
+// ============================================================
 
 .subject-info {
   display: flex;
@@ -753,12 +1018,15 @@ $text-muted: #5a6a7a;
   gap: 0.5rem;
 
   i {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    font-family: "primeicons" !important;
   }
 
   .subject-title {
     font-weight: 500;
+    font-size: 0.9rem;
     color: $text-dark;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   }
 
   .subject-badge {
@@ -774,131 +1042,12 @@ $text-muted: #5a6a7a;
 .parent-text {
   color: $text-muted;
   font-size: 0.85rem;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 }
 
-// ===== ردیف غیرفعال =====
-.inactive-row {
-  opacity: 0.6;
-  
-  td {
-    text-decoration: line-through;
-  }
-}
-
-// ===== دکمه وضعیت =====
-.status-btn {
-  border-radius: 20px !important;
-  padding: 0.25rem 0.9rem !important;
-  font-size: 0.7rem !important;
-  font-weight: 600 !important;
-  min-width: 70px !important;
-
-  &.active {
-    background: #10b981 !important;
-    color: white !important;
-  }
-
-  &.inactive {
-    background: #ef4444 !important;
-    color: white !important;
-  }
-}
-
-// ===== عملیات =====
-.action-group {
-  display: flex;
-  gap: 0.25rem;
-
-  .edit-btn:hover {
-    color: #3b82f6 !important;
-    background: #eef2ff !important;
-  }
-
-  .delete-btn:hover {
-    color: #ef4444 !important;
-    background: #fef2f2 !important;
-  }
-}
-
-// ===== هدر =====
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid $border;
-
-  .header-title {
-    h1 {
-      font-size: 1.4rem;
-      margin: 0;
-      color: $text-dark;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-
-      i {
-        color: $primary;
-      }
-    }
-
-    p {
-      margin: 0.25rem 0 0;
-      color: $text-muted;
-      font-size: 0.85rem;
-    }
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 0.8rem;
-    align-items: center;
-  }
-}
-
-// ===== جستجو =====
-.search-wrapper {
-  display: flex;
-  align-items: center;
-  background: #f8fafc;
-  border: 1px solid $border;
-  border-radius: 10px;
-  padding: 0.4rem 0.8rem;
-
-  i {
-    color: $text-light;
-    margin-left: 0.5rem;
-  }
-
-  input {
-    border: none;
-    background: transparent;
-    width: 100%;
-    outline: none;
-    font-size: 0.85rem;
-    color: $text-dark;
-
-    &::placeholder {
-      color: $text-light;
-    }
-  }
-}
-
-// ===== دکمه اصلی =====
-.action-btn {
-  background: $primary-gradient !important;
-  border: none !important;
-  border-radius: 10px !important;
-  padding: 0.55rem 1.3rem !important;
-  font-weight: 500 !important;
-  font-size: 0.85rem !important;
-  transition: all 0.3s ease !important;
-
-  &:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(0, 85, 164, 0.25) !important;
-  }
-}
+// ============================================================
+// ✅ ANIMATIONS
+// ============================================================
 
 @keyframes fadeInUp {
   from {
@@ -915,10 +1064,18 @@ $text-muted: #5a6a7a;
   animation: fadeInUp 0.3s ease both;
 }
 
-.children-table-wrapper tbody tr:nth-child(1) { animation-delay: 0.05s; }
-.children-table-wrapper tbody tr:nth-child(2) { animation-delay: 0.1s; }
-.children-table-wrapper tbody tr:nth-child(3) { animation-delay: 0.15s; }
-.children-table-wrapper tbody tr:nth-child(4) { animation-delay: 0.2s; }
-.children-table-wrapper tbody tr:nth-child(5) { animation-delay: 0.25s; }
-
-
+.children-table-wrapper tbody tr:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.children-table-wrapper tbody tr:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.children-table-wrapper tbody tr:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.children-table-wrapper tbody tr:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.children-table-wrapper tbody tr:nth-child(5) {
+  animation-delay: 0.25s;
+}
