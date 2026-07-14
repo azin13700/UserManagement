@@ -22,12 +22,12 @@ $danger: #ef4444;
 // ============================================================
 //  CONTAINER
 // ============================================================
+
 .request-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  //padding: 2rem;
   background: $bg;
 }
 
@@ -40,6 +40,7 @@ $danger: #ef4444;
   padding: 2.5rem;
   border: 1px solid rgba(255, 255, 255, 0.5);
   position: relative;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
   &::before {
     content: '';
@@ -56,6 +57,7 @@ $danger: #ef4444;
 // ============================================================
 //  FORM HEADER
 // ============================================================
+
 .form-header {
   display: flex;
   align-items: center;
@@ -76,21 +78,28 @@ $danger: #ef4444;
     color: $white;
     box-shadow: 0 4px 15px rgba(0, 85, 164, 0.2);
     flex-shrink: 0;
+
+    i {
+      font-family: "primeicons" !important;
+    }
   }
 
   .form-header-title {
     h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.5rem !important; // ✅ بزرگتر
+      font-weight: 700 !important;
       color: $text-dark;
       margin: 0;
       letter-spacing: -0.5px;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     }
 
     p {
-      font-size: 0.85rem;
+      font-size: 0.95rem !important; // ✅ بزرگتر
+      font-weight: 500 !important; // ✅ پررنگ‌تر
       color: $text-muted;
       margin: 0.25rem 0 0;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     }
   }
 }
@@ -98,6 +107,7 @@ $danger: #ef4444;
 // ============================================================
 //  FORM
 // ============================================================
+
 .request-form {
   display: flex;
   flex-direction: column;
@@ -110,9 +120,10 @@ $danger: #ef4444;
   gap: 0.4rem;
 
   label {
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.9rem !important; // ✅ بزرگتر
+    font-weight: 700 !important; // ✅ پررنگ‌تر
     color: $text-dark;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
     .required {
       color: $danger;
@@ -132,6 +143,7 @@ $danger: #ef4444;
       font-size: 1rem;
       pointer-events: none;
       z-index: 1;
+      font-family: "primeicons" !important;
     }
 
     .textarea-icon {
@@ -141,22 +153,27 @@ $danger: #ef4444;
   }
 
   .hint-text {
-    font-size: 0.7rem;
+    font-size: 0.75rem !important; // ✅ بزرگتر
+    font-weight: 400 !important;
     color: $text-light;
     margin-top: 0.15rem;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   }
 
   .char-count {
-    font-size: 0.7rem;
+    font-size: 0.75rem !important;
+    font-weight: 400 !important;
     color: $text-light;
     text-align: left;
     margin-top: 0.15rem;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   }
 }
 
 // ============================================================
 //  DROPDOWN STYLES
 // ============================================================
+
 ::ng-deep {
   .p-dropdown {
     width: 100%;
@@ -176,8 +193,10 @@ $danger: #ef4444;
 
     .p-dropdown-label {
       padding: 0.7rem 2.8rem 0.7rem 1rem;
-      font-size: 0.85rem;
+      font-size: 0.95rem !important; // ✅ بزرگتر
+      font-weight: 500 !important; // ✅ پررنگ‌تر
       color: $text-dark;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
       &.p-placeholder {
         color: $text-light;
@@ -187,6 +206,10 @@ $danger: #ef4444;
     .p-dropdown-trigger {
       width: 2.5rem;
       color: $text-light;
+
+      .p-dropdown-trigger-icon {
+        font-family: "primeicons" !important;
+      }
     }
 
     &.p-disabled {
@@ -203,8 +226,10 @@ $danger: #ef4444;
     .p-dropdown-items {
       .p-dropdown-item {
         padding: 0.6rem 1rem;
-        font-size: 0.85rem;
+        font-size: 0.95rem !important; // ✅ بزرگتر
+        font-weight: 500 !important; // ✅ پررنگ‌تر
         color: $text-dark;
+        font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
         &.p-highlight {
           background: #eef2ff;
@@ -227,24 +252,32 @@ $danger: #ef4444;
   i {
     color: $primary-light;
     font-size: 0.85rem;
+    font-family: "primeicons" !important;
+  }
+
+  span {
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    font-weight: 500 !important;
   }
 }
 
 // ============================================================
 //  TEXTAREA
 // ============================================================
+
 ::ng-deep .p-inputtextarea {
   width: 100%;
   padding: 0.7rem 1rem 0.7rem 2.8rem;
   background: #f8fafc;
   border: 1px solid $border;
   border-radius: 10px;
-  font-size: 0.85rem;
+  font-size: 0.95rem !important; // ✅ بزرگتر
+  font-weight: 500 !important; // ✅ پررنگ‌تر
   color: $text-dark;
   transition: all 0.2s ease;
   resize: vertical;
   min-height: 120px;
-  font-family: inherit;
+  font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
   &:focus {
     outline: none;
@@ -255,12 +288,14 @@ $danger: #ef4444;
 
   &::placeholder {
     color: $text-light;
+    font-weight: 400;
   }
 }
 
 // ============================================================
 //  PHOTO UPLOAD
 // ============================================================
+
 .photo-section {
   display: flex;
   flex-direction: column;
@@ -296,14 +331,16 @@ $danger: #ef4444;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
+      font-family: "primeicons" !important;
 
       &:hover {
-        background: darken($danger, 10%);
+        background: adjust-color($danger, $lightness: -10%);
         transform: scale(1.05);
       }
 
       i {
         font-size: 12px;
+        font-family: "primeicons" !important;
       }
     }
   }
@@ -324,9 +361,10 @@ $danger: #ef4444;
         border: none !important;
         border-radius: 10px !important;
         padding: 0.5rem 1.2rem !important;
-        font-weight: 500 !important;
-        font-size: 0.8rem !important;
+        font-weight: 600 !important; // ✅ پررنگ‌تر
+        font-size: 0.85rem !important; // ✅ بزرگتر
         transition: all 0.3s ease !important;
+        font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
         &:hover {
           transform: translateY(-1px) !important;
@@ -335,13 +373,16 @@ $danger: #ef4444;
 
         .p-button-icon {
           font-size: 0.9rem !important;
+          font-family: "primeicons" !important;
         }
       }
     }
 
     .hint-text {
-      font-size: 0.7rem;
+      font-size: 0.75rem !important;
+      font-weight: 400 !important;
       color: $text-light;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     }
   }
 }
@@ -349,6 +390,7 @@ $danger: #ef4444;
 // ============================================================
 //  FORM ACTIONS
 // ============================================================
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -360,9 +402,10 @@ $danger: #ef4444;
   ::ng-deep .p-button {
     border-radius: 10px;
     padding: 0.6rem 1.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.9rem !important; // ✅ بزرگتر
+    font-weight: 600 !important;
     transition: all 0.3s ease;
+    font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 
     &.cancel-btn {
       background: transparent;
@@ -396,56 +439,9 @@ $danger: #ef4444;
 }
 
 // ============================================================
-//  RESPONSIVE
-// ============================================================
-@media (max-width: 768px) {
-  .request-container {
-    padding: 1rem;
-  }
-
-  .request-card {
-    padding: 1.5rem;
-  }
-
-  .form-header {
-    .form-header-icon {
-      width: 48px;
-      height: 48px;
-      font-size: 1.4rem;
-    }
-
-    .form-header-title {
-      h1 {
-        font-size: 1.15rem;
-      }
-
-      p {
-        font-size: 0.8rem;
-      }
-    }
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-
-    ::ng-deep .p-button {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-
-  .photo-section {
-    .photo-preview {
-      width: 100px;
-      height: 100px;
-    }
-  }
-}
-
-
-// ============================================================
 //  TREE SELECT STYLES
 // ============================================================
+
 .tree-select-wrapper {
   min-width: 220px;
   
@@ -457,7 +453,7 @@ $danger: #ef4444;
     transition: all 0.2s ease;
     
     &:hover {
-      border-color: darken($border, 10%);
+      border-color: adjust-color($border, $lightness: -10%);
     }
     
     &.p-focus {
@@ -467,8 +463,10 @@ $danger: #ef4444;
     
     .p-treeselect-label {
       padding: 0.45rem 0.8rem;
-      font-size: 0.85rem;
+      font-size: 0.95rem !important; // ✅ بزرگتر
+      font-weight: 500 !important; // ✅ پررنگ‌تر
       color: $text-dark;
+      font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
       
       &.p-placeholder {
         color: $text-light;
@@ -478,6 +476,10 @@ $danger: #ef4444;
     .p-treeselect-trigger {
       width: 2.5rem;
       color: $text-light;
+
+      .p-treeselect-trigger-icon {
+        font-family: "primeicons" !important;
+      }
     }
   }
   
@@ -491,8 +493,10 @@ $danger: #ef4444;
       .p-treeselect-items {
         .p-treeselect-item {
           padding: 0.3rem 0.8rem;
-          font-size: 0.85rem;
+          font-size: 0.95rem !important; // ✅ بزرگتر
+          font-weight: 500 !important; // ✅ پررنگ‌تر
           color: $text-dark;
+          font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
           
           &:hover {
             background: #f8fafc;
@@ -516,6 +520,92 @@ $danger: #ef4444;
           }
         }
       }
+    }
+  }
+}
+
+// ============================================================
+//  RESPONSIVE
+// ============================================================
+
+@media (max-width: 768px) {
+  .request-container {
+    padding: 1rem;
+  }
+
+  .request-card {
+    padding: 1.5rem;
+  }
+
+  .form-header {
+    .form-header-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.4rem;
+    }
+
+    .form-header-title {
+      h1 {
+        font-size: 1.2rem !important;
+      }
+
+      p {
+        font-size: 0.85rem !important;
+      }
+    }
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .photo-section {
+    .photo-preview {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  ::ng-deep {
+    .p-dropdown .p-dropdown-label,
+    .p-inputtextarea,
+    .p-treeselect .p-treeselect-label {
+      font-size: 0.85rem !important;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .request-card {
+    padding: 1rem;
+  }
+
+  .form-header {
+    flex-direction: column;
+    text-align: center;
+
+    .form-header-title {
+      h1 {
+        font-size: 1.1rem !important;
+      }
+    }
+  }
+
+  .form-group label {
+    font-size: 0.8rem !important;
+  }
+
+  ::ng-deep {
+    .p-dropdown .p-dropdown-label,
+    .p-inputtextarea,
+    .p-treeselect .p-treeselect-label {
+      font-size: 0.8rem !important;
+      padding: 0.5rem !important;
     }
   }
 }
