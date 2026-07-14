@@ -183,7 +183,7 @@
             [disabled]="statusLoading[user.userId]">
           </button>
           </td>
-          <td><span class="date-text">{{ user.createdAt }}</span></td>
+          <td><span class="date-text">{{ user.createdAt | shamsiDate }}</span></td>
           <td>
             <div class="action-group">
               <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text edit-btn" (click)="editUser(user)"></button>

@@ -319,24 +319,17 @@ roleId:any;
     onUnitSelect(event: any) {
       this.selectedUnitId = event.node.data.unitId;
     }
+
+
     onSearch() {
-  
+
       const dto = {
-    
-        userId: this.userId,
-    
-        unitId: this.selectedUnitId
-        ? [this.selectedUnitId]
-        : [],
-    
-        subjectId: this.selectedSubjectId
-          ? [this.selectedSubjectId]
-          : [],
-    
-        subSubjectId: this.selectedSubSubjectId
-          ? [this.selectedSubSubjectId]
-          : [],
-    
+        roleId: this.roleId,
+        userUnitId: this.userUnitId,
+      
+        unitId: this.selectedUnitId ? [this.selectedUnitId] : [],
+        subjectId: this.selectedSubjectId ? [this.selectedSubjectId] : [],
+        subSubjectId: this.selectedSubSubjectId ? [this.selectedSubSubjectId] : [],
         requestCode: this.requestCode
       };
     

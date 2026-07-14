@@ -13,13 +13,25 @@
 }
 
 
-* {
-  font-family: 'IRANSans', sans-serif !important;
-}
-
 html,
-body {
-    font-family: "IRANSans", sans-serif !important;
+body,
+input,
+textarea,
+button,
+label,
+p,
+b,
+ul,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+
+span,
+select {
+    font-family: 'IRANSans', sans-serif;
 }
 
 ::ng-deep .p-component,

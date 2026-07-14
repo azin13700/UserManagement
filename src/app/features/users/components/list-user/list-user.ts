@@ -19,6 +19,7 @@ import { UserForm } from '../user-form/user-form';
 import Swal from 'sweetalert2';
 import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog-component/confirm-dialog-component';
 import { MessageDialogComponent } from '../../../../shared/message-dialog-component/message-dialog-component';
+import { ShamsiDatePipe } from '../../../../shared/pipes/shamsi-date-pipe';
 
 interface User {
   userId: number;
@@ -51,7 +52,8 @@ interface User {
     MultiSelectModule,
     TooltipModule,
     MessageDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ShamsiDatePipe 
   ],
   providers: [MessageService, ConfirmationService, DialogService],
   templateUrl: './list-user.html',

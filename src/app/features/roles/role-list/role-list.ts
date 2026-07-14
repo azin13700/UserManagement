@@ -126,7 +126,7 @@ export class RoleList implements OnInit {
         
         this.showConfirm(
           'تغییر وضعیت',
-          `آیا از ${action} کردن نقش "${role.roleName}" مطمئن هستید؟`,
+          `آیا از ${action} کردن نقش "${role.description}" مطمئن هستید؟`,
           async () => {
             this.statusLoading[role.roleId] = true;
             try {
@@ -193,7 +193,7 @@ export class RoleList implements OnInit {
       baseZIndex: 10000,
       data: { 
         roleId: role.roleId,
-        roleName: role.roleName
+        roleName: role.description
       }
     });
     
@@ -211,7 +211,7 @@ export class RoleList implements OnInit {
       baseZIndex: 10000,
       data: { 
         roleId: role.roleId,
-        roleName: role.roleName
+        roleName: role.description
       }
     });
     
@@ -230,7 +230,7 @@ export class RoleList implements OnInit {
       baseZIndex: 10000,
       data: { 
         roleId: role.roleId,
-        roleName: role.roleName
+        roleName: role.description
       }
     });
     

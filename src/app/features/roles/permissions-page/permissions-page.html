@@ -1,14 +1,12 @@
 <div class="permission-container">
   <app-message-dialog
-  [(visible)]="messageDialogVisible"
-  [title]="messageDialogTitle"
-  [message]="messageDialogMessage"
-  [type]="messageDialogType"
-  [loading]="messageDialogLoading"
-  (onConfirm)="handleMessageConfirm()"
-></app-message-dialog>
-
-
+    [(visible)]="messageDialogVisible"
+    [title]="messageDialogTitle"
+    [message]="messageDialogMessage"
+    [type]="messageDialogType"
+    [loading]="messageDialogLoading"
+    (onConfirm)="handleMessageConfirm()"
+  ></app-message-dialog>
 
   <div class="permission-header">
     <h2>
@@ -22,7 +20,6 @@
     <i class="pi pi-spin pi-spinner"></i>
     <span>در حال بارگذاری دسترسی‌ها...</span>
   </div>
-
 
   <div class="permission-content" *ngIf="!loading">
     
@@ -40,19 +37,21 @@
       </label>
     </div>
 
-    <div class="permission-group" *ngFor="let group of permissionGroups">
-      <h4 class="group-title">{{ group.category }}</h4>
-      <div class="permission-list">
-        <div class="permission-item" *ngFor="let permission of group.permissions">
-          <p-checkbox 
-            [(ngModel)]="permission.isActive"
-            [binary]="true"
-            [inputId]="'perm-' + permission.id"
-          ></p-checkbox>
-          <label [for]="'perm-' + permission.id" class="permission-label">
-            <span class="perm-name">{{ permission.name }}</span>
-            <span class="perm-desc" *ngIf="permission.description">— {{ permission.description }}</span>
-          </label>
+    <!-- ✅ 2 ستون برای permission-group ها -->
+    <div class="permission-groups-grid">
+      <div class="permission-group" *ngFor="let group of permissionGroups">
+        <h4 class="group-title">{{ group.category }}</h4>
+        <div class="permission-list">
+          <div class="permission-item" *ngFor="let permission of group.permissions">
+            <p-checkbox 
+              [(ngModel)]="permission.isActive"
+              [binary]="true"
+              [inputId]="'perm-' + permission.id"
+            ></p-checkbox>
+            <label [for]="'perm-' + permission.id" class="permission-label">
+              <span class="perm-name">{{ permission.description }}</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -81,5 +80,4 @@
       (click)="savePermissions()"
     ></button>
   </div>
-
 </div>
