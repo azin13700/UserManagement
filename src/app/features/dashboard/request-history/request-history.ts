@@ -11,6 +11,7 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog-component
 import { MessageDialogComponent } from '../../../shared/message-dialog-component/message-dialog-component';
 import { HistoryDto } from '../../../core/models/HistoryDto';
 import { lastValueFrom } from 'rxjs';
+import { ShamsiDatePipe } from '../../../shared/pipes/shamsi-date-pipe';
 
 @Component({
   selector: 'app-request-history',
@@ -24,7 +25,8 @@ import { lastValueFrom } from 'rxjs';
     FormsModule ,
     FloatLabelModule,
     MessageDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ShamsiDatePipe
 
   ],  templateUrl: './request-history.html',
   styleUrl: './request-history.scss',

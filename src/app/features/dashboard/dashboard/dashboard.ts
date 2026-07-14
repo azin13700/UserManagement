@@ -22,6 +22,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Answer } from '../answer/answer';
 import { RequestHistory } from '../request-history/request-history';
+import { ShamsiDatePipe } from '../../../shared/pipes/shamsi-date-pipe';
 
 interface Request {
   id: number;
@@ -62,7 +63,7 @@ interface Unit {
         MessageDialogComponent,
         ConfirmDialogComponent,
         TreeSelectModule,
-
+        ShamsiDatePipe
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './dashboard.html',
