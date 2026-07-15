@@ -177,7 +177,7 @@ $blue: #3b82f6;
 // ============================================================
 
 ::ng-deep .p-treetable {
-  // هدر
+  // ===== هدر =====
   .p-treetable-thead > tr > th {
     background: #f8fafc;
     color: $text-dark;
@@ -190,7 +190,56 @@ $blue: #3b82f6;
     font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   }
 
-  // سطرها
+  // ===== تنظیم عرض ستون‌ها و وسط‌چین =====
+  .p-treetable-thead > tr > th,
+  .p-treetable-tbody > tr > td {
+    // ستون اول (نام واحد) - راست‌چین
+    &:first-child {
+      text-align: right !important;
+      padding-right: 1.25rem !important;
+    }
+
+    // ستون‌های دیگر - وسط‌چین با عرض کم
+    &:not(:first-child) {
+      text-align: center !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+  }
+
+  // ===== ستون تعداد کاربران =====
+  .p-treetable-thead > tr > th:nth-child(2),
+  .p-treetable-tbody > tr > td:nth-child(2) {
+    width: 12% !important;
+    min-width: 80px !important;
+    max-width: 120px !important;
+  }
+
+  // ===== ستون وضعیت =====
+  .p-treetable-thead > tr > th:nth-child(3),
+  .p-treetable-tbody > tr > td:nth-child(3) {
+    width: 12% !important;
+    min-width: 80px !important;
+    max-width: 120px !important;
+  }
+
+  // ===== ستون ویرایش =====
+  .p-treetable-thead > tr > th:nth-child(4),
+  .p-treetable-tbody > tr > td:nth-child(4) {
+    width: 8% !important;
+    min-width: 60px !important;
+    max-width: 80px !important;
+  }
+
+  // ===== ستون زیرمجموعه =====
+  .p-treetable-thead > tr > th:nth-child(5),
+  .p-treetable-tbody > tr > td:nth-child(5) {
+    width: 8% !important;
+    min-width: 60px !important;
+    max-width: 80px !important;
+  }
+
+  // ===== سطرها =====
   .p-treetable-tbody > tr > td {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid #f1f5f9;
@@ -217,7 +266,7 @@ $blue: #3b82f6;
     }
   }
 
-  // Paginator
+  // ===== Paginator =====
   .p-paginator {
     background: transparent;
     border-top: 1px solid $border;
@@ -337,13 +386,14 @@ $blue: #3b82f6;
   background: #fef3c7;
   color: #92400e;
   font-weight: 600;
-  margin-right: 0.5rem;
+  margin-right: 0.8rem;
   font-family: "IRANSans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
 }
 
 .user-count-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.3rem;
   background: #eef2ff;
   padding: 0.2rem 0.7rem;
@@ -389,7 +439,7 @@ $blue: #3b82f6;
     color: #ffffff !important;
 
     &:hover {
-      background: darken($success, 10%) !important;
+      background: adjust-color($success, $lightness: -10%) !important;
       transform: scale(1.04);
       box-shadow: 0 4px 12px rgba($success, 0.3);
     }
@@ -400,7 +450,7 @@ $blue: #3b82f6;
     color: #ffffff !important;
 
     &:hover {
-      background: darken($danger, 10%) !important;
+      background: adjust-color($danger, $lightness: -10%) !important;
       transform: scale(1.04);
       box-shadow: 0 4px 12px rgba($danger, 0.3);
     }
@@ -426,6 +476,7 @@ $blue: #3b82f6;
 .action-group {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 0.25rem;
 
   ::ng-deep .p-button {
@@ -582,8 +633,16 @@ $blue: #3b82f6;
   ::ng-deep .p-treetable {
     .p-treetable-thead > tr > th,
     .p-treetable-tbody > tr > td {
-      padding: 0.5rem !important;
-      font-size: 0.8rem !important;
+      padding: 0.4rem !important;
+      font-size: 0.75rem !important;
+    }
+
+    // در موبایل عرض ستون‌ها خودکار شود
+    .p-treetable-thead > tr > th:not(:first-child),
+    .p-treetable-tbody > tr > td:not(:first-child) {
+      width: auto !important;
+      min-width: 40px !important;
+      max-width: none !important;
     }
   }
 
@@ -593,14 +652,14 @@ $blue: #3b82f6;
   }
 
   .user-count-badge {
-    font-size: 0.65rem !important;
-    padding: 0.15rem 0.5rem !important;
+    font-size: 0.6rem !important;
+    padding: 0.1rem 0.4rem !important;
   }
 
   .status-btn {
-    min-width: 55px !important;
-    font-size: 0.65rem !important;
-    padding: 0.2rem 0.6rem !important;
+    min-width: 50px !important;
+    font-size: 0.6rem !important;
+    padding: 0.15rem 0.5rem !important;
   }
 
   ::ng-deep .p-paginator {
@@ -638,17 +697,17 @@ $blue: #3b82f6;
   ::ng-deep .p-treetable {
     .p-treetable-thead > tr > th,
     .p-treetable-tbody > tr > td {
-      font-size: 0.7rem !important;
-      padding: 0.3rem !important;
+      font-size: 0.65rem !important;
+      padding: 0.25rem !important;
     }
   }
 
   .unit-name {
-    font-size: 0.75rem !important;
+    font-size: 0.7rem !important;
   }
 
   .unit-desc {
-    font-size: 0.7rem !important;
+    font-size: 0.65rem !important;
   }
 }
 
@@ -688,6 +747,132 @@ $blue: #3b82f6;
 
     &:hover {
       background: #94a3b8;
+    }
+  }
+}
+
+// ============================================================
+// ✅ DARK THEME
+// ============================================================
+
+.dark-theme {
+  .dashboard-container {
+    background: #0f172a;
+  }
+
+  .main-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .table-header {
+    background: #1e293b;
+    border-bottom-color: #334155;
+
+    .header-title {
+      h1 {
+        color: #f1f5f9;
+      }
+
+      p {
+        color: #94a3b8;
+      }
+    }
+  }
+
+  .search-wrapper {
+    background: #0f172a;
+    border-color: #334155;
+
+    input {
+      color: #f1f5f9;
+
+      &::placeholder {
+        color: #64748b;
+      }
+    }
+
+    &:focus-within {
+      background: #1e293b;
+      border-color: $primary;
+    }
+  }
+
+  ::ng-deep .p-treetable {
+    .p-treetable-thead > tr > th {
+      background: #1e293b;
+      color: #94a3b8;
+      border-bottom-color: #334155;
+    }
+
+    .p-treetable-tbody > tr > td {
+      border-bottom-color: #334155;
+      color: #e2e8f0;
+    }
+
+    .p-treetable-tbody > tr:hover > td {
+      background: rgba(51, 65, 85, 0.5);
+    }
+  }
+
+  .unit-name {
+    color: #f1f5f9;
+  }
+
+  .unit-desc {
+    color: #94a3b8;
+  }
+
+  .user-count-badge {
+    background: rgba($primary, 0.2);
+    color: #60a5fa;
+  }
+
+  .inactive-row {
+    background-color: rgba($danger, 0.15) !important;
+
+    td {
+      color: #fca5a5 !important;
+    }
+
+    .unit-name {
+      color: #fca5a5 !important;
+    }
+  }
+
+  .tree-caption {
+    background: #1e293b;
+    border-bottom-color: #334155;
+
+    .caption-info {
+      color: #94a3b8;
+
+      span {
+        color: #e2e8f0;
+      }
+    }
+  }
+
+  ::ng-deep .p-paginator {
+    border-top-color: #334155;
+
+    .p-paginator-element {
+      color: #94a3b8;
+
+      &.p-highlight {
+        background: $primary;
+        color: #ffffff;
+      }
+    }
+  }
+
+  .empty-content {
+    i {
+      color: #475569;
+    }
+
+    p {
+      color: #94a3b8;
     }
   }
 }

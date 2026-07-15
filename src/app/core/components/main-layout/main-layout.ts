@@ -126,7 +126,7 @@ export class MainLayout implements OnInit {
     }
     if (permissions.includes('Request.View')) {
       userManagementItems.push({
-        label: ' ایجاد درخواست',
+        label: ' ثبت درخواست',
         icon: 'pi pi-clipboard',
         routerLink: '/dashboard/request'
       });

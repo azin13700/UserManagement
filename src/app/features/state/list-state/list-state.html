@@ -63,7 +63,6 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="stateName">نام وضعیت <p-sortIcon field="stateName"></p-sortIcon></th>
             <th pSortableColumn="stateCaption">عنوان نمایشی وضعیت <p-sortIcon field="stateCaption"></p-sortIcon></th>
             <th pSortableColumn="isEnable">فعال/غیرفعال <p-sortIcon field="isEnable"></p-sortIcon></th>
             <th style="width:100px">ویرایش</th>
@@ -72,7 +71,6 @@
   
         <ng-template pTemplate="body" let-perm>
           <tr>
-            <td><span class="perm-name">{{ perm.stateName }}</span></td>
             <td><span class="perm-category">{{ perm.stateCaption }}</span></td>
 
             <td>
@@ -104,17 +102,18 @@
     [draggable]="false"
   >
     <div class="dialog-content">
-      <div class="field">
-        <label>نام وضعیت  <span class="required">*</span></label>
-        <input pInputText [(ngModel)]="currentPermission.stateName"     placeholder="مثال: Created" class="w-full" />
-      </div>
+  
   
       <div class="field">
         <label>عنوان وضعیت <span class="required">*</span></label>
         <input pInputText [(ngModel)]="currentPermission.stateCaption"  placeholder="مثال: درخواست ثبت شد" class="w-full" />
   
       </div>
-  
+      <div class="field">
+        <label> توضیحات  <span class="required">*</span></label>
+        <textarea pInputTextarea [(ngModel)]="currentPermission.stateName" rows="3" [autoResize]="true" class="w-full"></textarea>
+
+      </div>
  
   
 

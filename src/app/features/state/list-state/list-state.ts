@@ -15,6 +15,7 @@ import { MessageDialogComponent } from '../../../shared/message-dialog-component
 import { lastValueFrom } from 'rxjs';
 import { ApiService } from '../../../core/services/api-service';
 import { StatusDto } from '../../../core/models/StatusDto';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-list-state',
@@ -28,6 +29,7 @@ import { StatusDto } from '../../../core/models/StatusDto';
     InputTextModule,
     TagModule,
     ToastModule,
+    TextareaModule,
     SelectModule,
     ConfirmDialogModule,
     MessageDialogComponent,
