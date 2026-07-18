@@ -148,7 +148,6 @@ export class RoleList implements OnInit {
     const ref = this.dialogService.open(RolePage, {
       header: 'ایجاد نقش جدید',
       width: '80%',
-      closable: true,  
       closeOnEscape: true, 
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
@@ -167,7 +166,6 @@ export class RoleList implements OnInit {
     const ref = this.dialogService.open(RolePage, {
       header: 'ویرایش نقش',
       width: '80%',
-      closable: true,  
       closeOnEscape: true, 
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,

@@ -106,7 +106,6 @@ export class ListSubject implements OnInit  {
           const ref = this.dialogService.open(SubjectPage, {
             header: 'ایجاد موضوع جدید',
             width: '50%',
-            closable: true,  
             closeOnEscape: true, 
             contentStyle: { overflow: 'auto' },
             baseZIndex: 10000,
@@ -126,7 +125,6 @@ export class ListSubject implements OnInit  {
           const ref = this.dialogService.open(SubjectPage, {
             header: 'ویرایش موضوع',
             width: '50%',
-            closable: true,  
             closeOnEscape: true, 
             contentStyle: { overflow: 'auto' },
             baseZIndex: 10000,

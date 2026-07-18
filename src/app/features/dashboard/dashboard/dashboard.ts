@@ -352,7 +352,6 @@ roleId:any;
         header: 'ثبت پاسخ',
         width: '700px',
         modal: true,
-        closable: true,
         maximizable: false,
         draggable: false,
         resizable: false,

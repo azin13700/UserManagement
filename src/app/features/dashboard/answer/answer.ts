@@ -126,7 +126,7 @@ export class Answer implements OnInit {
   
     }
     close() {
-  
+      this.ref.close(true);
     }
     onSubmit() {
       console.log(this.status);

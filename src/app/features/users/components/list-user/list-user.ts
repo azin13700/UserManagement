@@ -255,7 +255,6 @@ onSearch() {
   editUser(user: User) {
     const ref = this.dialogService.open(UserForm, {
       header: 'ویرایش کاربر',
-      closable: true,  
       closeOnEscape: true, 
       width: '80%',
       height:'96%',
